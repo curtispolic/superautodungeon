@@ -32,6 +32,7 @@ public class MainGame : Game
         testHero = new();
         testEnemy = new();
         testHero.Position = new Vector2(100, 100);
+        testEnemy.Position = new Vector2(300, 100);
 
         testHero.Attack = 2;
         testHero.HP = 20;
@@ -54,6 +55,11 @@ public class MainGame : Game
         testHero.HPTexture = Content.Load<Texture2D>("heart");
         testHero.AttackTexture = Content.Load<Texture2D>("attack");
         testHero.StatsFont = Content.Load<SpriteFont>("statsFont");
+
+        testEnemy.Texture = Content.Load<Texture2D>("skeleton");
+        testEnemy.HPTexture = Content.Load<Texture2D>("heart");
+        testEnemy.AttackTexture = Content.Load<Texture2D>("attack");
+        testEnemy.StatsFont = Content.Load<SpriteFont>("statsFont");
 
         // TODO: use this.Content to load your game content here
     }
@@ -84,6 +90,7 @@ public class MainGame : Game
         _spriteBatch.Begin();
 
         testHero.Draw(_spriteBatch);
+        testEnemy.Draw(_spriteBatch);
 
         // TODO: Add your drawing code here
 
