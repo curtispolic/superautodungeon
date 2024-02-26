@@ -16,6 +16,8 @@ public class MainGame : Game
     private SpriteBatch _spriteBatch;
     private Hero testHero;
     private Enemy testEnemy;
+    private Combat testCombat;
+    private double testTimer;
 
     public MainGame()
     {
@@ -29,7 +31,7 @@ public class MainGame : Game
         // TODO: Add your initialization logic here
         testHero = new();
         testEnemy = new();
-        testHero.position = new Vector2(100, 100);
+        testHero.Position = new Vector2(100, 100);
 
         testHero.Attack = 2;
         testHero.HP = 20;
@@ -37,13 +39,9 @@ public class MainGame : Game
         testEnemy.HP = 10;
         Console.WriteLine($"HHP: {testHero.HP}  EHP: {testEnemy.HP}");
 
-        Combat testCombat = new(testHero, testEnemy);
+        testCombat = new(testHero, testEnemy);
 
-        while (testHero.HP > 0 && testEnemy.HP > 0)
-        {
-            testCombat.FightOneStep();
-            Console.WriteLine($"HHP: {testHero.HP}  EHP: {testEnemy.HP}");
-        }
+        testTimer = 0;
 
         base.Initialize();
     }
@@ -52,7 +50,10 @@ public class MainGame : Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-        testHero.texture = Content.Load<Texture2D>("ball");
+        testHero.Texture = Content.Load<Texture2D>("knight");
+        testHero.HPTexture = Content.Load<Texture2D>("heart");
+        testHero.AttackTexture = Content.Load<Texture2D>("attack");
+        testHero.StatsFont = Content.Load<SpriteFont>("statsFont");
 
         // TODO: use this.Content to load your game content here
     }
@@ -61,6 +62,15 @@ public class MainGame : Game
     {
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
+
+        testTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
+
+        if (testHero.HP > 0 && testEnemy.HP > 0 && testTimer > 2000)
+        {
+            testCombat.FightOneStep();
+            Console.WriteLine($"HHP: {testHero.HP}  EHP: {testEnemy.HP}");
+            testTimer = 0;
+        }
 
         // TODO: Add your update logic here
 

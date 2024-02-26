@@ -17,6 +17,9 @@
 # Built Visual Studio Code Extensions
 *.vsix
 
+# GIMP files
+GIMPFiles/
+
 
 #######################################
 # not sure about this one
