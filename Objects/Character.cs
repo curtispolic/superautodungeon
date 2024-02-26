@@ -27,7 +27,7 @@ public class Character
         // Drawing shadow
         spriteBatch.Draw(
             this.ShadowTexture,
-            this.Position + new Vector2(0, 96),
+            this.Position + new Vector2(16, 96),
             null,
             Color.White,
             0f,
