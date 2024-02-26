@@ -1,4 +1,4 @@
-#Super Auto Dungeon
+# Super Auto Dungeon
 Inspired by Super Auto Pets, I plan to create a dungeon-delving auto battler.
 
 Author: Curtis Polic
