@@ -55,11 +55,13 @@ public class MainGame : Game
         testHero.HPTexture = Content.Load<Texture2D>("heart");
         testHero.AttackTexture = Content.Load<Texture2D>("attack");
         testHero.StatsFont = Content.Load<SpriteFont>("statsFont");
+        testHero.ShadowTexture = Content.Load<Texture2D>("shadow50");
 
         testEnemy.Texture = Content.Load<Texture2D>("skeleton");
         testEnemy.HPTexture = Content.Load<Texture2D>("heart");
         testEnemy.AttackTexture = Content.Load<Texture2D>("attack");
         testEnemy.StatsFont = Content.Load<SpriteFont>("statsFont");
+        testEnemy.ShadowTexture = Content.Load<Texture2D>("shadow50");
 
         // TODO: use this.Content to load your game content here
     }
