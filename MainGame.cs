@@ -3,6 +3,10 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 using superautodungeon.Objects.Heroes;
+using superautodungeon.Objects.Enemies;
+using superautodungeon.Objects.Controllers;
+
+using System;
 
 namespace superautodungeon;
 
@@ -10,7 +14,8 @@ public class MainGame : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
-    private Hero test;
+    private Hero testHero;
+    private Enemy testEnemy;
 
     public MainGame()
     {
@@ -22,8 +27,23 @@ public class MainGame : Game
     protected override void Initialize()
     {
         // TODO: Add your initialization logic here
-        test = new();
-        test.position = new Vector2(100, 100);
+        testHero = new();
+        testEnemy = new();
+        testHero.position = new Vector2(100, 100);
+
+        testHero.Attack = 2;
+        testHero.HP = 20;
+        testEnemy.Attack = 1;
+        testEnemy.HP = 10;
+        Console.WriteLine($"HHP: {testHero.HP}  EHP: {testEnemy.HP}");
+
+        Combat testCombat = new(testHero, testEnemy);
+
+        while (testHero.HP > 0 && testEnemy.HP > 0)
+        {
+            testCombat.FightOneStep();
+            Console.WriteLine($"HHP: {testHero.HP}  EHP: {testEnemy.HP}");
+        }
 
         base.Initialize();
     }
@@ -32,7 +52,7 @@ public class MainGame : Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-        test.texture = Content.Load<Texture2D>("ball");
+        testHero.texture = Content.Load<Texture2D>("ball");
 
         // TODO: use this.Content to load your game content here
     }
@@ -53,7 +73,7 @@ public class MainGame : Game
 
         _spriteBatch.Begin();
 
-        test.Draw(_spriteBatch);
+        testHero.Draw(_spriteBatch);
 
         // TODO: Add your drawing code here
 
