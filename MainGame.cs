@@ -2,12 +2,15 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using superautodungeon.Objects.Heroes;
+
 namespace superautodungeon;
 
 public class MainGame : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
+    private Hero test;
 
     public MainGame()
     {
@@ -19,6 +22,8 @@ public class MainGame : Game
     protected override void Initialize()
     {
         // TODO: Add your initialization logic here
+        test = new();
+        test.position = new Vector2(100, 100);
 
         base.Initialize();
     }
@@ -26,6 +31,8 @@ public class MainGame : Game
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+        test.texture = Content.Load<Texture2D>("ball");
 
         // TODO: use this.Content to load your game content here
     }
@@ -44,7 +51,13 @@ public class MainGame : Game
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
+        _spriteBatch.Begin();
+
+        test.Draw(_spriteBatch);
+
         // TODO: Add your drawing code here
+
+        _spriteBatch.End();
 
         base.Draw(gameTime);
     }

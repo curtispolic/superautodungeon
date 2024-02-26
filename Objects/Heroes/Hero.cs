@@ -14,7 +14,7 @@ public class Hero
     // TODO Armour
     // TODO Trinket
 
-    Hero()
+    public Hero()
     {
         // Intentional blank for now
     }
@@ -22,5 +22,16 @@ public class Hero
     public virtual void Draw(SpriteBatch spriteBatch)
     {
         // TODO: Drawing
+        spriteBatch.Draw(
+            this.texture,
+            this.position,
+            null,
+            Color.White,
+            0f,
+            new Vector2(0, 0),
+            Vector2.One,
+            SpriteEffects.None,
+            0f
+        );
     }
 }
