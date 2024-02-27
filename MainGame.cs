@@ -28,7 +28,6 @@ public class MainGame : Game
 
     protected override void Initialize()
     {
-        // TODO: Add your initialization logic here
         testHero = new();
         testEnemy = new();
         testHero.Position = new Vector2(100, 100);
@@ -56,21 +55,19 @@ public class MainGame : Game
         testHero.AttackTexture = Content.Load<Texture2D>("attack");
         testHero.StatsFont = Content.Load<SpriteFont>("statsFont");
         testHero.ShadowTexture = Content.Load<Texture2D>("shadow50");
+        testHero.DeathTexture = Content.Load<Texture2D>("death");
 
         testEnemy.Texture = Content.Load<Texture2D>("skeleton");
         testEnemy.HPTexture = Content.Load<Texture2D>("heart");
         testEnemy.AttackTexture = Content.Load<Texture2D>("attack");
         testEnemy.StatsFont = Content.Load<SpriteFont>("statsFont");
         testEnemy.ShadowTexture = Content.Load<Texture2D>("shadow50");
+        testEnemy.DeathTexture = Content.Load<Texture2D>("death");
 
-        // TODO: use this.Content to load your game content here
     }
 
     protected override void Update(GameTime gameTime)
     {
-        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-            Exit();
-
         testTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
 
         if (testHero.HP > 0 && testEnemy.HP > 0 && testTimer > 2000)
@@ -79,8 +76,6 @@ public class MainGame : Game
             Console.WriteLine($"HHP: {testHero.HP}  EHP: {testEnemy.HP}");
             testTimer = 0;
         }
-
-        // TODO: Add your update logic here
 
         base.Update(gameTime);
     }
@@ -91,8 +86,8 @@ public class MainGame : Game
 
         _spriteBatch.Begin();
 
-        testHero.Draw(_spriteBatch);
-        testEnemy.Draw(_spriteBatch);
+        testHero.Draw(_spriteBatch, gameTime);
+        testEnemy.Draw(_spriteBatch, gameTime);
 
         // TODO: Add your drawing code here
 

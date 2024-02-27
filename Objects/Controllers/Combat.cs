@@ -20,6 +20,13 @@ public class Combat
     {
         hero.HP -= enemy.Attack;
         enemy.HP -= hero.Attack;
-        // Handle deaths here;
+        if (enemy.HP <= 0)
+        {
+            enemy.Die();
+        }
+        if (hero.HP <= 0)
+        {
+            hero.Die();
+        }
     }
 }
