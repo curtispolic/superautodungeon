@@ -3,6 +3,8 @@ namespace superautodungeon.Objects.Controllers;
 using superautodungeon.Objects.Heroes;
 using superautodungeon.Objects.Enemies;
 
+using System.Collections.Generic;
+
 public class Combat
 {
     public Party PlayerParty;
@@ -14,6 +16,29 @@ public class Combat
         PlayerParty = inputParty;
         EnemyMob = inputMob;
         Ongoing = true;
+    }
+
+    public void BeginRound()
+    {
+        // Move forward characters in the list
+        List<Hero> tempList = new();
+        foreach (var hero in PlayerParty.HeroList)
+        {
+            if (!hero.Dead)
+                tempList.Add(hero);
+        }
+        PlayerParty.HeroList = tempList;
+
+        List<Enemy> tempList2 = new();
+        foreach (var enemy in EnemyMob.EnemyList)
+        {
+            if (!enemy.Dead)
+                tempList2.Add(enemy);
+        }
+        EnemyMob.EnemyList = tempList2;
+
+        PlayerParty.Reposition();
+        EnemyMob.Reposition();
     }
 
     public void MeleeHit()
@@ -41,26 +66,20 @@ public class Combat
             {
                 if (hero.HP <= 0)
                 {
-                    if (hero.Die())
-                    {
-                        wasDeath = true;
-                    }
+                    wasDeath = hero.Die();
                 }
             }
             foreach (var enemy in EnemyMob.EnemyList)
             {
                 if (enemy.HP <= 0)
                 {
-                    if (enemy.Die())
-                    {
-                        wasDeath = true;
-                    }
+                    wasDeath = enemy.Die();
                 }
             }
         } while (wasDeath);
     }
 
-    public void RoundFinish()
+    public void EndRound()
     {
         // Check if all heroes or all enemies are dead
         int heroCheck = 0; int enemyCheck = 0;
@@ -75,49 +94,6 @@ public class Combat
                 enemyCheck++;
         }
         if (enemyCheck == EnemyMob.EnemyList.Count || heroCheck == PlayerParty.HeroList.Count)
-        {
-            Ongoing = false;
-        }
-    }
-
-    public void FightOneStep()
-    {
-        // Front two attack each other
-        Hero frontHero = PlayerParty.HeroList[0];
-        Enemy frontEnemy = EnemyMob.EnemyList[0];
-        frontHero.HP -= frontEnemy.Attack;
-        frontEnemy.HP -= frontHero.Attack;
-
-        // Handle on attack triggers here
-        
-        // Death handling
-        bool wasDeath = false;
-        do
-        {
-            wasDeath = false;
-            foreach (var hero in PlayerParty.HeroList)
-            {
-                if (hero.HP <= 0)
-                {
-                    if (hero.Die())
-                    {
-                        wasDeath = true;
-                    }
-                }
-            }
-            foreach (var enemy in EnemyMob.EnemyList)
-            {
-                if (enemy.HP <= 0)
-                {
-                    if (enemy.Die())
-                    {
-                        wasDeath = true;
-                    }
-                }
-            }
-        } while (wasDeath);
-
-        if (PlayerParty.HeroList.Count == 0 || EnemyMob.EnemyList.Count == 0)
         {
             Ongoing = false;
         }

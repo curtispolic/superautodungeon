@@ -28,20 +28,6 @@ public class Party
         return false;
     }
 
-    public void Compress()
-    {
-        foreach (var hero in HeroList)
-        {
-            if (hero.Dead)
-            {
-                HeroList.Remove(hero);
-            }
-        }
-        Reposition();
-    }
-
-    // TODO: Keep rendering dead party members until they die
-
     public void Reposition()
     {
         for (int i = 0; i<HeroList.Count; i++)

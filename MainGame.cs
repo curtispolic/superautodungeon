@@ -15,9 +15,7 @@ public class MainGame : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
-    private Hero testHero;
     private Party testParty;
-    private Enemy testEnemy;
     private Mob testMob;
     private Combat testCombat;
     private double fightTimer;
@@ -31,22 +29,29 @@ public class MainGame : Game
 
     protected override void Initialize()
     {
-        testHero = new();
-        testEnemy = new();
-        testHero.Position = new Vector2(100, 100);
-        testEnemy.Position = new Vector2(300, 100);
+        Random random = new();
 
-        testHero.Attack = 2;
-        testHero.HP = 20;
-        testEnemy.Attack = 1;
-        testEnemy.HP = 10;
-        Console.WriteLine($"HHP: {testHero.HP}  EHP: {testEnemy.HP}");
-
+        // Construct the party and mob
         testParty = new(new Vector2(100, 100));
-        testParty.Add(testHero);
-
         testMob = new(new Vector2(300, 100));
-        testMob.Add(testEnemy);
+
+        // Populate the party
+        for (int i = 0; i < 4; i++)
+        {
+            Hero newHero = new();
+            newHero.Attack = random.Next(2,5);
+            newHero.HP = random.Next(10,20);
+            testParty.Add(newHero);
+        }
+
+        // Populate the mob
+        for (int i = 0; i < 4; i++)
+        {
+            Enemy newEnemy = new();
+            newEnemy.Attack = random.Next(1,4);
+            newEnemy.HP = random.Next(5,15);
+            testMob.Add(newEnemy);
+        }
 
         testCombat = new(testParty, testMob);
 
@@ -59,20 +64,25 @@ public class MainGame : Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-        testHero.Texture = Content.Load<Texture2D>("knight");
-        testHero.HPTexture = Content.Load<Texture2D>("heart");
-        testHero.AttackTexture = Content.Load<Texture2D>("attack");
-        testHero.StatsFont = Content.Load<SpriteFont>("statsFont");
-        testHero.ShadowTexture = Content.Load<Texture2D>("shadow50");
-        testHero.DeathTexture = Content.Load<Texture2D>("death");
+        foreach (var hero in testParty.HeroList)
+        {
+            hero.Texture = Content.Load<Texture2D>("knight");
+            hero.HPTexture = Content.Load<Texture2D>("heart");
+            hero.AttackTexture = Content.Load<Texture2D>("attack");
+            hero.StatsFont = Content.Load<SpriteFont>("statsFont");
+            hero.ShadowTexture = Content.Load<Texture2D>("shadow50");
+            hero.DeathTexture = Content.Load<Texture2D>("death");
+        }
 
-        testEnemy.Texture = Content.Load<Texture2D>("skeleton");
-        testEnemy.HPTexture = Content.Load<Texture2D>("heart");
-        testEnemy.AttackTexture = Content.Load<Texture2D>("attack");
-        testEnemy.StatsFont = Content.Load<SpriteFont>("statsFont");
-        testEnemy.ShadowTexture = Content.Load<Texture2D>("shadow50");
-        testEnemy.DeathTexture = Content.Load<Texture2D>("death");
-
+        foreach (var enemy in testMob.EnemyList)
+        {
+            enemy.Texture = Content.Load<Texture2D>("skeleton");
+            enemy.HPTexture = Content.Load<Texture2D>("heart");
+            enemy.AttackTexture = Content.Load<Texture2D>("attack");
+            enemy.StatsFont = Content.Load<SpriteFont>("statsFont");
+            enemy.ShadowTexture = Content.Load<Texture2D>("shadow50");
+            enemy.DeathTexture = Content.Load<Texture2D>("death");
+        }
     }
 
     protected override void Update(GameTime gameTime)
@@ -81,10 +91,11 @@ public class MainGame : Game
 
         if (testCombat.Ongoing && fightTimer > 2000)
         {
+            testCombat.BeginRound();
             testCombat.MeleeHit();
             testCombat.OnAttackTriggers();
             testCombat.HandleDeath();
-            testCombat.RoundFinish();
+            testCombat.EndRound();
             fightTimer = 0;
         }
 
