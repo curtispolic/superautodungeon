@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using superautodungeon.Objects;
 using superautodungeon.Objects.Heroes;
 using superautodungeon.Objects.Enemies;
 using superautodungeon.Objects.Controllers;
@@ -15,9 +16,11 @@ public class MainGame : Game
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     private Hero testHero;
+    private Party testParty;
     private Enemy testEnemy;
+    private Mob testMob;
     private Combat testCombat;
-    private double testTimer;
+    private double fightTimer;
 
     public MainGame()
     {
@@ -39,9 +42,15 @@ public class MainGame : Game
         testEnemy.HP = 10;
         Console.WriteLine($"HHP: {testHero.HP}  EHP: {testEnemy.HP}");
 
-        testCombat = new(testHero, testEnemy);
+        testParty = new(new Vector2(100, 100));
+        testParty.Add(testHero);
 
-        testTimer = 0;
+        testMob = new(new Vector2(300, 100));
+        testMob.Add(testEnemy);
+
+        testCombat = new(testParty, testMob);
+
+        fightTimer = 0;
 
         base.Initialize();
     }
@@ -68,13 +77,15 @@ public class MainGame : Game
 
     protected override void Update(GameTime gameTime)
     {
-        testTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
+        fightTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
 
-        if (testHero.HP > 0 && testEnemy.HP > 0 && testTimer > 2000)
+        if (testCombat.Ongoing && fightTimer > 2000)
         {
-            testCombat.FightOneStep();
-            Console.WriteLine($"HHP: {testHero.HP}  EHP: {testEnemy.HP}");
-            testTimer = 0;
+            testCombat.MeleeHit();
+            testCombat.OnAttackTriggers();
+            testCombat.HandleDeath();
+            testCombat.RoundFinish();
+            fightTimer = 0;
         }
 
         base.Update(gameTime);
@@ -86,8 +97,8 @@ public class MainGame : Game
 
         _spriteBatch.Begin();
 
-        testHero.Draw(_spriteBatch, gameTime);
-        testEnemy.Draw(_spriteBatch, gameTime);
+        testParty.Draw(_spriteBatch, gameTime);
+        testMob.Draw(_spriteBatch, gameTime);
 
         // TODO: Add your drawing code here
 

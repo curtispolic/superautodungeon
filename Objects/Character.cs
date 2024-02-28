@@ -19,19 +19,24 @@ public class Character
     {
         Dead = false;
         Dying = false;
-        // Intentional blank for now
     }
 
-    public void Die()
+    public bool Die()
     {
-        Dying = true;
-        DeathTimer = 0;
-        // Intentional blank
+        // Returns true if this is the call that killed the character
+        if (!Dead && !Dying)
+        {
+            Dead = true;
+            Dying = true;
+            DeathTimer = 0;
+            return true;
+        }
+        return false;
     }
 
     public virtual void Draw(SpriteBatch spriteBatch, GameTime gameTime)
     {
-        if (!Dead)
+        if (!Dead || Dying)
         {
             // Drawing shadow
             spriteBatch.Draw(this.ShadowTexture, this.Position + new Vector2(16, 96), null, Color.White, 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
@@ -66,10 +71,9 @@ public class Character
         {
             spriteBatch.Draw(this.DeathTexture, this.Position + new Vector2(32, 32), null, new Color(255,255,255,(int)(DeathTimer/1000*255)), 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
             DeathTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (DeathTimer > 2000)
+            if (DeathTimer > 1500)
             {
                 Dying = false;
-                Dead = true;
             }
         }
     }
