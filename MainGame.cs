@@ -6,6 +6,7 @@ using superautodungeon.Objects;
 using superautodungeon.Objects.Heroes;
 using superautodungeon.Objects.Enemies;
 using superautodungeon.Objects.Controllers;
+using superautodungeon.Objects.UI;
 
 using System;
 
@@ -18,6 +19,7 @@ public class MainGame : Game
     private Party testParty;
     private Mob testMob;
     private Combat testCombat;
+    private Button testButton;
     private double fightTimer;
 
     public MainGame()
@@ -56,6 +58,10 @@ public class MainGame : Game
         testCombat = new(testParty, testMob);
 
         fightTimer = 0;
+
+        testButton = new("Test Button", Content.Load<SpriteFont>("statsFont"));
+        testButton.Texture = Content.Load<Texture2D>("button128x32");
+        testButton.Position = new Vector2(100, 400);
 
         base.Initialize();
     }
@@ -111,7 +117,7 @@ public class MainGame : Game
         testParty.Draw(_spriteBatch, gameTime);
         testMob.Draw(_spriteBatch, gameTime);
 
-        // TODO: Add your drawing code here
+        testButton.Draw(_spriteBatch, gameTime);
 
         _spriteBatch.End();
 
