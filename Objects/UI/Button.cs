@@ -5,13 +5,14 @@ using Microsoft.Xna.Framework.Graphics;
 
 public class Button
 {
-    public string Text;
+    public string Text, Type;
     public Texture2D Texture;
     public Vector2 Position;
     public SpriteFont Font;
 
-    public Button(string inputText, SpriteFont inputFont)
+    public Button(string buttonType, string inputText, SpriteFont inputFont)
     {
+        Type = buttonType;
         Text = inputText;
         Font = inputFont;
     }

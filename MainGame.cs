@@ -9,18 +9,21 @@ using superautodungeon.Objects.Controllers;
 using superautodungeon.Objects.UI;
 
 using System;
+using System.Collections.Generic;
 
 namespace superautodungeon;
 
 public class MainGame : Game
 {
+    private bool leftMouseDown;
+    private List<Button> buttonList;
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     private Party testParty;
     private Mob testMob;
     private Combat testCombat;
     private Button testButton;
-    private double fightTimer;
+    private double fightTimer, leftMouseDownTime;
 
     public MainGame()
     {
@@ -32,6 +35,12 @@ public class MainGame : Game
     protected override void Initialize()
     {
         Random random = new();
+
+        // UI Elements
+        buttonList = new();
+
+        // Mouse handling init
+        leftMouseDown = false;
 
         // Construct the party and mob
         testParty = new(new Vector2(100, 100));
@@ -59,9 +68,13 @@ public class MainGame : Game
 
         fightTimer = 0;
 
-        testButton = new("Test Button", Content.Load<SpriteFont>("statsFont"));
-        testButton.Texture = Content.Load<Texture2D>("button128x32");
-        testButton.Position = new Vector2(100, 400);
+        testButton = new("test", "Add Enemy", Content.Load<SpriteFont>("statsFont"))
+        {
+            Texture = Content.Load<Texture2D>("button128x32"),
+            Position = new Vector2(100, 400)
+        };
+
+        buttonList.Add(testButton);
 
         base.Initialize();
     }
@@ -93,6 +106,50 @@ public class MainGame : Game
 
     protected override void Update(GameTime gameTime)
     {
+        var MouseState = Mouse.GetState();
+
+        // Handle instances where the mouse is inside the game window
+        if (0 <= MouseState.X && MouseState.X <= _graphics.PreferredBackBufferWidth && 0 <= MouseState.Y && MouseState.Y <= _graphics.PreferredBackBufferHeight)
+        {
+            // Left mouse down handling
+            if (MouseState.LeftButton == ButtonState.Pressed && !leftMouseDown)
+            {
+                // Stored to determine dragging vs. clicking
+                leftMouseDownTime = gameTime.TotalGameTime.TotalMilliseconds;
+
+                foreach (var button in buttonList)
+                {
+                    // Clicking inside the bounds of a button
+                    if (MouseState.X > button.Position.X && MouseState.X < button.Position.X + button.Texture.Width &&
+                    MouseState.Y > button.Position.Y && MouseState.Y < button.Position.Y + button.Texture.Height)
+                    {
+                        // Handle button click
+                        if (button.Type == "test")
+                        {
+                            Enemy testEnemy = new()
+                            {
+                                HP = 5,
+                                Attack = 1,
+                                Texture = Content.Load<Texture2D>("skeleton"),
+                                HPTexture = Content.Load<Texture2D>("heart"),
+                                AttackTexture = Content.Load<Texture2D>("attack"),
+                                StatsFont = Content.Load<SpriteFont>("statsFont"),
+                                ShadowTexture = Content.Load<Texture2D>("shadow50"),
+                                DeathTexture = Content.Load<Texture2D>("death")
+                            };
+                            testCombat.EnemyMob.Add(testEnemy);
+                        }
+
+                        leftMouseDown = true;
+                    }
+                }
+            }
+            else if (MouseState.LeftButton == ButtonState.Released &&  leftMouseDown)
+            {
+                leftMouseDown = false;
+            }
+        }
+
         fightTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
 
         if (testCombat.Ongoing && fightTimer > 2000)
@@ -117,7 +174,10 @@ public class MainGame : Game
         testParty.Draw(_spriteBatch, gameTime);
         testMob.Draw(_spriteBatch, gameTime);
 
-        testButton.Draw(_spriteBatch, gameTime);
+        foreach (var button in buttonList)
+        {
+            button.Draw(_spriteBatch, gameTime);
+        }
 
         _spriteBatch.End();
 
