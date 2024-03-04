@@ -1,10 +1,12 @@
 namespace superautodungeon.Objects;
 
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 public class Character
 {
+    public MainGame GameParent;
     public Vector2 Position;
     public Texture2D Texture, HPTexture, AttackTexture, ShadowTexture, DeathTexture;
     public SpriteFont StatsFont;
@@ -15,8 +17,9 @@ public class Character
     // TODO Armour
     // TODO Trinket
 
-    public Character()
+    public Character(MainGame inputParent)
     {
+        GameParent = inputParent;
         Dead = false;
         Dying = false;
     }
@@ -32,6 +35,11 @@ public class Character
             return true;
         }
         return false;
+    }
+
+    public virtual void LoadContent()
+    {
+        Console.WriteLine("Non-override call of LoadContent for class Character");
     }
 
     public virtual void Draw(SpriteBatch spriteBatch, GameTime gameTime)

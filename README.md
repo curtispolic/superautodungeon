@@ -5,9 +5,10 @@ Author: Curtis Polic
 
 Current features:
 - Basic Heroes vs Enemies combat
+- Main Menu with placeholder buttons
 
 To Do in Order:
-- Create Main Menu and UI (polishing time)
+- Base UI for gameplay
 - Add 2 or 3 classes and shop
 - Add multiple enemy types
 - Expand To Do list

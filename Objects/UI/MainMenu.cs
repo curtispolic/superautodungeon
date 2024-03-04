@@ -1,9 +1,12 @@
 namespace superautodungeon.Objects.UI;
 
-using System.Security.Cryptography.X509Certificates;
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+
+using superautodungeon.Objects.Heroes;
+using superautodungeon.Objects.Enemies;
 
 public class MainMenu
 {
@@ -13,15 +16,15 @@ public class MainMenu
     public bool leftMouseDown;
     public double leftMouseDownTime;
 
-    public MainMenu(MainGame inputParent, GraphicsDeviceManager graphics)
+    public MainMenu(MainGame inputParent)
     {
         GameParent = inputParent;
-        int buttonLeft = graphics.PreferredBackBufferWidth / 2 - 64;
-        NewGameButton = new Button(GameParent, "New Game", new Vector2(buttonLeft, 250));
-        LoadGameButton = new Button(GameParent, "Load Game", new Vector2(buttonLeft, 300));
-        SettingsButton = new Button(GameParent, "Settings", new Vector2(buttonLeft, 350));
-        ExitButton = new Button(GameParent, "Exit", new Vector2(buttonLeft, 400));
+        NewGameButton = new Button(GameParent, "New Game", new Vector2(50, 250));
+        LoadGameButton = new Button(GameParent, "Load Game", new Vector2(50, 300));
+        SettingsButton = new Button(GameParent, "Settings", new Vector2(50, 350));
+        ExitButton = new Button(GameParent, "Exit", new Vector2(50, 400));
         leftMouseDown = false;
+        LoadContent();
     }
 
     public void Update(GraphicsDeviceManager graphics, GameTime gameTime)
@@ -86,7 +89,7 @@ public class MainMenu
     public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
     {
         // Drawing the title
-        spriteBatch.Draw(this.TitleTexture, new Vector2(150,0), null, Color.White, 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
+        spriteBatch.Draw(TitleTexture, new Vector2(50,50), null, Color.White, 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
 
         // The buttons
         NewGameButton.Draw(spriteBatch, gameTime);
@@ -97,21 +100,43 @@ public class MainMenu
 
     public void OnClickExit()
     {
-
+        GameParent.Exit();
     }
 
     public void OnClickSettings()
     {
-
+        Console.WriteLine("Settings button clicked - TODO: Add functionality");
     }
 
     public void OnClickLoadGame()
     {
-
+        Console.WriteLine("Load Game button clicked - TODO: Add functionality");
     }
 
     public void OnClickNewGame()
     {
-    
+        Party testParty;
+        Mob testMob;
+
+        // Construct the party and mob
+        testParty = new(new Vector2(100, 100));
+        testMob = new(new Vector2(300, 100));
+
+        // Populate the party
+        for (int i = 0; i < 4; i++)
+        {
+            Hero newHero = new(GameParent);
+            testParty.Add(newHero);
+        }
+
+        // Populate the mob
+        for (int i = 0; i < 4; i++)
+        {
+            Enemy newEnemy = new(GameParent);
+            testMob.Add(newEnemy);
+        }
+
+      GameParent.combat = new(GameParent, testParty, testMob);
+      GameParent.CombatVisible = true;
     }
 }
