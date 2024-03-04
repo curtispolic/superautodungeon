@@ -16,9 +16,11 @@ namespace superautodungeon;
 
 public class MainGame : Game
 {
-    public bool MainMenuVisible, CombatVisible;
+    public bool MainMenuVisible, CombatVisible, GameplayUIVisible;
     public MainMenu mainMenu;
     public Combat combat;
+    public GameplayUI gameplayUI;
+    public Party playerParty;
     public GraphicsDeviceManager graphics;
     private SpriteBatch _spriteBatch;
     private double fightTimer;
@@ -45,6 +47,7 @@ public class MainGame : Game
         MainMenuVisible = true;
 
         CombatVisible = false;
+        GameplayUIVisible = false;
 
         fightTimer = 0;
 
@@ -91,6 +94,9 @@ public class MainGame : Game
             
         if (CombatVisible)
             combat.Draw(_spriteBatch, gameTime);
+
+        if (GameplayUIVisible)
+            gameplayUI.Draw(_spriteBatch, gameTime);
 
         _spriteBatch.End();
 

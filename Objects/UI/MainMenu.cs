@@ -125,8 +125,12 @@ public class MainMenu
         // Populate the party
         for (int i = 0; i < 4; i++)
         {
-            Hero newHero = new(GameParent);
-            testParty.Add(newHero);
+        Hero newHero = new(GameParent)
+        {
+            HP = 40,
+            Attack = 8
+        };
+        testParty.Add(newHero);
         }
 
         // Populate the mob
@@ -136,7 +140,14 @@ public class MainMenu
             testMob.Add(newEnemy);
         }
 
-      GameParent.combat = new(GameParent, testParty, testMob);
-      GameParent.CombatVisible = true;
+        GameParent.playerParty = testParty;
+
+        GameParent.combat = new(GameParent, testParty, testMob);
+        GameParent.CombatVisible = true;
+
+        GameParent.gameplayUI = new(GameParent, GameParent.playerParty);
+        GameParent.GameplayUIVisible = true;
+
+        GameParent.MainMenuVisible = false;
     }
 }
