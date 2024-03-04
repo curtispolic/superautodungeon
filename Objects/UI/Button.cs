@@ -1,20 +1,28 @@
 namespace superautodungeon.Objects.UI;
 
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 public class Button
 {
-    public string Text, Type;
+    public string Text;
+    public MainGame GameParent;
     public Texture2D Texture;
     public Vector2 Position;
     public SpriteFont Font;
 
-    public Button(string buttonType, string inputText, SpriteFont inputFont)
+    public Button(MainGame inputParent, string inputText, Vector2 inputPosition)
     {
-        Type = buttonType;
+        GameParent = inputParent;
+        Position = inputPosition;
         Text = inputText;
-        Font = inputFont;
+    }
+
+    public void LoadContent()
+    {
+        Texture = GameParent.Content.Load<Texture2D>("button128x32");
+        Font = GameParent.Content.Load<SpriteFont>("statsFont");
     }
 
     public virtual void Draw(SpriteBatch spriteBatch, GameTime gameTime)

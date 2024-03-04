@@ -15,15 +15,14 @@ namespace superautodungeon;
 
 public class MainGame : Game
 {
-    private bool leftMouseDown;
-    private List<Button> buttonList;
+    private MainMenu mainMenu;
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     private Party testParty;
     private Mob testMob;
     private Combat testCombat;
     private Button testButton;
-    private double fightTimer, leftMouseDownTime;
+    private double fightTimer;
 
     public MainGame()
     {
@@ -36,12 +35,9 @@ public class MainGame : Game
     {
         Random random = new();
 
-        // UI Elements
-        buttonList = new();
+        mainMenu = new(this, _graphics);
 
-        // Mouse handling init
-        leftMouseDown = false;
-
+        /*
         // Construct the party and mob
         testParty = new(new Vector2(100, 100));
         testMob = new(new Vector2(300, 100));
@@ -49,32 +45,29 @@ public class MainGame : Game
         // Populate the party
         for (int i = 0; i < 4; i++)
         {
-            Hero newHero = new();
-            newHero.Attack = random.Next(2,5);
-            newHero.HP = random.Next(10,20);
+            Hero newHero = new()
+            {
+                Attack = random.Next(2, 5),
+                HP = random.Next(10, 20)
+            };
             testParty.Add(newHero);
         }
 
         // Populate the mob
         for (int i = 0; i < 4; i++)
         {
-            Enemy newEnemy = new();
-            newEnemy.Attack = random.Next(1,4);
-            newEnemy.HP = random.Next(5,15);
+            Enemy newEnemy = new()
+            {
+                Attack = random.Next(1, 4),
+                HP = random.Next(5, 15)
+            };
             testMob.Add(newEnemy);
         }
 
         testCombat = new(testParty, testMob);
 
         fightTimer = 0;
-
-        testButton = new("test", "Add Enemy", Content.Load<SpriteFont>("statsFont"))
-        {
-            Texture = Content.Load<Texture2D>("button128x32"),
-            Position = new Vector2(100, 400)
-        };
-
-        buttonList.Add(testButton);
+        */
 
         base.Initialize();
     }
@@ -83,6 +76,9 @@ public class MainGame : Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
+        mainMenu.LoadContent();
+
+        /*
         foreach (var hero in testParty.HeroList)
         {
             hero.Texture = Content.Load<Texture2D>("knight");
@@ -102,13 +98,14 @@ public class MainGame : Game
             enemy.ShadowTexture = Content.Load<Texture2D>("shadow50");
             enemy.DeathTexture = Content.Load<Texture2D>("death");
         }
+        */
     }
 
     protected override void Update(GameTime gameTime)
     {
-        var MouseState = Mouse.GetState();
 
         // Handle instances where the mouse is inside the game window
+        /*
         if (0 <= MouseState.X && MouseState.X <= _graphics.PreferredBackBufferWidth && 0 <= MouseState.Y && MouseState.Y <= _graphics.PreferredBackBufferHeight)
         {
             // Left mouse down handling
@@ -116,6 +113,7 @@ public class MainGame : Game
             {
                 // Stored to determine dragging vs. clicking
                 leftMouseDownTime = gameTime.TotalGameTime.TotalMilliseconds;
+                leftMouseDown = true;
 
                 foreach (var button in buttonList)
                 {
@@ -124,23 +122,8 @@ public class MainGame : Game
                     MouseState.Y > button.Position.Y && MouseState.Y < button.Position.Y + button.Texture.Height)
                     {
                         // Handle button click
-                        if (button.Type == "test")
-                        {
-                            Enemy testEnemy = new()
-                            {
-                                HP = 5,
-                                Attack = 1,
-                                Texture = Content.Load<Texture2D>("skeleton"),
-                                HPTexture = Content.Load<Texture2D>("heart"),
-                                AttackTexture = Content.Load<Texture2D>("attack"),
-                                StatsFont = Content.Load<SpriteFont>("statsFont"),
-                                ShadowTexture = Content.Load<Texture2D>("shadow50"),
-                                DeathTexture = Content.Load<Texture2D>("death")
-                            };
-                            testCombat.EnemyMob.Add(testEnemy);
-                        }
+                        
 
-                        leftMouseDown = true;
                     }
                 }
             }
@@ -149,7 +132,9 @@ public class MainGame : Game
                 leftMouseDown = false;
             }
         }
+        */
 
+        /*
         fightTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
 
         if (testCombat.Ongoing && fightTimer > 2000)
@@ -161,6 +146,9 @@ public class MainGame : Game
             testCombat.EndRound();
             fightTimer = 0;
         }
+        */
+
+        mainMenu.Update(_graphics, gameTime);
 
         base.Update(gameTime);
     }
@@ -171,6 +159,9 @@ public class MainGame : Game
 
         _spriteBatch.Begin();
 
+        mainMenu.Draw(_spriteBatch, gameTime);
+
+        /*
         testParty.Draw(_spriteBatch, gameTime);
         testMob.Draw(_spriteBatch, gameTime);
 
@@ -178,6 +169,7 @@ public class MainGame : Game
         {
             button.Draw(_spriteBatch, gameTime);
         }
+        */
 
         _spriteBatch.End();
 
