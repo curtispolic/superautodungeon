@@ -21,6 +21,7 @@ public class MainGame : Game
     public Combat combat;
     public GameplayUI gameplayUI;
     public Party playerParty;
+    public NameGenerator nameGenerator;
     public GraphicsDeviceManager graphics;
     private SpriteBatch _spriteBatch;
     private double fightTimer;
@@ -40,8 +41,6 @@ public class MainGame : Game
         graphics.PreferredBackBufferHeight = 900;
         graphics.ApplyChanges();
 
-        Random random = new();
-
         // Set the main menu and make it visible
         mainMenu = new(this);
         MainMenuVisible = true;
@@ -50,6 +49,9 @@ public class MainGame : Game
         GameplayUIVisible = false;
 
         fightTimer = 0;
+
+        // Create the name generator
+        nameGenerator = new();
 
         base.Initialize();
     }

@@ -8,10 +8,17 @@ public class GameplayUI
 {
     public MainGame GameParent;
     public Party PlayerParty;
+    private SpriteFont Font;
     public GameplayUI(MainGame inputParent, Party inputParty)
     {
         GameParent = inputParent;
         PlayerParty = inputParty;
+        LoadContent();
+    }
+
+    public void LoadContent()
+    {
+        Font = GameParent.Content.Load<SpriteFont>("statsFont");
     }
 
     public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
@@ -34,10 +41,25 @@ public class GameplayUI
         spriteBatch.Draw(_texture, new Rectangle(1280, 0, 320, 900), Color.White);
         spriteBatch.Draw(_texture2, new Rectangle(1285, 5, 310, 890), Color.White);
 
+        // TODO: Draw text explaining what is meant to be in each panel
+
+        // Draw the player's party on the side panel
         for (int i = 0; i < PlayerParty.HeroList.Count; i++)
         {
+            // Draw the hero
             Hero tempHero = PlayerParty.HeroList[i];
-            tempHero.Draw(spriteBatch, gameTime, new Vector2(1285, 5 + i * 200));
+            Vector2 tempPos = new(1285, 25 + i * 230);
+            tempHero.Draw(spriteBatch, gameTime, tempPos);
+
+            // Draw the name
+            spriteBatch.DrawString(Font, tempHero.Name, tempPos + new Vector2(11, -16), Color.Black);
+            spriteBatch.DrawString(Font, tempHero.Name, tempPos + new Vector2(9, -14), Color.Black);
+            spriteBatch.DrawString(Font, tempHero.Name, tempPos + new Vector2(9, -16), Color.Black);
+            spriteBatch.DrawString(Font, tempHero.Name, tempPos + new Vector2(11, -14), Color.Black);
+            spriteBatch.DrawString(Font, tempHero.Name, tempPos + new Vector2(10, -15), Color.White);
+
+            if (tempHero.Dead)
+                spriteBatch.Draw(tempHero.DeathTexture, tempPos + new Vector2(32, 32), null, Color.White, 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
         }
     }
 }

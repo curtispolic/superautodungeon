@@ -13,6 +13,7 @@ public class Character
     public bool Dead, Dying;
     public int HP, Attack;
     public double DeathTimer;
+    public string Name, Description;
     // TODO Weapon
     // TODO Armour
     // TODO Trinket

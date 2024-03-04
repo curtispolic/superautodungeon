@@ -125,7 +125,7 @@ public class MainMenu
         // Populate the party
         for (int i = 0; i < 4; i++)
         {
-        Hero newHero = new(GameParent)
+        Knight newHero = new(GameParent)
         {
             HP = 40,
             Attack = 8
