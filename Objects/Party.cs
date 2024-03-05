@@ -30,9 +30,14 @@ public class Party
 
     public void Reposition()
     {
-        for (int i = 0; i<HeroList.Count; i++)
+        int count = 0;
+        foreach (var hero in HeroList)
         {
-            HeroList[i].Position = Position - new Vector2(i*128, 0);
+            if (!hero.Dead)
+            {
+                hero.Position = Position - new Vector2(count*128, 0);
+                count++;
+            }
         }
     }
 

@@ -6,6 +6,7 @@ using superautodungeon.Objects.Enemies;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Security.Cryptography.X509Certificates;
 
 public class Combat
 {
@@ -22,17 +23,14 @@ public class Combat
         Ongoing = true;
     }
 
+    public void Update()
+    {
+        
+    }
+
     public void BeginRound()
     {
-        // Move forward characters in the list
-        List<Hero> tempList = new();
-        foreach (var hero in PlayerParty.HeroList)
-        {
-            if (!hero.Dead)
-                tempList.Add(hero);
-        }
-        PlayerParty.HeroList = tempList;
-
+        // Move forward enemies in the list
         List<Enemy> tempList2 = new();
         foreach (var enemy in EnemyMob.EnemyList)
         {
@@ -47,7 +45,15 @@ public class Combat
 
     public void MeleeHit()
     {
-        Hero frontHero = PlayerParty.HeroList[0];
+        Hero frontHero = new(GameParent);
+        foreach (Hero hero in PlayerParty.HeroList)
+        {
+            if (!hero.Dead)
+            {
+                frontHero = hero;
+                break;
+            }
+        }
         Enemy frontEnemy = EnemyMob.EnemyList[0];
         frontHero.HP -= frontEnemy.Attack;
         frontEnemy.HP -= frontHero.Attack;
