@@ -16,9 +16,11 @@ namespace superautodungeon;
 
 public class MainGame : Game
 {
-    public bool MainMenuVisible, CombatVisible, GameplayUIVisible;
+    public bool MainMenuVisible, CombatVisible, GameplayUIVisible, ShopVisible;
+    public int ShopTier;
     public MainMenu mainMenu;
     public Combat combat;
+    public Shop shop;
     public GameplayUI gameplayUI;
     public Party playerParty;
     public NameGenerator nameGenerator;
@@ -48,10 +50,15 @@ public class MainGame : Game
         CombatVisible = false;
         GameplayUIVisible = false;
 
+        playerParty = new(new Vector2(0,0));
+
         fightTimer = 0;
 
         // Create the name generator
         nameGenerator = new();
+
+        // Set the shop tier
+        ShopTier = 1;
 
         base.Initialize();
     }
@@ -99,6 +106,9 @@ public class MainGame : Game
 
         if (GameplayUIVisible)
             gameplayUI.Draw(_spriteBatch, gameTime);
+
+        if (ShopVisible)
+            shop.Draw(_spriteBatch, gameTime);
 
         _spriteBatch.End();
 

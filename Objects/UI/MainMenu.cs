@@ -115,6 +115,11 @@ public class MainMenu
 
     public void OnClickNewGame()
     {
+        GameParent.shop = new(GameParent, GameParent.ShopTier);
+        GameParent.ShopVisible = true;
+
+        // Below is the code for creating a test combat
+        /*
         Party testParty;
         Mob testMob;
 
@@ -138,7 +143,7 @@ public class MainMenu
         // Populate the mob
         for (int i = 0; i < 4; i++)
         {
-            Enemy newEnemy = new(GameParent);
+            Skeleton newEnemy = new(GameParent);
             testMob.Add(newEnemy);
         }
 
@@ -146,6 +151,7 @@ public class MainMenu
 
         GameParent.combat = new(GameParent, testParty, testMob);
         GameParent.CombatVisible = true;
+        */
 
         GameParent.gameplayUI = new(GameParent, GameParent.playerParty);
         GameParent.GameplayUIVisible = true;
