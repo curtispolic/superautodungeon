@@ -71,7 +71,6 @@ public class MainGame : Game
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
-        
     }
 
     protected override void Update(GameTime gameTime)

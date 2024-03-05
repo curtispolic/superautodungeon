@@ -35,61 +35,24 @@ public class MainMenu
 
     public void Update(GraphicsDeviceManager graphics, GameTime gameTime)
     {
-        var MouseState = Mouse.GetState();
+        var mouseState = Mouse.GetState();
 
-        // Handle instances where the mouse is inside the game window
-        if (0 <= MouseState.X && MouseState.X <= graphics.PreferredBackBufferWidth && 0 <= MouseState.Y && MouseState.Y <= graphics.PreferredBackBufferHeight)
-        {
-            // Left mouse down handling
-            if (MouseState.LeftButton == ButtonState.Pressed && !leftMouseDown)
-            {
-                // Stored to determine dragging vs. clicking
-                leftMouseDownTime = gameTime.TotalGameTime.TotalMilliseconds;
-                leftMouseDown = true;
+        if (NewGameButton.Update(mouseState, graphics, gameTime))
+            OnClickNewGame();
 
-                // Clicking inside NewGameButton
-                if (MouseState.X > NewGameButton.Position.X && MouseState.X < NewGameButton.Position.X + NewGameButton.Texture.Width &&
-                MouseState.Y > NewGameButton.Position.Y && MouseState.Y < NewGameButton.Position.Y + NewGameButton.Texture.Height)
-                {                    
-                    OnClickNewGame();
-                }
+        if (LoadGameButton.Update(mouseState, graphics, gameTime))
+            OnClickLoadGame();
 
-                // Clicking inside LoadGameButton
-                if (MouseState.X > LoadGameButton.Position.X && MouseState.X < LoadGameButton.Position.X + LoadGameButton.Texture.Width &&
-                MouseState.Y > LoadGameButton.Position.Y && MouseState.Y < LoadGameButton.Position.Y + LoadGameButton.Texture.Height)
-                {                    
-                    OnClickLoadGame();
-                }
+        if (SettingsButton.Update(mouseState, graphics, gameTime))
+            OnClickSettings();
 
-                // Clicking inside NewGameButton
-                if (MouseState.X > SettingsButton.Position.X && MouseState.X < SettingsButton.Position.X + SettingsButton.Texture.Width &&
-                MouseState.Y > SettingsButton.Position.Y && MouseState.Y < SettingsButton.Position.Y + SettingsButton.Texture.Height)
-                {                    
-                    OnClickSettings();
-                }
-
-                // Clicking inside NewGameButton
-                if (MouseState.X > ExitButton.Position.X && MouseState.X < ExitButton.Position.X + ExitButton.Texture.Width &&
-                MouseState.Y > ExitButton.Position.Y && MouseState.Y < ExitButton.Position.Y + ExitButton.Texture.Height)
-                {                    
-                    OnClickExit();
-                }
-
-            }
-            else if (MouseState.LeftButton == ButtonState.Released &&  leftMouseDown)
-            {
-                leftMouseDown = false;
-            }
-        }
+        if (ExitButton.Update(mouseState, graphics, gameTime))
+            OnClickExit();
     }
 
     public void LoadContent()
     {
         TitleTexture = GameParent.Content.Load<Texture2D>("title");
-        NewGameButton.LoadContent();
-        LoadGameButton.LoadContent();
-        SettingsButton.LoadContent();
-        ExitButton.LoadContent();
     }
 
     public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
