@@ -123,14 +123,16 @@ public class MainMenu
         testMob = new(new Vector2(300, 100));
 
         // Populate the party
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 2; i++)
         {
-        Knight newHero = new(GameParent)
+            Knight newHero = new(GameParent);
+            testParty.Add(newHero);
+        }
+
+        for (int i = 0; i < 2; i++)
         {
-            HP = 40,
-            Attack = 8
-        };
-        testParty.Add(newHero);
+            Wizard newHero = new(GameParent);
+            testParty.Add(newHero);
         }
 
         // Populate the mob
