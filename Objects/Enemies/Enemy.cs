@@ -14,7 +14,8 @@ public class Enemy : Character
     {
         Random random = new();
         Attack = random.Next(1, 4);
-        HP = random.Next(5, 15);
+        MaxHP = random.Next(5, 15);
+        CurrentHP = MaxHP;
         LoadContent();
     }
 

@@ -12,7 +12,8 @@ public class Knight : Hero
         Description = "A sturdy, shield bearing Knight. It will be difficult for enemies to get past his plate armour.";
         Class = "Knight";
         Name = Gender == "Male" ? GameParent.nameGenerator.CreateMaleName() : GameParent.nameGenerator.CreateFemaleName();
-        HP = 12;
+        MaxHP = 12;
+        CurrentHP = 12;
         Attack = 2;
         LoadContent();
     }

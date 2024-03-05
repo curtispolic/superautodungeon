@@ -6,7 +6,6 @@ using superautodungeon.Objects.Enemies;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Security.Cryptography.X509Certificates;
 
 public class Combat
 {
@@ -25,7 +24,7 @@ public class Combat
 
     public void Update()
     {
-        
+
     }
 
     public void BeginRound()
@@ -55,8 +54,8 @@ public class Combat
             }
         }
         Enemy frontEnemy = EnemyMob.EnemyList[0];
-        frontHero.HP -= frontEnemy.Attack;
-        frontEnemy.HP -= frontHero.Attack;
+        frontHero.CurrentHP -= frontEnemy.Attack;
+        frontEnemy.CurrentHP -= frontHero.Attack;
 
         // Handle the animation
     }
@@ -74,14 +73,14 @@ public class Combat
             wasDeath = false;
             foreach (var hero in PlayerParty.HeroList)
             {
-                if (hero.HP <= 0)
+                if (hero.CurrentHP <= 0)
                 {
                     wasDeath = hero.Die();
                 }
             }
             foreach (var enemy in EnemyMob.EnemyList)
             {
-                if (enemy.HP <= 0)
+                if (enemy.CurrentHP <= 0)
                 {
                     wasDeath = enemy.Die();
                 }

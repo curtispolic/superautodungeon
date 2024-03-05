@@ -11,7 +11,7 @@ public class Character
     public Texture2D Texture, HPTexture, AttackTexture, ShadowTexture, DeathTexture;
     public SpriteFont StatsFont;
     public bool Dead, Dying;
-    public int HP, Attack;
+    public int MaxHP, CurrentHP, Attack;
     public double DeathTimer;
     public string Name, Description;
     // TODO Weapon
@@ -61,12 +61,12 @@ public class Character
 
             // Drawing HP text
             // Draws 4 offset versions for the black outline, then a white version on top
-            spriteBatch.DrawString(this.StatsFont, this.HP.ToString(), this.Position + new Vector2(31,131), Color.Black);
-            spriteBatch.DrawString(this.StatsFont, this.HP.ToString(), this.Position + new Vector2(29,129), Color.Black);
-            spriteBatch.DrawString(this.StatsFont, this.HP.ToString(), this.Position + new Vector2(31,129), Color.Black);
-            spriteBatch.DrawString(this.StatsFont, this.HP.ToString(), this.Position + new Vector2(29,131), Color.Black);
+            spriteBatch.DrawString(this.StatsFont, this.CurrentHP.ToString(), this.Position + new Vector2(31,131), Color.Black);
+            spriteBatch.DrawString(this.StatsFont, this.CurrentHP.ToString(), this.Position + new Vector2(29,129), Color.Black);
+            spriteBatch.DrawString(this.StatsFont, this.CurrentHP.ToString(), this.Position + new Vector2(31,129), Color.Black);
+            spriteBatch.DrawString(this.StatsFont, this.CurrentHP.ToString(), this.Position + new Vector2(29,131), Color.Black);
 
-            spriteBatch.DrawString(this.StatsFont, this.HP.ToString(), this.Position + new Vector2(30,130), Color.White);
+            spriteBatch.DrawString(this.StatsFont, this.CurrentHP.ToString(), this.Position + new Vector2(30,130), Color.White);
 
             // Attack text
             spriteBatch.DrawString(this.StatsFont, this.Attack.ToString(), this.Position + new Vector2(83,129), Color.Black);
@@ -103,12 +103,12 @@ public class Character
 
         // Drawing HP text
         // Draws 4 offset versions for the black outline, then a white version on top
-        spriteBatch.DrawString(this.StatsFont, this.HP.ToString(), position + new Vector2(31,131), Color.Black);
-        spriteBatch.DrawString(this.StatsFont, this.HP.ToString(), position + new Vector2(29,129), Color.Black);
-        spriteBatch.DrawString(this.StatsFont, this.HP.ToString(), position + new Vector2(31,129), Color.Black);
-        spriteBatch.DrawString(this.StatsFont, this.HP.ToString(), position + new Vector2(29,131), Color.Black);
+        spriteBatch.DrawString(this.StatsFont, this.CurrentHP.ToString(), position + new Vector2(31,131), Color.Black);
+        spriteBatch.DrawString(this.StatsFont, this.CurrentHP.ToString(), position + new Vector2(29,129), Color.Black);
+        spriteBatch.DrawString(this.StatsFont, this.CurrentHP.ToString(), position + new Vector2(31,129), Color.Black);
+        spriteBatch.DrawString(this.StatsFont, this.CurrentHP.ToString(), position + new Vector2(29,131), Color.Black);
 
-        spriteBatch.DrawString(this.StatsFont, this.HP.ToString(), position + new Vector2(30,130), Color.White);
+        spriteBatch.DrawString(this.StatsFont, this.CurrentHP.ToString(), position + new Vector2(30,130), Color.White);
 
         // Attack text
         spriteBatch.DrawString(this.StatsFont, this.Attack.ToString(), position + new Vector2(83,129), Color.Black);

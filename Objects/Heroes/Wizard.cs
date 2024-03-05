@@ -12,7 +12,8 @@ public class Wizard : Hero
         Description = "A wise old wizard. Foes will tremble before his magical prowess.";
         Class = "Wizard";
         Name = Gender == "Male" ? GameParent.nameGenerator.CreateMaleName() : GameParent.nameGenerator.CreateFemaleName();
-        HP = 6;
+        MaxHP = 6;
+        CurrentHP = 6;
         Attack = 1;
         LoadContent();
     }
