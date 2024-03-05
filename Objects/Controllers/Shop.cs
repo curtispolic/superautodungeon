@@ -13,6 +13,13 @@ public class Shop
     public List<Hero> BuyableHeroes;
     public Button RerollButton, UpgradeShopButton, ExitButton;
     public int ShopTier, RerollCost, UpgradeCost;
+    public bool Active;
+
+    public Shop()
+    {
+        Active = false;
+    }
+
     public Shop(MainGame inputParent, int inputTier)
     {
         GameParent = inputParent;
@@ -24,6 +31,12 @@ public class Shop
         ExitButton = new Button(GameParent, "Exit Shop", new Vector2(50, 350));
         LoadContent();
         ReRoll();
+        Active = true;
+    }
+
+    public void Update(GameTime gameTime)
+    {
+
     }
 
     public void BuyHero(Hero inputHero, int inputIndex)

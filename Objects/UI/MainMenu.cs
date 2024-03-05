@@ -13,8 +13,13 @@ public class MainMenu
     public Button NewGameButton, LoadGameButton, SettingsButton, ExitButton;
     public Texture2D TitleTexture, BackgroundTexture;
     public MainGame GameParent;
-    public bool leftMouseDown;
+    public bool leftMouseDown, Active;
     public double leftMouseDownTime;
+
+    public MainMenu()
+    {
+        Active = false;
+    }
 
     public MainMenu(MainGame inputParent)
     {
@@ -25,6 +30,7 @@ public class MainMenu
         ExitButton = new Button(GameParent, "Exit", new Vector2(50, 400));
         leftMouseDown = false;
         LoadContent();
+        Active = true;
     }
 
     public void Update(GraphicsDeviceManager graphics, GameTime gameTime)
@@ -116,7 +122,6 @@ public class MainMenu
     public void OnClickNewGame()
     {
         GameParent.shop = new(GameParent, GameParent.ShopTier);
-        GameParent.ShopVisible = true;
 
         // Below is the code for creating a test combat
         /*
@@ -154,8 +159,7 @@ public class MainMenu
         */
 
         GameParent.gameplayUI = new(GameParent, GameParent.playerParty);
-        GameParent.GameplayUIVisible = true;
 
-        GameParent.MainMenuVisible = false;
+        Active = false;
     }
 }

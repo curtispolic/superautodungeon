@@ -12,7 +12,12 @@ public class Combat
     public MainGame GameParent;
     public Party PlayerParty;
     public Mob EnemyMob;
-    public bool Ongoing;
+    public bool Ongoing, Active;
+
+    public Combat()
+    {
+        Active = false;
+    }
 
     public Combat(MainGame inputParent, Party inputParty, Mob inputMob)
     {
@@ -20,6 +25,7 @@ public class Combat
         PlayerParty = inputParty;
         EnemyMob = inputMob;
         Ongoing = true;
+        Active = true;
     }
 
     public void Update()
@@ -105,7 +111,7 @@ public class Combat
         if (enemyCheck == EnemyMob.EnemyList.Count || heroCheck == PlayerParty.HeroList.Count)
         {
             Ongoing = false;
-            GameParent.CombatVisible = false;
+            Active = false;
         }
     }
 

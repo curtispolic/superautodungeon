@@ -11,12 +11,12 @@ using superautodungeon.Objects.UI;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Xml.Linq;
 
 namespace superautodungeon;
 
 public class MainGame : Game
 {
-    public bool MainMenuVisible, CombatVisible, GameplayUIVisible, ShopVisible;
     public int ShopTier;
     public MainMenu mainMenu;
     public Combat combat;
@@ -43,12 +43,17 @@ public class MainGame : Game
         graphics.PreferredBackBufferHeight = 900;
         graphics.ApplyChanges();
 
-        // Set the main menu and make it visible
+        // Set the main menu
         mainMenu = new(this);
-        MainMenuVisible = true;
 
-        CombatVisible = false;
-        GameplayUIVisible = false;
+        /*
+        Create default shells of each other game element
+        These shells simply set .Active to false so they will not attempt to render
+        When created for real, .Active will be true, so they will render and update
+        */
+        shop = new();
+        gameplayUI = new();
+        combat = new();
 
         playerParty = new(new Vector2(0,0));
 
@@ -73,7 +78,7 @@ public class MainGame : Game
     {
         fightTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
 
-        if (CombatVisible)
+        if (combat.Active)
         {
             if (combat.Ongoing && fightTimer > 2000)
             {
@@ -86,8 +91,11 @@ public class MainGame : Game
             }
         }
 
-        if (MainMenuVisible)
+        if (mainMenu.Active)
             mainMenu.Update(graphics, gameTime);
+
+        if (shop.Active)
+            shop.Update(gameTime);
 
         base.Update(gameTime);
     }
@@ -98,16 +106,16 @@ public class MainGame : Game
         GraphicsDevice.Clear(Color.Black);
         _spriteBatch.Begin();
 
-        if (MainMenuVisible)
+        if (mainMenu.Active)
             mainMenu.Draw(_spriteBatch, gameTime);
             
-        if (CombatVisible)
+        if (combat.Active)
             combat.Draw(_spriteBatch, gameTime);
 
-        if (GameplayUIVisible)
+        if (gameplayUI.Active)
             gameplayUI.Draw(_spriteBatch, gameTime);
 
-        if (ShopVisible)
+        if (shop.Active)
             shop.Draw(_spriteBatch, gameTime);
 
         _spriteBatch.End();

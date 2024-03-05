@@ -9,11 +9,19 @@ public class GameplayUI
     public MainGame GameParent;
     public Party PlayerParty;
     private SpriteFont Font;
+    public bool Active;
+
+    public GameplayUI()
+    {
+        Active = false;
+    }
+
     public GameplayUI(MainGame inputParent, Party inputParty)
     {
         GameParent = inputParent;
         PlayerParty = inputParty;
         LoadContent();
+        Active = true;
     }
 
     public void LoadContent()
