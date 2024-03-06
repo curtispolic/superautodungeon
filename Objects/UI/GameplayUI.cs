@@ -57,17 +57,24 @@ public class GameplayUI
             // Draw the hero
             Hero tempHero = PlayerParty.HeroList[i];
             Vector2 tempPos = new(1285, 25 + i * 230);
-            tempHero.Draw(spriteBatch, gameTime, tempPos);
+            if (tempHero.Active)
+            {
+                tempHero.Draw(spriteBatch, gameTime, tempPos);
 
-            // Draw the name
-            spriteBatch.DrawString(Font, tempHero.Name, tempPos + new Vector2(11, -16), Color.Black);
-            spriteBatch.DrawString(Font, tempHero.Name, tempPos + new Vector2(9, -14), Color.Black);
-            spriteBatch.DrawString(Font, tempHero.Name, tempPos + new Vector2(9, -16), Color.Black);
-            spriteBatch.DrawString(Font, tempHero.Name, tempPos + new Vector2(11, -14), Color.Black);
-            spriteBatch.DrawString(Font, tempHero.Name, tempPos + new Vector2(10, -15), Color.White);
+                // Draw the name
+                spriteBatch.DrawString(Font, tempHero.Name, tempPos + new Vector2(11, -16), Color.Black);
+                spriteBatch.DrawString(Font, tempHero.Name, tempPos + new Vector2(9, -14), Color.Black);
+                spriteBatch.DrawString(Font, tempHero.Name, tempPos + new Vector2(9, -16), Color.Black);
+                spriteBatch.DrawString(Font, tempHero.Name, tempPos + new Vector2(11, -14), Color.Black);
+                spriteBatch.DrawString(Font, tempHero.Name, tempPos + new Vector2(10, -15), Color.White);
 
-            if (tempHero.Dead)
-                spriteBatch.Draw(tempHero.DeathTexture, tempPos + new Vector2(32, 32), null, Color.White, 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
+                if (tempHero.Dead)
+                    spriteBatch.Draw(tempHero.DeathTexture, tempPos + new Vector2(32, 32), null, Color.White, 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
+            }
+            else
+            {
+                tempHero.DrawShadowOnly(spriteBatch, gameTime, tempPos);
+            }
         }
     }
 }

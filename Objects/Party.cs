@@ -10,16 +10,24 @@ public class Party
 {
     public List<Hero> HeroList;
     public Vector2 Position;
+    public MainGame GameParent;
 
-    public Party(Vector2 inputPosition)
+    public Party(MainGame inputParent, Vector2 inputPosition)
     {
-        HeroList = new();
+        GameParent = inputParent;
+        HeroList = new()
+        {
+            new(GameParent, false),
+            new(GameParent, false),
+            new(GameParent, false),
+            new(GameParent, false)
+        };
         Position = inputPosition;
     }
 
-    public bool Add(Hero inputHero)
+    public bool Add(Hero inputHero, int inputIndex)
     {
-        if (HeroList.Count < 4)
+        if (HeroList[inputIndex].Active)
         {
             HeroList.Add(inputHero);
             Reposition();

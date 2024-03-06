@@ -50,7 +50,7 @@ public class Combat
 
     public void MeleeHit()
     {
-        Hero frontHero = new(GameParent);
+        Hero frontHero = new(GameParent, false);
         foreach (Hero hero in PlayerParty.HeroList)
         {
             if (!hero.Dead)

@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 public class Wizard : Hero
 {
-    public Wizard(MainGame inputParent): base(inputParent)
+    public Wizard(MainGame inputParent): base(inputParent, true)
     {
         Random random  = new();
         Gender = random.Next(2) == 1 ? "Male" : "Female";

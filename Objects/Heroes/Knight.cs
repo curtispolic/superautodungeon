@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 public class Knight : Hero
 {
-    public Knight(MainGame inputParent): base(inputParent)
+    public Knight(MainGame inputParent): base(inputParent, true)
     {
         Random random  = new();
         Gender = random.Next(2) == 1 ? "Male" : "Female";
@@ -21,10 +21,6 @@ public class Knight : Hero
     public override void LoadContent()
     {
         Texture = GameParent.Content.Load<Texture2D>("knight");
-        HPTexture = GameParent.Content.Load<Texture2D>("heart");
-        AttackTexture = GameParent.Content.Load<Texture2D>("attack");
-        StatsFont = GameParent.Content.Load<SpriteFont>("statsFont");
-        ShadowTexture = GameParent.Content.Load<Texture2D>("shadow50");
-        DeathTexture = GameParent.Content.Load<Texture2D>("death");
+        base.LoadContent();
     }
 }

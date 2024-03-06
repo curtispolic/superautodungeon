@@ -18,11 +18,17 @@ public class Character
     // TODO Armour
     // TODO Trinket
 
+    public Character()
+    {
+
+    }
+
     public Character(MainGame inputParent)
     {
         GameParent = inputParent;
         Dead = false;
         Dying = false;
+        LoadContent();
     }
 
     public bool Die()
@@ -40,7 +46,11 @@ public class Character
 
     public virtual void LoadContent()
     {
-        Console.WriteLine("Non-override call of LoadContent for class Character");
+        HPTexture = GameParent.Content.Load<Texture2D>("heart");
+        AttackTexture = GameParent.Content.Load<Texture2D>("attack");
+        StatsFont = GameParent.Content.Load<SpriteFont>("statsFont");
+        ShadowTexture = GameParent.Content.Load<Texture2D>("shadow50");
+        DeathTexture = GameParent.Content.Load<Texture2D>("death");
     }
 
     public virtual void Draw(SpriteBatch spriteBatch, GameTime gameTime)

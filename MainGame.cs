@@ -47,7 +47,7 @@ public class MainGame : Game
         gameplayUI = new();
         combat = new();
 
-        playerParty = new(new Vector2(0,0));
+        playerParty = new(this, new Vector2(0,0));
 
         fightTimer = 0;
 
