@@ -7,7 +7,6 @@ public class Skeleton : Enemy
 {
     public Skeleton(MainGame inputParent): base(inputParent)
     {
-        Random random  = new();
         Description = "Quite spooky and/or scary.";
         Name = "Skeleton";
         MaxHP = 5;

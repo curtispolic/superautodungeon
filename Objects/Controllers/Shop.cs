@@ -14,6 +14,7 @@ public class Shop
     public MainGame GameParent;
     public List<Hero> BuyableHeroes;
     public Button RerollButton, UpgradeShopButton, ExitButton;
+    public Vector2 PickupOffset;
     public int ShopTier, RerollCost, UpgradeCost, PickedUp;
     public bool Active;
 
@@ -64,7 +65,10 @@ public class Shop
         {
             if (PickedUp == -1)
                 if (BuyableHeroes[i].Update(mouseState, graphics, gameTime))
+                {
                     PickedUp = i;
+                    PickupOffset = BuyableHeroes[i].Position - mouseState.Position.ToVector2();
+                }
         }
 
 
@@ -144,6 +148,9 @@ public class Shop
     public void ExitShop()
     {
         Active = false;
+
+        // Just for testing beta release
+        GameParent.combat = new(GameParent, GameParent.playerParty, new Mob(GameParent, new Vector2(400, 200)));
     }
 
     public void LoadContent()

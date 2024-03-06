@@ -36,16 +36,13 @@ public class Combat
     public void BeginRound()
     {
         // Move forward enemies in the list
-        List<Enemy> tempList2 = new();
+        List<Enemy> tempList = new();
         foreach (var enemy in EnemyMob.EnemyList)
         {
             if (!enemy.Dead)
-                tempList2.Add(enemy);
+                tempList.Add(enemy);
         }
-        EnemyMob.EnemyList = tempList2;
-
-        PlayerParty.Reposition();
-        EnemyMob.Reposition();
+        EnemyMob.EnemyList = tempList;
     }
 
     public void MeleeHit()

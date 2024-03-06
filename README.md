@@ -22,4 +22,7 @@ Notes:
 
 Position is a bad thinking variable for everything, since it is all going to be drawn in multiple places. Refactor to get rid of 
 position as an attribute for objects. EDIT: Okay not everything, buttons rely on it for their handling now but stuff like combats 
-do not need a position. EDIT2: Okay I think heroes will also require a position for drag handling but itll be okay.
+do not need a position. EDIT2: Okay I think heroes will also require a position for drag handling but itll be okay. EDIT3: somewhat through
+removing position
+
+Use the layer float parameter of draw rather that insisting its all done in order

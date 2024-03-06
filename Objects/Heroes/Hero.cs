@@ -91,9 +91,39 @@ public class Hero : Character
         {
             var mouseState = Mouse.GetState();
             Vector2 mousePos = mouseState.Position.ToVector2();
-            base.Draw(spriteBatch, gameTime, mousePos, false);
             DrawShadowOnly(spriteBatch, gameTime, Position);
+            MouseDraw(spriteBatch, gameTime, mousePos + GameParent.shop.PickupOffset);
         }
+    }
+
+    public virtual void MouseDraw(SpriteBatch spriteBatch, GameTime gameTime, Vector2 position)
+    {
+        // For drawing under the mouse when picked up
+        // Drawing Self
+        spriteBatch.Draw(this.Texture, position, null, Color.White, 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
+
+        // Drawing HP icon
+        spriteBatch.Draw(this.HPTexture, position + new Vector2(24, 128), null, Color.White, 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
+
+        // Drawing attack
+        spriteBatch.Draw(this.AttackTexture, position + new Vector2(72, 128), null, Color.White, 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
+
+        // Drawing HP text
+        // Draws 4 offset versions for the black outline, then a white version on top
+        spriteBatch.DrawString(this.StatsFont, this.CurrentHP.ToString(), position + new Vector2(31,131), Color.Black);
+        spriteBatch.DrawString(this.StatsFont, this.CurrentHP.ToString(), position + new Vector2(29,129), Color.Black);
+        spriteBatch.DrawString(this.StatsFont, this.CurrentHP.ToString(), position + new Vector2(31,129), Color.Black);
+        spriteBatch.DrawString(this.StatsFont, this.CurrentHP.ToString(), position + new Vector2(29,131), Color.Black);
+
+        spriteBatch.DrawString(this.StatsFont, this.CurrentHP.ToString(), position + new Vector2(30,130), Color.White);
+
+        // Attack text
+        spriteBatch.DrawString(this.StatsFont, this.Attack.ToString(), position + new Vector2(83,129), Color.Black);
+        spriteBatch.DrawString(this.StatsFont, this.Attack.ToString(), position + new Vector2(85,131), Color.Black);
+        spriteBatch.DrawString(this.StatsFont, this.Attack.ToString(), position + new Vector2(85,129), Color.Black);
+        spriteBatch.DrawString(this.StatsFont, this.Attack.ToString(), position + new Vector2(83,131), Color.Black);
+
+        spriteBatch.DrawString(this.StatsFont, this.Attack.ToString(), position + new Vector2(84,130), Color.White);
     }
 
     public virtual void DrawShadowOnly(SpriteBatch spriteBatch, GameTime gameTime, Vector2 position)

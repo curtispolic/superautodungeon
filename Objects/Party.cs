@@ -27,30 +27,22 @@ public class Party
         if (!HeroList[inputIndex].Active)
         {
             HeroList[inputIndex] = inputHero;
-            Reposition();
+            HeroList[inputIndex].Position =  new Vector2(1285, 25 + inputIndex * 230);
             return true;
         }
         return false;
     }
 
-    public void Reposition()
-    {
-        int count = 0;
-        foreach (var hero in HeroList)
-        {
-            if (!hero.Dead)
-            {
-                hero.Position =  new Vector2(1285, 25 + count * 230);
-                count++;
-            }
-        }
-    }
-
     public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
     {
-        foreach (var hero in HeroList)
+        // This method is only used to draw in combat
+        for (int i = 0; i < 4; i++)
         {
-            hero.Draw(spriteBatch, gameTime);
+            var hero = HeroList[i];
+            if (hero.Active)
+                hero.CombatDraw(spriteBatch, gameTime, new Vector2(400 - 100 * i, 200));
+            else
+                hero.DrawShadowOnly(spriteBatch, gameTime, new Vector2(400 - 100 * i, 200));
         }
     }
 }

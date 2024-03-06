@@ -9,11 +9,19 @@ using superautodungeon.Objects.Enemies;
 public class Mob
 {
     public List<Enemy> EnemyList;
+    public MainGame GameParent;
     public Vector2 Position;
 
-    public Mob(Vector2 inputPosition)
+    public Mob(MainGame inputParent, Vector2 inputPosition)
     {
-        EnemyList = new();
+        GameParent = inputParent;
+        EnemyList = new()
+        {
+            new Skeleton(GameParent),
+            new Skeleton(GameParent),
+            new Skeleton(GameParent),
+            new Skeleton(GameParent)
+        };
         Position = inputPosition;
     }
 
@@ -44,15 +52,17 @@ public class Mob
     {
         for (int i = 0; i<EnemyList.Count; i++)
         {
-            EnemyList[i].Position = Position + new Vector2(i*128, 0);
+            EnemyList[i].Position = Position + new Vector2(i*100, 0);
         }
     }
 
     public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
     {
-        foreach (var enemy in EnemyList)
+        // Only used for combat drawing
+        for (int i = 0; i < EnemyList.Count; i++)
         {
-            enemy.Draw(spriteBatch, gameTime);
+            var enemy = EnemyList[i];
+            enemy.CombatDraw(spriteBatch, gameTime, new Vector2(600 + 100 * i, 200));
         }
     }
 }
