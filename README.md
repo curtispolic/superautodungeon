@@ -8,9 +8,9 @@ Current features:
 - Main Menu with half of the buttons working
 - Base UI for gameplay
 - 2 hero classes with no features
+- Shop (this task was herculean)
 
 To Do in Rough Order:
-- Add shop
 - Add levels
 - Add map and map movement
 - Refine main menu graphics

@@ -9,27 +9,24 @@ using superautodungeon.Objects.Heroes;
 public class Party
 {
     public List<Hero> HeroList;
-    public Vector2 Position;
     public MainGame GameParent;
 
-    public Party(MainGame inputParent, Vector2 inputPosition)
+    public Party(MainGame inputParent)
     {
         GameParent = inputParent;
-        HeroList = new()
+        HeroList = new();
+        for (int i = 0; i < 4; i++)
         {
-            new(GameParent, false),
-            new(GameParent, false),
-            new(GameParent, false),
-            new(GameParent, false)
-        };
-        Position = inputPosition;
+            HeroList.Add(new(GameParent, false));
+            HeroList[i].Position = new(1285, 25 + i * 230);
+        }
     }
 
     public bool Add(Hero inputHero, int inputIndex)
     {
-        if (HeroList[inputIndex].Active)
+        if (!HeroList[inputIndex].Active)
         {
-            HeroList.Add(inputHero);
+            HeroList[inputIndex] = inputHero;
             Reposition();
             return true;
         }
@@ -43,7 +40,7 @@ public class Party
         {
             if (!hero.Dead)
             {
-                hero.Position = Position - new Vector2(count*128, 0);
+                hero.Position =  new Vector2(1285, 25 + count * 230);
                 count++;
             }
         }

@@ -14,7 +14,7 @@ public class Shop
     public MainGame GameParent;
     public List<Hero> BuyableHeroes;
     public Button RerollButton, UpgradeShopButton, ExitButton;
-    public int ShopTier, RerollCost, UpgradeCost;
+    public int ShopTier, RerollCost, UpgradeCost, PickedUp;
     public bool Active;
 
     public Shop()
@@ -48,20 +48,54 @@ public class Shop
 
         if(ExitButton.Update(mouseState, graphics, gameTime))
             ExitShop();
+        
+        // PickedUp prevents us from picking up multiple heroes
+        PickedUp = -1;
+        for (int i = 0; i < BuyableHeroes.Count; i++)
+        {
+            if (BuyableHeroes[i].PickedUp)
+            {
+                PickedUp = i;
+                break;
+            }
+        }
+
+        for (int i = 0; i < BuyableHeroes.Count; i++)
+        {
+            if (PickedUp == -1)
+                if (BuyableHeroes[i].Update(mouseState, graphics, gameTime))
+                    PickedUp = i;
+        }
+
+
     }
 
-    public void BuyHero(Hero inputHero, int inputIndex)
+    public void BuyHero(int boughtHeroIndex, int draggedOntoIndex)
     {
-        Hero draggedOnHero = GameParent.playerParty.HeroList[inputIndex];
+        Hero draggedOnHero = GameParent.playerParty.HeroList[draggedOntoIndex];
+        Hero inputHero = BuyableHeroes[boughtHeroIndex];
         if (inputHero.Class == draggedOnHero.Class)
         {
             // Level up hero in the party
         }
-        else if (draggedOnHero.Class == "None")
+        else if (!draggedOnHero.Active)
         {
             // Buy into that index
-            GameParent.playerParty.HeroList[inputIndex] = inputHero;
+            inputHero.Buyable = false;
+            inputHero.PickedUp = false;
+            GameParent.playerParty.Add(inputHero, draggedOntoIndex);
         }
+        else
+        {
+            // Cancel the buy
+            return;
+        }
+
+        // Replace bought hero with inactive
+        BuyableHeroes[boughtHeroIndex] = new Hero(GameParent, false)
+        {
+            Position = new Vector2(20 + boughtHeroIndex * 200, 20)
+        };
     }
 
     public void ReRoll()
@@ -90,6 +124,7 @@ public class Shop
         {
             // Will contian logic for rolling from valid shop tiers
             BuyableHeroes.Add(random.Next(2) == 1 ? new Knight(GameParent) : new Wizard(GameParent));
+            BuyableHeroes[i].Position = new Vector2(20 + i * 200, 20);
         }
     }
 
@@ -132,14 +167,29 @@ public class Shop
 
         spriteBatch.Draw(_texture2, new Rectangle(25, 25, 1230, 580), Color.White);
 
+        // Checking for picked up hero for special drawing order
+        Hero pickedUpHero = new(GameParent, false);
+        var pickedCheck = false;
         for (int i = 0; i < BuyableHeroes.Count; i++)
         {
             var hero = BuyableHeroes[i];
-            hero.Draw(spriteBatch, gameTime, new Vector2(20 + i * 200, 20));
+            if (hero.PickedUp)
+            {
+                pickedUpHero = hero;
+                pickedCheck = true;
+            }
+            else
+            {
+                hero.Draw(spriteBatch, gameTime);
+            }
         }
 
         RerollButton.Draw(spriteBatch, gameTime);
         UpgradeShopButton.Draw(spriteBatch, gameTime);
         ExitButton.Draw(spriteBatch, gameTime);
+
+        // Draw picked up hero last to show above all others
+        if (pickedCheck)
+            pickedUpHero.Draw(spriteBatch, gameTime);
     }
 }

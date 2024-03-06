@@ -1,6 +1,6 @@
 namespace superautodungeon.Objects;
 
-using System;
+using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -10,7 +10,7 @@ public class Character
     public Vector2 Position;
     public Texture2D Texture, HPTexture, AttackTexture, ShadowTexture, DeathTexture;
     public SpriteFont StatsFont;
-    public bool Dead, Dying;
+    public bool Dead, Dying, MouseOver, Active;
     public int MaxHP, CurrentHP, Attack;
     public double DeathTimer;
     public string Name, Description;
@@ -29,6 +29,34 @@ public class Character
         Dead = false;
         Dying = false;
         LoadContent();
+    }
+
+    public virtual bool Update(MouseState mouseState, GraphicsDeviceManager graphics, GameTime gameTime)
+    {
+        // This is just for handling mouseover status, say for a mouseover panel to show character information
+        // Only handle active characters
+        if (Active)
+        {   
+            // Handle instances where the mouse is inside the game window
+            if (0 <= mouseState.X && mouseState.X <= graphics.PreferredBackBufferWidth && 0 <= mouseState.Y && mouseState.Y <= graphics.PreferredBackBufferHeight)
+            {
+                if (mouseState.LeftButton == ButtonState.Released)
+                {
+                    // Hovering inside self
+                    if (mouseState.X > Position.X && mouseState.X < Position.X + Texture.Width &&
+                    mouseState.Y > Position.Y && mouseState.Y < Position.Y + Texture.Height)
+                    {
+                        // Mouseover effect, return asap to not hit the false at the end
+                        MouseOver = true;
+                        return false;
+                    }
+                }
+            }
+        }
+
+        // Mouseover true is handled, so default to false
+        MouseOver = false;
+        return false;
     }
 
     public bool Die()
@@ -97,10 +125,11 @@ public class Character
         }
     }
 
-    public virtual void Draw(SpriteBatch spriteBatch, GameTime gameTime, Vector2 position)
+    public virtual void Draw(SpriteBatch spriteBatch, GameTime gameTime, Vector2 position, bool drawShadow)
     {
         // Drawing shadow
-        spriteBatch.Draw(this.ShadowTexture, position + new Vector2(16, 96), null, Color.White, 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
+        if (drawShadow)
+            spriteBatch.Draw(this.ShadowTexture, position + new Vector2(16, 96), null, Color.White, 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
 
         // Drawing Self
         spriteBatch.Draw(this.Texture, position, null, Color.White, 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);

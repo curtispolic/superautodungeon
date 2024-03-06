@@ -47,7 +47,7 @@ public class MainGame : Game
         gameplayUI = new();
         combat = new();
 
-        playerParty = new(this, new Vector2(0,0));
+        playerParty = new(this);
 
         fightTimer = 0;
 
@@ -87,6 +87,9 @@ public class MainGame : Game
 
         if (shop.Active)
             shop.Update(graphics, gameTime);
+
+        if (gameplayUI.Active)
+            gameplayUI.Update(graphics, gameTime);
 
         base.Update(gameTime);
     }

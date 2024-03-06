@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using superautodungeon.Objects.Heroes;
+using Microsoft.Xna.Framework.Input;
 
 namespace superautodungeon.Objects.UI;
 
@@ -29,6 +29,29 @@ public class GameplayUI
         Font = GameParent.Content.Load<SpriteFont>("statsFont");
     }
 
+    public int Update(GraphicsDeviceManager graphics, GameTime gameTime)
+    {
+        var mouseState = Mouse.GetState();
+
+        for (int i = 0; i < 4; i++)
+        {
+            if (PlayerParty.HeroList[i].Update(mouseState, graphics, gameTime))
+            {
+                // Handle clicks on the party
+                // This is specifically for shop buying
+                if (GameParent.shop.Active)
+                {
+                    if (GameParent.shop.PickedUp > 0)
+                    {
+                        GameParent.shop.BuyHero(GameParent.shop.PickedUp, i);
+                    }
+                }
+            }
+        }
+
+        return -1;
+    }
+
     public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
     {
         // Temp texture to draw the outline of the panel
@@ -52,28 +75,26 @@ public class GameplayUI
         // TODO: Draw text explaining what is meant to be in each panel
 
         // Draw the player's party on the side panel
-        for (int i = 0; i < PlayerParty.HeroList.Count; i++)
+        foreach (var hero in PlayerParty.HeroList)
         {
             // Draw the hero
-            Hero tempHero = PlayerParty.HeroList[i];
-            Vector2 tempPos = new(1285, 25 + i * 230);
-            if (tempHero.Active)
+            if (hero.Active)
             {
-                tempHero.Draw(spriteBatch, gameTime, tempPos);
+                hero.Draw(spriteBatch, gameTime);
 
                 // Draw the name
-                spriteBatch.DrawString(Font, tempHero.Name, tempPos + new Vector2(11, -16), Color.Black);
-                spriteBatch.DrawString(Font, tempHero.Name, tempPos + new Vector2(9, -14), Color.Black);
-                spriteBatch.DrawString(Font, tempHero.Name, tempPos + new Vector2(9, -16), Color.Black);
-                spriteBatch.DrawString(Font, tempHero.Name, tempPos + new Vector2(11, -14), Color.Black);
-                spriteBatch.DrawString(Font, tempHero.Name, tempPos + new Vector2(10, -15), Color.White);
+                spriteBatch.DrawString(Font, hero.Name, hero.Position + new Vector2(11, -16), Color.Black);
+                spriteBatch.DrawString(Font, hero.Name, hero.Position + new Vector2(9, -14), Color.Black);
+                spriteBatch.DrawString(Font, hero.Name, hero.Position + new Vector2(9, -16), Color.Black);
+                spriteBatch.DrawString(Font, hero.Name, hero.Position + new Vector2(11, -14), Color.Black);
+                spriteBatch.DrawString(Font, hero.Name, hero.Position + new Vector2(10, -15), Color.White);
 
-                if (tempHero.Dead)
-                    spriteBatch.Draw(tempHero.DeathTexture, tempPos + new Vector2(32, 32), null, Color.White, 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
+                if (hero.Dead)
+                    spriteBatch.Draw(hero.DeathTexture, hero.Position + new Vector2(32, 32), null, Color.White, 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
             }
             else
             {
-                tempHero.DrawShadowOnly(spriteBatch, gameTime, tempPos);
+                hero.DrawShadowOnly(spriteBatch, gameTime, hero.Position);
             }
         }
     }
