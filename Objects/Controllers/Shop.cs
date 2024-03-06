@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+
 using superautodungeon.Objects.Heroes;
 using superautodungeon.Objects.UI;
 
@@ -34,9 +36,18 @@ public class Shop
         Active = true;
     }
 
-    public void Update(GameTime gameTime)
+    public void Update(GraphicsDeviceManager graphics, GameTime gameTime)
     {
+        var mouseState = Mouse.GetState();
 
+        if(RerollButton.Update(mouseState, graphics, gameTime))
+            OnClickReRoll();
+        
+        if(UpgradeShopButton.Update(mouseState, graphics, gameTime))
+            OnClickUpgradeShopTier();
+
+        if(ExitButton.Update(mouseState, graphics, gameTime))
+            ExitShop();
     }
 
     public void BuyHero(Hero inputHero, int inputIndex)
@@ -57,6 +68,12 @@ public class Shop
     {
         RollEquipment();
         RollHeroes();
+    }
+
+    public void OnClickReRoll()
+    {
+        // This should handle the gold checking prior to actually rerolling
+        ReRoll();
     }
 
     public void RollEquipment()
@@ -80,15 +97,23 @@ public class Shop
     {
         GameParent.ShopTier++;
         ShopTier++;
-        RollEquipment();
-        RollHeroes();
+        ReRoll();
+    }
+
+    public void OnClickUpgradeShopTier()
+    {
+        // This will handle the gold checking and tier checking prior to the method call
+        UpgradeShopTier();
+    }
+
+    public void ExitShop()
+    {
+        Active = false;
     }
 
     public void LoadContent()
     {
-        RerollButton.LoadContent();
-        UpgradeShopButton.LoadContent();
-        ExitButton.LoadContent();
+        // GP Icon to come
     }
 
     public void Draw(SpriteBatch spriteBatch, GameTime gameTime)

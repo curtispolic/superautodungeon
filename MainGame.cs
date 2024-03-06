@@ -1,17 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 using superautodungeon.Objects;
-using superautodungeon.Objects.Heroes;
-using superautodungeon.Objects.Enemies;
 using superautodungeon.Objects.Controllers;
 using superautodungeon.Objects.UI;
-
-using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Xml.Linq;
 
 namespace superautodungeon;
 
@@ -94,7 +86,7 @@ public class MainGame : Game
             mainMenu.Update(graphics, gameTime);
 
         if (shop.Active)
-            shop.Update(gameTime);
+            shop.Update(graphics, gameTime);
 
         base.Update(gameTime);
     }

@@ -21,4 +21,5 @@ To Do in Rough Order:
 Notes:
 
 Position is a bad thinking variable for everything, since it is all going to be drawn in multiple places. Refactor to get rid of 
-position as an attribute for objects.
+position as an attribute for objects. EDIT: Okay not everything, buttons rely on it for their handling now but stuff like combats 
+do not need a position.
