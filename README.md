@@ -18,6 +18,9 @@ To Do in Rough Order:
 - Add multiple enemy types
 - Expand To Do list
 
+Known Bugs:
+- First hero in the shop does not purchase correcly
+
 Notes:
 
 Map is going to be based on a Darkest Dungeon esque traversal of a map, moving through towards a known boss at the end of a floor. 
