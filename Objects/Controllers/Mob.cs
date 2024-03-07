@@ -1,4 +1,4 @@
-namespace superautodungeon.Objects;
+namespace superautodungeon.Objects.Controllers;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

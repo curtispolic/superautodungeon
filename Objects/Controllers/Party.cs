@@ -1,10 +1,11 @@
-namespace superautodungeon.Objects;
+namespace superautodungeon.Objects.Controllers;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
 using superautodungeon.Objects.Heroes;
+using System;
 
 public class Party
 {
@@ -44,5 +45,21 @@ public class Party
             else
                 hero.DrawShadowOnly(spriteBatch, gameTime, new Vector2(400 - 100 * i, 200));
         }
+    }
+
+    public Texture2D FrontHero()
+    {
+        foreach (var hero in HeroList)
+        {
+            if (hero.Active)
+            {
+                if (!hero.Dead)
+                {
+                    return hero.Texture;
+                }
+            }
+        }
+
+        return null;
     }
 }

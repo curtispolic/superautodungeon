@@ -4,6 +4,8 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
+using superautodungeon.Objects.Controllers;
+
 public class Enemy : Character
 {
     // TODO Weapon

@@ -2,6 +2,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using superautodungeon.Objects.Controllers;
+
 namespace superautodungeon.Objects.UI;
 
 public class GameplayUI

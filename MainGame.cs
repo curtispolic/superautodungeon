@@ -13,6 +13,7 @@ public class MainGame : Game
     public MainMenu mainMenu;
     public Combat combat;
     public Shop shop;
+    public Level level;
     public GameplayUI gameplayUI;
     public Party playerParty;
     public NameGenerator nameGenerator;
@@ -46,6 +47,7 @@ public class MainGame : Game
         shop = new();
         gameplayUI = new();
         combat = new();
+        level = new();
 
         playerParty = new(this);
 
@@ -91,13 +93,16 @@ public class MainGame : Game
         if (gameplayUI.Active)
             gameplayUI.Update(graphics, gameTime);
 
+        if (level.Active)
+            level.Update(graphics, gameTime);
+
         base.Update(gameTime);
     }
 
     protected override void Draw(GameTime gameTime)
     {
         // Clear the screen and begin rendering
-        GraphicsDevice.Clear(Color.Black);
+        GraphicsDevice.Clear(Color.LightPink);
         _spriteBatch.Begin();
 
         if (mainMenu.Active)
@@ -111,6 +116,9 @@ public class MainGame : Game
 
         if (shop.Active)
             shop.Draw(_spriteBatch, gameTime);
+
+        if (level.Active)
+            level.Draw(_spriteBatch, gameTime);
 
         _spriteBatch.End();
 

@@ -150,7 +150,7 @@ public class Shop
         Active = false;
 
         // Just for testing beta release
-        GameParent.combat = new(GameParent, GameParent.playerParty, new Mob(GameParent, new Vector2(400, 200)));
+        GameParent.level = new Level(GameParent);
     }
 
     public void LoadContent()
