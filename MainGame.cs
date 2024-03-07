@@ -71,7 +71,17 @@ public class MainGame : Game
     {
         fightTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
 
-        if (combat.Active)
+        // Always update UI if it's needed
+        if (gameplayUI.Active)
+            gameplayUI.Update(graphics, gameTime);
+
+        // Only update 1 thing that takes up the screen
+        if (mainMenu.Active)
+        {
+            mainMenu.Update(graphics, gameTime);
+        }
+        // TODO revise combat to account for animation times
+        else if (combat.Active)
         {
             if (combat.Ongoing && fightTimer > 2000)
             {
@@ -83,18 +93,14 @@ public class MainGame : Game
                 fightTimer = 0;
             }
         }
-
-        if (mainMenu.Active)
-            mainMenu.Update(graphics, gameTime);
-
-        if (shop.Active)
+        else if (shop.Active)
+        {
             shop.Update(graphics, gameTime);
-
-        if (gameplayUI.Active)
-            gameplayUI.Update(graphics, gameTime);
-
-        if (level.Active)
+        }
+        else if (level.Active)
+        {
             level.Update(graphics, gameTime);
+        }
 
         base.Update(gameTime);
     }
@@ -107,9 +113,6 @@ public class MainGame : Game
 
         if (mainMenu.Active)
             mainMenu.Draw(_spriteBatch, gameTime);
-            
-        if (combat.Active)
-            combat.Draw(_spriteBatch, gameTime);
 
         if (gameplayUI.Active)
             gameplayUI.Draw(_spriteBatch, gameTime);
@@ -119,6 +122,9 @@ public class MainGame : Game
 
         if (level.Active)
             level.Draw(_spriteBatch, gameTime);
+
+        if (combat.Active)
+            combat.Draw(_spriteBatch, gameTime);
 
         _spriteBatch.End();
 

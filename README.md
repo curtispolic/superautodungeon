@@ -19,7 +19,7 @@ To Do in Rough Order:
 - Expand To Do list
 
 Known Bugs:
-- First hero in the shop does not purchase correcly
+- None
 
 Notes:
 

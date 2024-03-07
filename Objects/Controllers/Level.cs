@@ -19,6 +19,8 @@ public class Level
 
     public Level(MainGame inputParent)
     {
+        GameParent = inputParent;
+
         // Create 5x5 room
         RoomGrid = new Room [5,5];
         for (int i = 0; i < 5; i++)
@@ -33,7 +35,19 @@ public class Level
         Random random = new();
         RoomGrid[random.Next(5), random.Next(5)].ContainsPlayer = true;
 
-        GameParent = inputParent;
+        // Make 5 combat rooms
+        int combats = 0;
+        while (combats < 5)
+        {
+            int x = random.Next(5);
+            int y = random.Next(5);
+            if (!RoomGrid[x,y].ContainsPlayer && RoomGrid[x,y] is not CombatRoom)
+            {
+                RoomGrid[x,y] = new CombatRoom(this, x, y);
+                combats++;
+            }
+        }
+
         Active = true;
     }
 

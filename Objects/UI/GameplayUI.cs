@@ -43,7 +43,7 @@ public class GameplayUI
                 // This is specifically for shop buying
                 if (GameParent.shop.Active)
                 {
-                    if (GameParent.shop.PickedUp > 0)
+                    if (GameParent.shop.PickedUp > -1)
                     {
                         GameParent.shop.BuyHero(GameParent.shop.PickedUp, i);
                     }

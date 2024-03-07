@@ -11,7 +11,7 @@ public class Room
     public Level LevelParent;
     public Vector2 Position;
     public int X, Y;
-    public bool MouseOver, Active, leftMouseDown, ContainsPlayer;
+    public bool MouseOver, Active, leftMouseDown, ContainsPlayer, Completed;
 
     public Room()
     {
@@ -27,6 +27,7 @@ public class Room
         LevelParent = inputParent;
         X = inputX;
         Y = inputY;
+        Completed = false;
         Position = new Vector2(250 + X*120, 20 + Y*120);
     }
 
@@ -105,7 +106,9 @@ public class Room
 
         if (ContainsPlayer)
         {
-            spriteBatch.Draw(LevelParent.GameParent.playerParty.FrontHero(), Position, null, Color.White, 0f, new Vector2(0, 0), new Vector2(100f/128f, 100f/128f), SpriteEffects.None, 0f);
+            Texture2D playerTexture = LevelParent.GameParent.playerParty.FrontHero();
+            if (playerTexture is not null)
+                spriteBatch.Draw(playerTexture, Position, null, Color.White, 0f, new Vector2(0, 0), new Vector2(100f/playerTexture.Width, 100f/playerTexture.Height), SpriteEffects.None, 0f);
         }
     }
 }

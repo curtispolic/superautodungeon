@@ -6,12 +6,14 @@ using superautodungeon.Objects.Enemies;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using superautodungeon.Objects.Rooms;
 
 public class Combat
 {
     public MainGame GameParent;
     public Party PlayerParty;
     public Mob EnemyMob;
+    public Room RoomParent;
     public bool Ongoing, Active;
 
     public Combat()
@@ -19,11 +21,12 @@ public class Combat
         Active = false;
     }
 
-    public Combat(MainGame inputParent, Party inputParty, Mob inputMob)
+    public Combat(MainGame inputParent, Room inputRoomParent, Party inputParty, Mob inputMob)
     {
         GameParent = inputParent;
         PlayerParty = inputParty;
         EnemyMob = inputMob;
+        RoomParent = inputRoomParent;
         Ongoing = true;
         Active = true;
     }
@@ -109,6 +112,7 @@ public class Combat
         {
             Ongoing = false;
             Active = false;
+            RoomParent.Completed = true;
         }
     }
 
