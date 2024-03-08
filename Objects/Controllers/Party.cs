@@ -37,13 +37,15 @@ public class Party
     public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
     {
         // This method is only used to draw in combat
+        int count = 0;
         for (int i = 0; i < 4; i++)
         {
             var hero = HeroList[i];
-            if (hero.Active)
-                hero.CombatDraw(spriteBatch, gameTime, new Vector2(400 - 100 * i, 200));
-            else
-                hero.DrawShadowOnly(spriteBatch, gameTime, new Vector2(400 - 100 * i, 200));
+            if (hero.Active && (!hero.Dead || hero.Dying))
+            {
+                hero.CombatDraw(spriteBatch, gameTime, new Vector2(400 - 100 * count, 200));
+                count++;
+            }
         }
     }
 

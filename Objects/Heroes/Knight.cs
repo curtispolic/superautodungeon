@@ -9,7 +9,7 @@ public class Knight : Hero
     {
         Random random  = new();
         Gender = random.Next(2) == 1 ? "Male" : "Female";
-        Description = "A sturdy, shield bearing Knight. It will be difficult for enemies to get past his plate armour.";
+        Description = "A sturdy, shield bearing Knight. It will be difficult for enemies to get past their plate armour.";
         Class = "Knight";
         Name = Gender == "Male" ? GameParent.nameGenerator.CreateMaleName() : GameParent.nameGenerator.CreateFemaleName();
         MaxHP = 12;

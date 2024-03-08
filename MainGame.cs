@@ -83,7 +83,7 @@ public class MainGame : Game
         // TODO revise combat to account for animation times
         else if (combat.Active)
         {
-            if (combat.Ongoing && fightTimer > 2000)
+            if (fightTimer > 2000)
             {
                 combat.BeginRound();
                 combat.MeleeHit();

@@ -11,7 +11,7 @@ public class Character
     public Texture2D Texture, HPTexture, AttackTexture, ShadowTexture, DeathTexture;
     public SpriteFont StatsFont;
     public bool Dead, Dying, MouseOver, Active;
-    public int MaxHP, CurrentHP, Attack;
+    public int MaxHP, CurrentHP, Attack, Mana;
     public double DeathTimer;
     public string Name, Description;
     // TODO Weapon
@@ -26,6 +26,7 @@ public class Character
     public Character(MainGame inputParent)
     {
         GameParent = inputParent;
+        Mana = 0;
         Dead = false;
         Dying = false;
         LoadContent();
@@ -70,6 +71,16 @@ public class Character
             return true;
         }
         return false;
+    }
+
+    public virtual void TakeDamage(int damage)
+    {
+        CurrentHP -= damage;
+        // Handle damage taking effects here, equipment blah blah
+        if (CurrentHP <= 0)
+        {
+            Die();
+        }
     }
 
     public virtual void LoadContent()

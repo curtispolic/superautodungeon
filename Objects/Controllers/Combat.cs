@@ -14,7 +14,7 @@ public class Combat
     public Party PlayerParty;
     public Mob EnemyMob;
     public Room RoomParent;
-    public bool Ongoing, Active;
+    public bool Begun, Active;
 
     public Combat()
     {
@@ -27,13 +27,51 @@ public class Combat
         PlayerParty = inputParty;
         EnemyMob = inputMob;
         RoomParent = inputRoomParent;
-        Ongoing = true;
+        Begun = false;
         Active = true;
     }
 
-    public void Update()
-    {
+    /*
+    The goal is for combat to be handled as follows:
+    - The two front units will melee each other
+        - These attacks occur "simultaneously"
+    - Effects will trigger in the following order:
+        - On damage taken
+        - On attack
+            - Potentially another on damage taken, and so on...
+        - Player effects will always resolve before enemy effects
+    - Then moving down the party, each will resolve their abilities:
+        - Player party 2nd place
+        - Enemy party 2nd place
+        - And so on...
+    - After each ability, damage taken effects may trigger
+        - All triggers caused by an ability must be resolved before moving to the next
+    - Death will be checked for after each trigger
+        - If a character dies, it may trigger a damage taken trigger, or a death trigger, but that is all
+    - Characters remain in place until the end of a combat round, then they will be shuffled forward
+    */
 
+    public int Update()
+    {
+        // Will return the number of milliseconds the game should wait before calling again
+        int animationTime = 0;
+        
+        if (!Begun)
+        {
+            animationTime += BeginCombat();
+        }
+
+        return animationTime;
+    }
+
+    public int BeginCombat()
+    {
+        int animationTime = 0;
+
+        // Handle start of combat stuff here
+
+        Begun = true;
+        return animationTime;
     }
 
     public void BeginRound()
@@ -48,9 +86,11 @@ public class Combat
         EnemyMob.EnemyList = tempList;
     }
 
-    public void MeleeHit()
+    public int MeleeHit()
     {
+        int animationTime = 0;
         Hero frontHero = new(GameParent, false);
+
         foreach (Hero hero in PlayerParty.HeroList)
         {
             if (!hero.Dead)
@@ -60,10 +100,14 @@ public class Combat
             }
         }
         Enemy frontEnemy = EnemyMob.EnemyList[0];
-        frontHero.CurrentHP -= frontEnemy.Attack;
-        frontEnemy.CurrentHP -= frontHero.Attack;
 
+        frontHero.MeleeHit();
+        frontEnemy.MeleeHit();
+        frontEnemy.TakeDamage(frontHero.Attack);
+        frontHero.TakeDamage(frontEnemy.Attack);
         // Handle the animation
+
+        return animationTime;
     }
 
     public void OnAttackTriggers()
@@ -110,7 +154,6 @@ public class Combat
         }
         if (enemyCheck == EnemyMob.EnemyList.Count || heroCheck == PlayerParty.HeroList.Count)
         {
-            Ongoing = false;
             Active = false;
             RoomParent.Completed = true;
         }

@@ -9,7 +9,7 @@ public class Wizard : Hero
     {
         Random random  = new();
         Gender = random.Next(2) == 1 ? "Male" : "Female";
-        Description = "A wise old wizard. Foes will tremble before his magical prowess.";
+        Description = "A wise old wizard. Foes will tremble before their magical prowess.";
         Class = "Wizard";
         Name = Gender == "Male" ? GameParent.nameGenerator.CreateMaleName() : GameParent.nameGenerator.CreateFemaleName();
         MaxHP = 6;
@@ -21,10 +21,40 @@ public class Wizard : Hero
     public override void LoadContent()
     {
         Texture = GameParent.Content.Load<Texture2D>("wizard");
-        HPTexture = GameParent.Content.Load<Texture2D>("heart");
-        AttackTexture = GameParent.Content.Load<Texture2D>("attack");
-        StatsFont = GameParent.Content.Load<SpriteFont>("statsFont");
-        ShadowTexture = GameParent.Content.Load<Texture2D>("shadow50");
-        DeathTexture = GameParent.Content.Load<Texture2D>("death");
+        base.LoadContent();
+    }
+
+    public int CombatStep()
+    {
+        // Combat steps will return the time in milliseconds the animation will require to play.
+        if (Mana > 2)
+        {
+            Fireball();
+            Mana -= 2;
+            // placeholder animation values
+            return 10;
+        }
+        else
+        {
+            Mana++;
+            return 5;
+        }
+    }
+
+    public void Fireball()
+    {
+        // Fireball targets a random enemy and does 2/4/6 damage, and half that to adjacent targets
+        var enemyMob = GameParent.combat.EnemyMob;
+        Random random = new();
+        int target = random.Next(enemyMob.EnemyList.Count);
+
+        // Just two for now until levelling is implemeneted
+        enemyMob.EnemyList[target].CurrentHP -= 2;
+
+        // Make sure we don't go out of range
+        if (target > 0)
+            enemyMob.EnemyList[target-1].CurrentHP -= 1;
+        if (target < enemyMob.EnemyList.Count - 1)
+            enemyMob.EnemyList[target+1].CurrentHP -= 1;
     }
 }

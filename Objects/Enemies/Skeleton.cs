@@ -18,10 +18,6 @@ public class Skeleton : Enemy
     public override void LoadContent()
     {
         Texture = GameParent.Content.Load<Texture2D>("skeleton");
-        HPTexture = GameParent.Content.Load<Texture2D>("heart");
-        AttackTexture = GameParent.Content.Load<Texture2D>("attack");
-        StatsFont = GameParent.Content.Load<SpriteFont>("statsFont");
-        ShadowTexture = GameParent.Content.Load<Texture2D>("shadow50");
-        DeathTexture = GameParent.Content.Load<Texture2D>("death");
+        base.LoadContent();
     }
 }
