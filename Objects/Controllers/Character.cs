@@ -3,6 +3,7 @@ namespace superautodungeon.Objects.Controllers;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Runtime.ConstrainedExecution;
 
 public class Character
 {
@@ -10,10 +11,12 @@ public class Character
     public Vector2 Position;
     public Texture2D Texture, HPTexture, AttackTexture, ShadowTexture, DeathTexture;
     public SpriteFont StatsFont;
-    public bool Dead, Dying, MouseOver, Active;
+    public bool Dead, Dying, MouseOver, Active, MeleeHitting;
     public int MaxHP, CurrentHP, Attack, Mana;
-    public double DeathTimer;
+    public double DeathTimer, AnimationTimer;
     public string Name, Description;
+
+    public static int DEATH_TIME = 1000;
     // TODO Weapon
     // TODO Armour
     // TODO Trinket
@@ -29,7 +32,15 @@ public class Character
         Mana = 0;
         Dead = false;
         Dying = false;
+        DeathTimer = 0;
+        MeleeHitting = false;
         LoadContent();
+    }
+
+    public virtual int CombatStep()
+    {
+        // Overriden by units that have combat triggers that have animations
+        return 0;
     }
 
     public virtual bool Update(MouseState mouseState, GraphicsDeviceManager graphics, GameTime gameTime)
@@ -60,27 +71,31 @@ public class Character
         return false;
     }
 
-    public bool Die()
+    public virtual int Die(int animationDelay)
     {
-        // Returns true if this is the call that killed the character
-        if (!Dead && !Dying)
-        {
-            Dead = true;
-            Dying = true;
-            DeathTimer = 0;
-            return true;
-        }
-        return false;
+        Dead = true;
+        Dying = true;
+        DeathTimer = 0 - animationDelay;
+        return 1000;
     }
 
-    public virtual void TakeDamage(int damage)
+    public virtual int TakeDamage(int damage, int animationDelay)
     {
+        int animationTime = 0;
         CurrentHP -= damage;
         // Handle damage taking effects here, equipment blah blah
         if (CurrentHP <= 0)
         {
-            Die();
+            animationTime += Die(animationDelay);
         }
+
+        return animationTime;
+    }
+
+    public virtual void MeleeHit()
+    {
+        MeleeHitting = true;
+        AnimationTimer = 0;
     }
 
     public virtual void LoadContent()
@@ -131,13 +146,11 @@ public class Character
 
     public virtual void CombatDraw(SpriteBatch spriteBatch, GameTime gameTime, Vector2 position)
     {
+        // If alive or dying, draw the essentials (shadow and stats)
         if (!Dead || Dying)
         {
             // Drawing shadow
             spriteBatch.Draw(ShadowTexture, position + new Vector2(16, 96), null, Color.White, 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
-
-            // Drawing Self
-            spriteBatch.Draw(Texture, position, null, Color.White, 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
 
             // Drawing HP icon
             spriteBatch.Draw(HPTexture, position + new Vector2(24, 128), null, Color.White, 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
@@ -162,14 +175,21 @@ public class Character
 
             spriteBatch.DrawString(StatsFont, Attack.ToString(), position + new Vector2(84,130), Color.White);
         }
-        if (Dying)
+        // If not doing any on the specially handled character drawing animations, do it here
+        if (!MeleeHitting)
         {
-            spriteBatch.Draw(DeathTexture, position + new Vector2(32, 32), null, new Color(255,255,255,(int)(DeathTimer/1000*255)), 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
-            DeathTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (DeathTimer > 1500)
+            spriteBatch.Draw(Texture, position, null, Color.White, 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
+        }
+        // If dying, draw the skull, after a suitable delay to account for animations
+        if (Dying && DeathTimer >= 0)
+        {
+            spriteBatch.Draw(DeathTexture, position + new Vector2(32, 32), null, new Color(255,255,255,(int)(DeathTimer/(DEATH_TIME/2)*255)), 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
+            if (DeathTimer > DEATH_TIME)
             {
                 Dying = false;
             }
         }
+
+        DeathTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
     }
 }

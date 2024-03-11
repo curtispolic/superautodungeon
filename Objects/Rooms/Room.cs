@@ -106,7 +106,7 @@ public class Room
 
         if (ContainsPlayer)
         {
-            Texture2D playerTexture = LevelParent.GameParent.playerParty.FrontHero();
+            Texture2D playerTexture = LevelParent.GameParent.playerParty.FrontHero().Texture;
             if (playerTexture is not null)
                 spriteBatch.Draw(playerTexture, Position, null, Color.White, 0f, new Vector2(0, 0), new Vector2(100f/playerTexture.Width, 100f/playerTexture.Height), SpriteEffects.None, 0f);
         }

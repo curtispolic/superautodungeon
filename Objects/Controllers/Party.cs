@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 using superautodungeon.Objects.Heroes;
 using System;
+using System.Collections;
 
 public class Party
 {
@@ -34,6 +35,22 @@ public class Party
         return false;
     }
 
+    public Hero FrontHero()
+    {
+        foreach (var hero in HeroList)
+        {
+            if (hero.Active)
+            {
+                if (!hero.Dead)
+                {
+                    return hero;
+                }
+            }
+        }
+
+        return null;
+    }
+
     public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
     {
         // This method is only used to draw in combat
@@ -47,21 +64,5 @@ public class Party
                 count++;
             }
         }
-    }
-
-    public Texture2D FrontHero()
-    {
-        foreach (var hero in HeroList)
-        {
-            if (hero.Active)
-            {
-                if (!hero.Dead)
-                {
-                    return hero.Texture;
-                }
-            }
-        }
-
-        return null;
     }
 }

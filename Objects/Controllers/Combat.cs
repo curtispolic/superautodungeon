@@ -15,6 +15,7 @@ public class Combat
     public Mob EnemyMob;
     public Room RoomParent;
     public bool Begun, Active;
+    public int AnimationTime;
 
     public Combat()
     {
@@ -27,6 +28,7 @@ public class Combat
         PlayerParty = inputParty;
         EnemyMob = inputMob;
         RoomParent = inputRoomParent;
+        AnimationTime = 0;
         Begun = false;
         Active = true;
     }
@@ -41,9 +43,8 @@ public class Combat
             - Potentially another on damage taken, and so on...
         - Player effects will always resolve before enemy effects
     - Then moving down the party, each will resolve their abilities:
-        - Player party 2nd place
-        - Enemy party 2nd place
-        - And so on...
+        - Player party first, in order
+        - Enemy party second, in order
     - After each ability, damage taken effects may trigger
         - All triggers caused by an ability must be resolved before moving to the next
     - Death will be checked for after each trigger
@@ -56,17 +57,47 @@ public class Combat
         // Will return the number of milliseconds the game should wait before calling again
         int animationTime = 0;
         
+        // Combat start animations (characters bobbing onto screen)
         if (!Begun)
         {
             animationTime += BeginCombat();
         }
+
+        // Melee and associated triggers
+        animationTime += MeleeHit(animationTime);
+
+        // Combat steps for backline units
+        foreach (var hero in PlayerParty.HeroList)
+        {
+            if (hero.Active)
+            {
+                if (!hero.Dead && hero != PlayerParty.FrontHero())
+                {
+                    animationTime += hero.CombatStep();
+                }
+            }
+        }
+
+        foreach (var enemy in EnemyMob.EnemyList)
+        {
+            if (enemy.Active)
+            {
+                if (!enemy.Dead && enemy != EnemyMob.EnemyList[0])
+                {
+                    animationTime += enemy.CombatStep();
+                }
+            }
+        }
+
+        animationTime += EndRound();
 
         return animationTime;
     }
 
     public int BeginCombat()
     {
-        int animationTime = 0;
+        // Just hard-coded 200 for now
+        int animationTime = 200;
 
         // Handle start of combat stuff here
 
@@ -74,71 +105,23 @@ public class Combat
         return animationTime;
     }
 
-    public void BeginRound()
+    public int MeleeHit(int animationDelay)
     {
-        // Move forward enemies in the list
-        List<Enemy> tempList = new();
-        foreach (var enemy in EnemyMob.EnemyList)
-        {
-            if (!enemy.Dead)
-                tempList.Add(enemy);
-        }
-        EnemyMob.EnemyList = tempList;
-    }
+        // Base melee hit time is 500
+        int animationTime = 500;
 
-    public int MeleeHit()
-    {
-        int animationTime = 0;
-        Hero frontHero = new(GameParent, false);
-
-        foreach (Hero hero in PlayerParty.HeroList)
-        {
-            if (!hero.Dead)
-            {
-                frontHero = hero;
-                break;
-            }
-        }
-        Enemy frontEnemy = EnemyMob.EnemyList[0];
+        Hero frontHero = PlayerParty.FrontHero();
+        Enemy frontEnemy = EnemyMob.FrontEnemy();
 
         frontHero.MeleeHit();
         frontEnemy.MeleeHit();
-        frontEnemy.TakeDamage(frontHero.Attack);
-        frontHero.TakeDamage(frontEnemy.Attack);
-        // Handle the animation
+        animationTime += frontEnemy.TakeDamage(frontHero.Attack, animationDelay + animationTime);
+        animationTime += frontHero.TakeDamage(frontEnemy.Attack, animationDelay + animationTime);
 
         return animationTime;
     }
 
-    public void OnAttackTriggers()
-    {
-        return;
-    }
-
-    public void HandleDeath()
-    {
-        bool wasDeath;
-        do
-        {
-            wasDeath = false;
-            foreach (var hero in PlayerParty.HeroList)
-            {
-                if (hero.CurrentHP <= 0)
-                {
-                    wasDeath = hero.Die();
-                }
-            }
-            foreach (var enemy in EnemyMob.EnemyList)
-            {
-                if (enemy.CurrentHP <= 0)
-                {
-                    wasDeath = enemy.Die();
-                }
-            }
-        } while (wasDeath);
-    }
-
-    public void EndRound()
+    public int EndRound()
     {
         // Check if all heroes or all enemies are dead
         int heroCheck = 0; int enemyCheck = 0;
@@ -157,6 +140,9 @@ public class Combat
             Active = false;
             RoomParent.Completed = true;
         }
+
+        // Placeholder zero
+        return 500;
     }
 
     public void Draw(SpriteBatch spriteBatch, GameTime gameTime)

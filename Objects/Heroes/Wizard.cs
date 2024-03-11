@@ -24,7 +24,7 @@ public class Wizard : Hero
         base.LoadContent();
     }
 
-    public int CombatStep()
+    public override int CombatStep()
     {
         // Combat steps will return the time in milliseconds the animation will require to play.
         if (Mana > 2)

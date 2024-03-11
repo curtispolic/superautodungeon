@@ -80,17 +80,12 @@ public class MainGame : Game
         {
             mainMenu.Update(graphics, gameTime);
         }
-        // TODO revise combat to account for animation times
         else if (combat.Active)
         {
-            if (fightTimer > 2000)
+            if (fightTimer > combat.AnimationTime)
             {
-                combat.BeginRound();
-                combat.MeleeHit();
-                combat.OnAttackTriggers();
-                combat.HandleDeath();
-                combat.EndRound();
                 fightTimer = 0;
+                combat.AnimationTime = combat.Update();
             }
         }
         else if (shop.Active)
