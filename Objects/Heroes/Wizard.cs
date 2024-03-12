@@ -38,7 +38,8 @@ public class Wizard : Hero
         // Combat steps will return the time in milliseconds the animation will require to play.
         double animationTime = 0;
 
-        if (Mana >= 2)
+        // Make sure there's a target and have mana
+        if (Mana >= 2 && GameParent.combat.EnemyMob.AliveEnemies().Count > 0)
         {
             animationTime += Fireball(animationDelay + animationTime);
             Mana -= 2;
@@ -56,22 +57,24 @@ public class Wizard : Hero
     {
         // Fireball targets a random enemy and does 2/4/6 damage, and half that to adjacent targets
         double animationTime = FIREBALL_TIME;
-        var enemyMob = GameParent.combat.EnemyMob;
         Random random = new();
-        FireballTargetIndex = random.Next(enemyMob.AliveEnemies().Count);
-        var target = enemyMob.AliveEnemies()[FireballTargetIndex];
+        var enemies = GameParent.combat.EnemyMob.AliveEnemies();
+        FireballTargetIndex = random.Next(enemies.Count);
         FireballTimer = 0 - animationDelay;
 
         // Just two for now until levelling is implemeneted
-        animationTime += target.TakeDamage(2, animationDelay + animationTime);
+        animationTime += enemies[FireballTargetIndex].TakeDamage(2, animationDelay + animationTime);
 
         // Make sure we don't go out of range
         if (FireballTargetIndex > 0)
-            animationTime += enemyMob.AliveEnemies()[FireballTargetIndex-1].TakeDamage(1, animationDelay + animationTime);
-        if (FireballTargetIndex < enemyMob.AliveEnemies().Count - 1)
-            animationTime += enemyMob.AliveEnemies()[FireballTargetIndex+1].TakeDamage(1, animationDelay + animationTime);
+        {
+            animationTime += enemies[FireballTargetIndex-1].TakeDamage(1, animationDelay + animationTime);
+        }
+        if (FireballTargetIndex < enemies.Count - 1)
+        {
+            animationTime += enemies[FireballTargetIndex+1].TakeDamage(1, animationDelay + animationTime);
+        }
 
-        // hardcode 500 animation time for now
         return animationTime;
     }
 

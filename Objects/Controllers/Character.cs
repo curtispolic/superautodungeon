@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Runtime.ConstrainedExecution;
+using System.Collections.Generic;
 
 public class Character
 {
@@ -13,10 +14,13 @@ public class Character
     public SpriteFont StatsFont;
     public bool Dead, Dying, MouseOver, Active, MeleeHitting;
     public int MaxHP, CurrentHP, Attack, Mana;
+    public List<int> LastDamageAmounts;
     public double DeathTimer, AnimationTimer;
+    public List<double> DamageAnimationTimers;
     public string Name, Description;
 
     public static int DEATH_TIME = 1000;
+    public static int DAMAGE_SHOW_TIME = 250;
     // TODO Weapon
     // TODO Armour
     // TODO Trinket
@@ -33,6 +37,8 @@ public class Character
         Dead = false;
         Dying = false;
         DeathTimer = 0;
+        DamageAnimationTimers = new();
+        LastDamageAmounts = new();
         MeleeHitting = false;
         LoadContent();
     }
@@ -83,6 +89,8 @@ public class Character
     {
         double animationTime = 0;
         CurrentHP -= damage;
+        LastDamageAmounts.Add(damage);
+        DamageAnimationTimers.Add(0 - animationDelay);
         // Handle damage taking effects here, equipment blah blah
         if (CurrentHP <= 0)
         {
@@ -191,7 +199,26 @@ public class Character
                 Dying = false;
             }
         }
+        for (int i = 0; i < DamageAnimationTimers.Count; i++)
+        {
+            if (DamageAnimationTimers[i] <= DAMAGE_SHOW_TIME && DamageAnimationTimers[i] > 0)
+            {
+                float slidingUp = (float)DamageAnimationTimers[i] / DAMAGE_SHOW_TIME * -50;
 
+                // Drawing HP icon
+                spriteBatch.Draw(HPTexture, position + new Vector2(54, slidingUp), null, new Color(255,255,255,128), 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
+
+                // Draw the amount of damage taken
+                spriteBatch.DrawString(StatsFont, "-" + LastDamageAmounts[i].ToString(), position + new Vector2(61,3 + slidingUp), Color.Black);
+                spriteBatch.DrawString(StatsFont, "-" + LastDamageAmounts[i].ToString(), position + new Vector2(59,1 + slidingUp), Color.Black);
+                spriteBatch.DrawString(StatsFont, "-" + LastDamageAmounts[i].ToString(), position + new Vector2(61,1 + slidingUp), Color.Black);
+                spriteBatch.DrawString(StatsFont, "-" + LastDamageAmounts[i].ToString(), position + new Vector2(59,3 + slidingUp), Color.Black);
+
+                spriteBatch.DrawString(StatsFont, "-" + LastDamageAmounts[i].ToString(), position + new Vector2(60,2 + slidingUp), Color.White);
+            }
+
+            DamageAnimationTimers[i] += gameTime.ElapsedGameTime.TotalMilliseconds;
+        }
         DeathTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
         AnimationTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
     }

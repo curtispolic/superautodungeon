@@ -14,7 +14,7 @@ public class Combat
     public Party PlayerParty;
     public Mob EnemyMob;
     public Room RoomParent;
-    public bool Begun, Active;
+    public bool Begun, Finished, Active;
     public double AnimationTime;
 
     public Combat()
@@ -30,13 +30,14 @@ public class Combat
         RoomParent = inputRoomParent;
         AnimationTime = 0;
         Begun = false;
+        Finished = false;
         Active = true;
     }
 
     /*
     The goal is for combat to be handled as follows:
     - The two front units will melee each other
-        - These attacks occur "simultaneously"
+        - The enemy will take damage first, but if they die, the hero will still take damage
     - Effects will trigger in the following order:
         - On damage taken
         - On attack
@@ -52,46 +53,54 @@ public class Combat
     - Characters remain in place until the end of a combat round, then they will be shuffled forward
     */
 
-    public double Update()
+    public double Update(bool updatingCombat)
     {
-        // Will return the number of milliseconds the game should wait before calling again
-        double animationTime = 0;
-        
-        // Combat start animations (characters bobbing onto screen)
-        if (!Begun)
+        // Only update combat once a round, but always check the buttons
+        if (updatingCombat)
         {
-            animationTime += BeginCombat();
-        }
-
-        // Melee and associated triggers
-        animationTime += MeleeHit(animationTime);
-
-        // Combat steps for backline units
-        foreach (var hero in PlayerParty.HeroList)
-        {
-            if (hero.Active)
+            // Will return the number of milliseconds the game should wait before calling again
+            double animationTime = 0;
+            
+            // Combat start animations (characters bobbing onto screen)
+            if (!Begun)
             {
-                if (!hero.Dead && hero != PlayerParty.FrontHero())
+                animationTime += BeginCombat();
+            }
+
+            // Melee and associated triggers
+            animationTime += MeleeHit(animationTime);
+
+            // Combat steps for backline units
+            foreach (var hero in PlayerParty.HeroList)
+            {
+                if (hero.Active)
                 {
-                    animationTime += hero.CombatStep(animationTime);
+                    if (!hero.Dead && hero != PlayerParty.FrontHero())
+                    {
+                        animationTime += hero.CombatStep(animationTime);
+                    }
                 }
             }
-        }
 
-        foreach (var enemy in EnemyMob.EnemyList)
-        {
-            if (enemy.Active)
+            foreach (var enemy in EnemyMob.EnemyList)
             {
-                if (!enemy.Dead && enemy != EnemyMob.EnemyList[0])
+                if (enemy.Active)
                 {
-                    animationTime += enemy.CombatStep(animationTime);
+                    if (!enemy.Dead && enemy != EnemyMob.EnemyList[0])
+                    {
+                        animationTime += enemy.CombatStep(animationTime);
+                    }
                 }
             }
+
+            animationTime += EndRound();
+
+            return animationTime;
         }
-
-        animationTime += EndRound();
-
-        return animationTime;
+        else 
+        {
+            return 0;
+        }
     }
 
     public double BeginCombat()
@@ -100,6 +109,14 @@ public class Combat
         double animationTime = 200;
 
         // Handle start of combat stuff here
+        // Make sure everything starts at zero mana
+        foreach (var hero in PlayerParty.HeroList)
+        {
+            if (hero.Active)
+            {
+                hero.Mana = 0;
+            }
+        }
 
         Begun = true;
         return animationTime;
@@ -113,8 +130,10 @@ public class Combat
         Hero frontHero = PlayerParty.FrontHero();
         Enemy frontEnemy = EnemyMob.FrontEnemy();
 
+        // Melee hit returns animation time but they happen simultaneously so just a base of 500 is used
         frontHero.MeleeHit(animationDelay);
         frontEnemy.MeleeHit(animationDelay);
+
         animationTime += frontEnemy.TakeDamage(frontHero.Attack, animationDelay + animationTime);
         animationTime += frontHero.TakeDamage(frontEnemy.Attack, animationDelay + animationTime);
 
@@ -141,7 +160,7 @@ public class Combat
             RoomParent.Completed = true;
         }
 
-        // Placeholder zero
+        // Placeholder 500 to delay end round a touch
         return 500;
     }
 

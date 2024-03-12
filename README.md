@@ -9,17 +9,17 @@ Current features:
 - Base UI for gameplay
 - 2 hero classes with no features
 - Shop (this task was herculean)
+- Levels, rooms, filled combats
+- Combat steps for backline units
 
 To Do in Rough Order:
-- Add levels
-- Add map and map movement
 - Refine main menu graphics
 - Add settings menu
 - Add multiple enemy types
 - Expand To Do list
 
 Known Bugs:
-- Multiple wizards can cause a crash where they target outside the correct indexes
+- None
 
 Notes:
 

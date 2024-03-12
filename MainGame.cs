@@ -85,7 +85,7 @@ public class MainGame : Game
             if (fightTimer > combat.AnimationTime)
             {
                 fightTimer = 0;
-                combat.AnimationTime = combat.Update();
+                combat.AnimationTime = combat.Update(true);
             }
         }
         else if (shop.Active)
