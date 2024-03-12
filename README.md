@@ -19,7 +19,7 @@ To Do in Rough Order:
 - Expand To Do list
 
 Known Bugs:
-- None
+- Multiple wizards can cause a crash where they target outside the correct indexes
 
 Notes:
 

@@ -51,6 +51,24 @@ public class Party
         return null;
     }
 
+    public List<Hero> AliveHeroes()
+    {
+        List<Hero> tempList = new();
+
+        foreach (var hero in HeroList)
+        {
+            if (hero.Active)
+            {
+                if (!hero.Dead)
+                {
+                    tempList.Add(hero);
+                }
+            }
+        }
+
+        return tempList;
+    }
+
     public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
     {
         // This method is only used to draw in combat

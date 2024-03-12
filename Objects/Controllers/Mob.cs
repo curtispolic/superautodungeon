@@ -39,6 +39,23 @@ public class Mob
         return null;
     }
 
+    public List<Enemy> AliveEnemies()
+    {
+        List<Enemy> tempList = new();
+        foreach (var enemy in EnemyList)
+        {
+            if (enemy.Active)
+            {
+                if (!enemy.Dead)
+                {
+                    tempList.Add(enemy);
+                }
+            }
+        }
+
+        return tempList;
+    }
+
     public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
     {
         // This method is only used to draw in combat

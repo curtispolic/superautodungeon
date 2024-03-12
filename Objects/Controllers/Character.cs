@@ -37,7 +37,7 @@ public class Character
         LoadContent();
     }
 
-    public virtual int CombatStep()
+    public virtual double CombatStep(double animationDelay)
     {
         // Overriden by units that have combat triggers that have animations
         return 0;
@@ -71,7 +71,7 @@ public class Character
         return false;
     }
 
-    public virtual int Die(int animationDelay)
+    public virtual double Die(double animationDelay)
     {
         Dead = true;
         Dying = true;
@@ -79,23 +79,25 @@ public class Character
         return 1000;
     }
 
-    public virtual int TakeDamage(int damage, int animationDelay)
+    public virtual double TakeDamage(int damage, double animationDelay)
     {
-        int animationTime = 0;
+        double animationTime = 0;
         CurrentHP -= damage;
         // Handle damage taking effects here, equipment blah blah
         if (CurrentHP <= 0)
         {
-            animationTime += Die(animationDelay);
+            animationTime += Die(animationTime + animationDelay);
         }
 
         return animationTime;
     }
 
-    public virtual void MeleeHit()
+    public virtual double MeleeHit(double animationDelay)
     {
         MeleeHitting = true;
-        AnimationTimer = 0;
+        AnimationTimer = 0 - animationDelay;
+
+        return 500;
     }
 
     public virtual void LoadContent()
@@ -191,5 +193,6 @@ public class Character
         }
 
         DeathTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
+        AnimationTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
     }
 }

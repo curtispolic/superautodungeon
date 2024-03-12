@@ -15,7 +15,7 @@ public class Combat
     public Mob EnemyMob;
     public Room RoomParent;
     public bool Begun, Active;
-    public int AnimationTime;
+    public double AnimationTime;
 
     public Combat()
     {
@@ -52,10 +52,10 @@ public class Combat
     - Characters remain in place until the end of a combat round, then they will be shuffled forward
     */
 
-    public int Update()
+    public double Update()
     {
         // Will return the number of milliseconds the game should wait before calling again
-        int animationTime = 0;
+        double animationTime = 0;
         
         // Combat start animations (characters bobbing onto screen)
         if (!Begun)
@@ -73,7 +73,7 @@ public class Combat
             {
                 if (!hero.Dead && hero != PlayerParty.FrontHero())
                 {
-                    animationTime += hero.CombatStep();
+                    animationTime += hero.CombatStep(animationTime);
                 }
             }
         }
@@ -84,7 +84,7 @@ public class Combat
             {
                 if (!enemy.Dead && enemy != EnemyMob.EnemyList[0])
                 {
-                    animationTime += enemy.CombatStep();
+                    animationTime += enemy.CombatStep(animationTime);
                 }
             }
         }
@@ -94,10 +94,10 @@ public class Combat
         return animationTime;
     }
 
-    public int BeginCombat()
+    public double BeginCombat()
     {
         // Just hard-coded 200 for now
-        int animationTime = 200;
+        double animationTime = 200;
 
         // Handle start of combat stuff here
 
@@ -105,23 +105,23 @@ public class Combat
         return animationTime;
     }
 
-    public int MeleeHit(int animationDelay)
+    public double MeleeHit(double animationDelay)
     {
         // Base melee hit time is 500
-        int animationTime = 500;
+        double animationTime = 500;
 
         Hero frontHero = PlayerParty.FrontHero();
         Enemy frontEnemy = EnemyMob.FrontEnemy();
 
-        frontHero.MeleeHit();
-        frontEnemy.MeleeHit();
+        frontHero.MeleeHit(animationDelay);
+        frontEnemy.MeleeHit(animationDelay);
         animationTime += frontEnemy.TakeDamage(frontHero.Attack, animationDelay + animationTime);
         animationTime += frontHero.TakeDamage(frontEnemy.Attack, animationDelay + animationTime);
 
         return animationTime;
     }
 
-    public int EndRound()
+    public double EndRound()
     {
         // Check if all heroes or all enemies are dead
         int heroCheck = 0; int enemyCheck = 0;

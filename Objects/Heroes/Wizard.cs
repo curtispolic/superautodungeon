@@ -1,10 +1,17 @@
 namespace superautodungeon.Objects.Heroes;
 
 using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 public class Wizard : Hero
 {
+    public Texture2D FireballTexture;
+    public double FireballTimer;
+    public int FireballTargetIndex;
+    
+    public static int FIREBALL_TIME = 1500;
+
     public Wizard(MainGame inputParent): base(inputParent, true)
     {
         Random random  = new();
@@ -15,46 +22,76 @@ public class Wizard : Hero
         MaxHP = 6;
         CurrentHP = 6;
         Attack = 1;
+        FireballTimer = FIREBALL_TIME + 1;
         LoadContent();
     }
 
     public override void LoadContent()
     {
         Texture = GameParent.Content.Load<Texture2D>("wizard");
+        FireballTexture = GameParent.Content.Load<Texture2D>("fireball");
         base.LoadContent();
     }
 
-    public override int CombatStep()
+    public override double CombatStep(double animationDelay)
     {
         // Combat steps will return the time in milliseconds the animation will require to play.
-        if (Mana > 2)
+        double animationTime = 0;
+
+        if (Mana >= 2)
         {
-            Fireball();
+            animationTime += Fireball(animationDelay + animationTime);
             Mana -= 2;
             // placeholder animation values
-            return 10;
+            return animationTime;
         }
         else
         {
             Mana++;
-            return 5;
+            return animationTime;
         }
     }
 
-    public void Fireball()
+    public double Fireball(double animationDelay)
     {
         // Fireball targets a random enemy and does 2/4/6 damage, and half that to adjacent targets
+        double animationTime = FIREBALL_TIME;
         var enemyMob = GameParent.combat.EnemyMob;
         Random random = new();
-        int target = random.Next(enemyMob.EnemyList.Count);
+        FireballTargetIndex = random.Next(enemyMob.AliveEnemies().Count);
+        var target = enemyMob.AliveEnemies()[FireballTargetIndex];
+        FireballTimer = 0 - animationDelay;
 
         // Just two for now until levelling is implemeneted
-        enemyMob.EnemyList[target].CurrentHP -= 2;
+        animationTime += target.TakeDamage(2, animationDelay + animationTime);
 
         // Make sure we don't go out of range
-        if (target > 0)
-            enemyMob.EnemyList[target-1].CurrentHP -= 1;
-        if (target < enemyMob.EnemyList.Count - 1)
-            enemyMob.EnemyList[target+1].CurrentHP -= 1;
+        if (FireballTargetIndex > 0)
+            animationTime += enemyMob.AliveEnemies()[FireballTargetIndex-1].TakeDamage(1, animationDelay + animationTime);
+        if (FireballTargetIndex < enemyMob.AliveEnemies().Count - 1)
+            animationTime += enemyMob.AliveEnemies()[FireballTargetIndex+1].TakeDamage(1, animationDelay + animationTime);
+
+        // hardcode 500 animation time for now
+        return animationTime;
+    }
+
+    public override void CombatDraw(SpriteBatch spriteBatch, GameTime gameTime, Vector2 position)
+    {
+        if (FireballTimer < FIREBALL_TIME && FireballTimer > 0)
+        {
+            // Using Math.Sin() to make the fireball arc
+            double degrees = Math.PI * (FireballTimer/FIREBALL_TIME*180) / 180.0;
+
+            // Offset uses the same vector Mob uses to draw the enemy position + a little bit to look good
+            Vector2 fireballOffset = new Vector2(600 + 20 + 100 * FireballTargetIndex, 200) - position;
+            fireballOffset.X *= (float)(FireballTimer / FIREBALL_TIME);
+            fireballOffset.Y = 0 - (float)Math.Sin(degrees) * 150;
+
+            spriteBatch.Draw(FireballTexture, position + fireballOffset, null, Color.White, -0.5f + (float)(FireballTimer / FIREBALL_TIME), new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
+        }
+
+        FireballTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
+
+        base.CombatDraw(spriteBatch, gameTime, position);
     }
 }
