@@ -31,9 +31,7 @@ public class Level
             }
         }
 
-        // Put the player in a random room
         Random random = new();
-        RoomGrid[random.Next(5), random.Next(5)].ContainsPlayer = true;
 
         // Make 5 combat rooms
         int combats = 0;
@@ -41,14 +39,31 @@ public class Level
         {
             int x = random.Next(5);
             int y = random.Next(5);
-            if (!RoomGrid[x,y].ContainsPlayer && RoomGrid[x,y] is not CombatRoom)
+            if (RoomGrid[x,y] is not CombatRoom)
             {
                 RoomGrid[x,y] = new CombatRoom(this, x, y);
                 combats++;
             }
         }
 
+        // Make a shop
+        bool shop = false;
+        Room shopRoom = new();
+        while (!shop)
+        {
+            int x = random.Next(5);
+            int y = random.Next(5);
+            if (RoomGrid[x,y] is not CombatRoom)
+            {
+                RoomGrid[x,y] = new ShopRoom(this, x, y);
+                shopRoom = RoomGrid[x,y];
+                shop = true;
+            }
+        }
+
+        // Start the player in the shop
         Active = true;
+        shopRoom.Enter();
     }
 
     public virtual void Update(GraphicsDeviceManager graphics, GameTime gameTime)

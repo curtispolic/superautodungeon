@@ -11,10 +11,10 @@ namespace superautodungeon.Objects.Controllers;
 
 public class Shop
 {
-    public MainGame GameParent;
     public List<Hero> BuyableHeroes;
     public Button RerollButton, UpgradeShopButton, ExitButton;
     public Vector2 PickupOffset;
+    public Level LevelParent;
     public int ShopTier, RerollCost, UpgradeCost, PickedUp;
     public bool Active;
 
@@ -23,15 +23,15 @@ public class Shop
         Active = false;
     }
 
-    public Shop(MainGame inputParent, int inputTier)
+    public Shop(Level inputLevel, int inputTier)
     {
-        GameParent = inputParent;
+        LevelParent = inputLevel;
         ShopTier = inputTier;
         RerollCost = 50;
         UpgradeCost = 300;
-        RerollButton = new Button(GameParent, $"Reroll: {RerollCost}GP", new Vector2(50, 250));
-        UpgradeShopButton = new Button(GameParent, $"Upgrade Shop Tier: {UpgradeCost}GP", new Vector2(50, 300));
-        ExitButton = new Button(GameParent, "Exit Shop", new Vector2(50, 350));
+        RerollButton = new Button(LevelParent.GameParent, $"Reroll: {RerollCost}GP", new Vector2(50, 250));
+        UpgradeShopButton = new Button(LevelParent.GameParent, $"Upgrade Shop Tier: {UpgradeCost}GP", new Vector2(50, 300));
+        ExitButton = new Button(LevelParent.GameParent, "Exit Shop", new Vector2(50, 350));
         LoadContent();
         ReRoll();
         Active = true;
@@ -76,7 +76,7 @@ public class Shop
 
     public void BuyHero(int boughtHeroIndex, int draggedOntoIndex)
     {
-        Hero draggedOnHero = GameParent.playerParty.HeroList[draggedOntoIndex];
+        Hero draggedOnHero = LevelParent.GameParent.playerParty.HeroList[draggedOntoIndex];
         Hero inputHero = BuyableHeroes[boughtHeroIndex];
         if (inputHero.Class == draggedOnHero.Class)
         {
@@ -87,7 +87,7 @@ public class Shop
             // Buy into that index
             inputHero.Buyable = false;
             inputHero.PickedUp = false;
-            GameParent.playerParty.Add(inputHero, draggedOntoIndex);
+            LevelParent.GameParent.playerParty.Add(inputHero, draggedOntoIndex);
         }
         else
         {
@@ -96,7 +96,7 @@ public class Shop
         }
 
         // Replace bought hero with inactive
-        BuyableHeroes[boughtHeroIndex] = new Hero(GameParent, false)
+        BuyableHeroes[boughtHeroIndex] = new Hero(LevelParent.GameParent, false)
         {
             Position = new Vector2(20 + boughtHeroIndex * 200, 20)
         };
@@ -127,14 +127,14 @@ public class Shop
         for (int i = 0; i < 5; i++)
         {
             // Will contian logic for rolling from valid shop tiers
-            BuyableHeroes.Add(random.Next(2) == 1 ? new Knight(GameParent) : new Wizard(GameParent));
+            BuyableHeroes.Add(random.Next(2) == 1 ? new Knight(LevelParent.GameParent) : new Wizard(LevelParent.GameParent));
             BuyableHeroes[i].Position = new Vector2(20 + i * 200, 20);
         }
     }
 
     public void UpgradeShopTier()
     {
-        GameParent.ShopTier++;
+        LevelParent.GameParent.ShopTier++;
         ShopTier++;
         ReRoll();
     }
@@ -148,9 +148,7 @@ public class Shop
     public void ExitShop()
     {
         Active = false;
-
-        // Just for testing beta release
-        GameParent.level = new Level(GameParent);
+        LevelParent.Active = true;
     }
 
     public void LoadContent()
@@ -175,7 +173,7 @@ public class Shop
         spriteBatch.Draw(_texture2, new Rectangle(25, 25, 1230, 580), Color.White);
 
         // Checking for picked up hero for special drawing order
-        Hero pickedUpHero = new(GameParent, false);
+        Hero pickedUpHero = new(LevelParent.GameParent, false);
         var pickedCheck = false;
         for (int i = 0; i < BuyableHeroes.Count; i++)
         {

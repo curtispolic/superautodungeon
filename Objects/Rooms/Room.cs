@@ -104,11 +104,18 @@ public class Room
         else
             spriteBatch.Draw(texture2, new Rectangle((int)Position.X + 5, (int)Position.Y + 5, 90, 90), Color.White);
 
+        DrawCharacter(spriteBatch, gameTime);
+    }
+
+    public void DrawCharacter(SpriteBatch spriteBatch, GameTime gameTime)
+    {
         if (ContainsPlayer)
         {
+            if (LevelParent.GameParent.playerParty.FrontHero() is not null)
+            {
             Texture2D playerTexture = LevelParent.GameParent.playerParty.FrontHero().Texture;
-            if (playerTexture is not null)
-                spriteBatch.Draw(playerTexture, Position, null, Color.White, 0f, new Vector2(0, 0), new Vector2(100f/playerTexture.Width, 100f/playerTexture.Height), SpriteEffects.None, 0f);
+            spriteBatch.Draw(playerTexture, Position, null, Color.White, 0f, new Vector2(0, 0), new Vector2(100f/playerTexture.Width, 100f/playerTexture.Height), SpriteEffects.None, 0f);
+            }
         }
     }
 }

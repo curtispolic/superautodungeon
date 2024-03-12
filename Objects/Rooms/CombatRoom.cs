@@ -32,5 +32,6 @@ public class CombatRoom : Room
         base.Draw(spriteBatch, gameTime);
         if (!Completed)
             spriteBatch.Draw(Texture, Position, null, Color.White, 0f, new Vector2(0, 0), new Vector2(100f/Texture.Width, 100f/Texture.Height), SpriteEffects.None, 0f); 
+        DrawCharacter(spriteBatch, gameTime);
     }
 }

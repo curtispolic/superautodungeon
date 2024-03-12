@@ -84,44 +84,8 @@ public class MainMenu
 
     public void OnClickNewGame()
     {
-        GameParent.shop = new(GameParent, GameParent.ShopTier);
-
-        // Below is the code for creating a test combat
-        /*
-        Party testParty;
-        Mob testMob;
-
-        // Construct the party and mob
-        testParty = new(new Vector2(100, 100));
-        testMob = new(new Vector2(300, 100));
-
-        // Populate the party
-        for (int i = 0; i < 2; i++)
-        {
-            Knight newHero = new(GameParent);
-            testParty.Add(newHero);
-        }
-
-        for (int i = 0; i < 2; i++)
-        {
-            Wizard newHero = new(GameParent);
-            testParty.Add(newHero);
-        }
-
-        // Populate the mob
-        for (int i = 0; i < 4; i++)
-        {
-            Skeleton newEnemy = new(GameParent);
-            testMob.Add(newEnemy);
-        }
-
-        GameParent.playerParty = testParty;
-
-        GameParent.combat = new(GameParent, testParty, testMob);
-        GameParent.CombatVisible = true;
-        */
-
         GameParent.gameplayUI = new(GameParent, GameParent.playerParty);
+        GameParent.level = new(GameParent);
 
         Active = false;
     }
