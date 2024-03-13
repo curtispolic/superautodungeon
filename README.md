@@ -11,15 +11,24 @@ Current features:
 - Shop (this task was herculean)
 - Levels, rooms, filled combats
 - Combat steps for backline units
+- Placeholder mouseover information
 
 To Do in Rough Order:
-- Refine main menu graphics
-- Add settings menu
-- Add multiple enemy types
+- Make mouseover feature complete
+- Fully describe each class and enemy properly
+- Create mana icon and animations
+- Add 2 more classes (priest, archer)
+- Add 2 or 3 more enemies (goblin, dark wizard, ogre)
+- Implement gold
+- Party reordering
+- Selling units
+- Levelling up
+- Add a boss to the level
+- Fog of war for the level
 - Expand To Do list
 
 Known Bugs:
-- None
+- Mouseover does not work on combat units
 
 Notes:
 
