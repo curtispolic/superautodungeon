@@ -134,8 +134,8 @@ public class Combat
         frontHero.MeleeHit(animationDelay);
         frontEnemy.MeleeHit(animationDelay);
 
-        animationTime += frontEnemy.TakeDamage(frontHero.Attack, animationDelay + animationTime);
-        animationTime += frontHero.TakeDamage(frontEnemy.Attack, animationDelay + animationTime);
+        animationTime += frontEnemy.TakeDamage(frontHero.CurrentAttack, animationDelay + animationTime);
+        animationTime += frontHero.TakeDamage(frontEnemy.CurrentAttack, animationDelay + animationTime);
 
         return animationTime;
     }

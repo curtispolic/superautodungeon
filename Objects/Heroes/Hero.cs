@@ -149,12 +149,12 @@ public class Hero : Character
         spriteBatch.DrawString(this.StatsFont, this.CurrentHP.ToString(), position + new Vector2(30,130), Color.White);
 
         // Attack text
-        spriteBatch.DrawString(this.StatsFont, this.Attack.ToString(), position + new Vector2(83,129), Color.Black);
-        spriteBatch.DrawString(this.StatsFont, this.Attack.ToString(), position + new Vector2(85,131), Color.Black);
-        spriteBatch.DrawString(this.StatsFont, this.Attack.ToString(), position + new Vector2(85,129), Color.Black);
-        spriteBatch.DrawString(this.StatsFont, this.Attack.ToString(), position + new Vector2(83,131), Color.Black);
+        spriteBatch.DrawString(this.StatsFont, this.CurrentAttack.ToString(), position + new Vector2(83,129), Color.Black);
+        spriteBatch.DrawString(this.StatsFont, this.CurrentAttack.ToString(), position + new Vector2(85,131), Color.Black);
+        spriteBatch.DrawString(this.StatsFont, this.CurrentAttack.ToString(), position + new Vector2(85,129), Color.Black);
+        spriteBatch.DrawString(this.StatsFont, this.CurrentAttack.ToString(), position + new Vector2(83,131), Color.Black);
 
-        spriteBatch.DrawString(this.StatsFont, this.Attack.ToString(), position + new Vector2(84,130), Color.White);
+        spriteBatch.DrawString(this.StatsFont, this.CurrentAttack.ToString(), position + new Vector2(84,130), Color.White);
     }
 
     public virtual void DrawShadowOnly(SpriteBatch spriteBatch, GameTime gameTime, Vector2 position)

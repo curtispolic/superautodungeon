@@ -10,7 +10,8 @@ public class Rat : Enemy
         Name = "Rat";
         MaxHP = 3;
         CurrentHP = 3;
-        Attack = 1;
+        BaseAttack = 1;
+        CurrentAttack = 1;
         Active = true;
         LoadContent();
     }

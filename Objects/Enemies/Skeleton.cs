@@ -11,7 +11,8 @@ public class Skeleton : Enemy
         Name = "Skeleton";
         MaxHP = 5;
         CurrentHP = 5;
-        Attack = 1;
+        BaseAttack = 1;
+        CurrentAttack = 1;
         Active = true;
         LoadContent();
     }

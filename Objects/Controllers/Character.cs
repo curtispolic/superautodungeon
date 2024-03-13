@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Runtime.ConstrainedExecution;
 using System.Collections.Generic;
+using superautodungeon.Objects.UI;
 
 public class Character
 {
@@ -12,8 +13,9 @@ public class Character
     public Vector2 Position;
     public Texture2D Texture, HPTexture, AttackTexture, ShadowTexture, DeathTexture;
     public SpriteFont StatsFont;
+    public CharacterHoverPanel HoverPanel;
     public bool Dead, Dying, MouseOver, Active, MeleeHitting;
-    public int MaxHP, CurrentHP, Attack, Mana;
+    public int MaxHP, CurrentHP, BaseAttack, CurrentAttack, Mana;
     public List<int> LastDamageAmounts;
     public double DeathTimer, AnimationTimer;
     public List<double> DamageAnimationTimers;
@@ -32,6 +34,7 @@ public class Character
 
     public Character(MainGame inputParent)
     {
+        // This constructor should only run for active characters
         GameParent = inputParent;
         Mana = 0;
         Dead = false;
@@ -41,6 +44,9 @@ public class Character
         LastDamageAmounts = new();
         MeleeHitting = false;
         LoadContent();
+
+        // Hover panels inherit textures so should be called after loadcontent
+        HoverPanel = new(this);
     }
 
     public virtual double CombatStep(double animationDelay)
@@ -65,6 +71,7 @@ public class Character
                     mouseState.Y > Position.Y && mouseState.Y < Position.Y + Texture.Height)
                     {
                         // Mouseover effect, return asap to not hit the false at the end
+                        HoverPanel.Position = new(mouseState.X, mouseState.Y);
                         MouseOver = true;
                         return false;
                     }
@@ -141,16 +148,21 @@ public class Character
         spriteBatch.DrawString(this.StatsFont, this.CurrentHP.ToString(), this.Position + new Vector2(30,130), Color.White);
 
         // Attack text
-        spriteBatch.DrawString(this.StatsFont, this.Attack.ToString(), this.Position + new Vector2(83,129), Color.Black);
-        spriteBatch.DrawString(this.StatsFont, this.Attack.ToString(), this.Position + new Vector2(85,131), Color.Black);
-        spriteBatch.DrawString(this.StatsFont, this.Attack.ToString(), this.Position + new Vector2(85,129), Color.Black);
-        spriteBatch.DrawString(this.StatsFont, this.Attack.ToString(), this.Position + new Vector2(83,131), Color.Black);
+        spriteBatch.DrawString(this.StatsFont, this.CurrentAttack.ToString(), this.Position + new Vector2(83,129), Color.Black);
+        spriteBatch.DrawString(this.StatsFont, this.CurrentAttack.ToString(), this.Position + new Vector2(85,131), Color.Black);
+        spriteBatch.DrawString(this.StatsFont, this.CurrentAttack.ToString(), this.Position + new Vector2(85,129), Color.Black);
+        spriteBatch.DrawString(this.StatsFont, this.CurrentAttack.ToString(), this.Position + new Vector2(83,131), Color.Black);
 
-        spriteBatch.DrawString(this.StatsFont, this.Attack.ToString(), this.Position + new Vector2(84,130), Color.White);
+        spriteBatch.DrawString(this.StatsFont, this.CurrentAttack.ToString(), this.Position + new Vector2(84,130), Color.White);
 
         if (Dead)
         {
             spriteBatch.Draw(DeathTexture, Position + new Vector2(32, 32), null, Color.White, 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
+        }
+
+        if (MouseOver)
+        {
+            HoverPanel.Draw(spriteBatch, gameTime);
         }
     }
 
@@ -178,12 +190,12 @@ public class Character
             spriteBatch.DrawString(StatsFont, CurrentHP.ToString(), position + new Vector2(30,130), Color.White);
 
             // Attack text
-            spriteBatch.DrawString(StatsFont, Attack.ToString(), position + new Vector2(83,129), Color.Black);
-            spriteBatch.DrawString(StatsFont, Attack.ToString(), position + new Vector2(85,131), Color.Black);
-            spriteBatch.DrawString(StatsFont, Attack.ToString(), position + new Vector2(85,129), Color.Black);
-            spriteBatch.DrawString(StatsFont, Attack.ToString(), position + new Vector2(83,131), Color.Black);
+            spriteBatch.DrawString(StatsFont, CurrentAttack.ToString(), position + new Vector2(83,129), Color.Black);
+            spriteBatch.DrawString(StatsFont, CurrentAttack.ToString(), position + new Vector2(85,131), Color.Black);
+            spriteBatch.DrawString(StatsFont, CurrentAttack.ToString(), position + new Vector2(85,129), Color.Black);
+            spriteBatch.DrawString(StatsFont, CurrentAttack.ToString(), position + new Vector2(83,131), Color.Black);
 
-            spriteBatch.DrawString(StatsFont, Attack.ToString(), position + new Vector2(84,130), Color.White);
+            spriteBatch.DrawString(StatsFont, CurrentAttack.ToString(), position + new Vector2(84,130), Color.White);
         }
         // If not doing any on the specially handled character drawing animations, do it here
         if (!MeleeHitting)
@@ -199,6 +211,14 @@ public class Character
                 Dying = false;
             }
         }
+
+        // Mouseover panels
+        if (MouseOver)
+        {
+            HoverPanel.Draw(spriteBatch, gameTime);
+        }
+
+        // Drawing damage icons
         for (int i = 0; i < DamageAnimationTimers.Count; i++)
         {
             if (DamageAnimationTimers[i] <= DAMAGE_SHOW_TIME && DamageAnimationTimers[i] > 0)
@@ -219,6 +239,8 @@ public class Character
 
             DamageAnimationTimers[i] += gameTime.ElapsedGameTime.TotalMilliseconds;
         }
+
+        // Timer handling
         DeathTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
         AnimationTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
     }
