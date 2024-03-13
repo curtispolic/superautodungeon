@@ -16,9 +16,9 @@ public class Mob
         GameParent = inputParent;
         EnemyList = new()
         {
-            new Skeleton(GameParent),
-            new Skeleton(GameParent),
-            new Skeleton(GameParent),
+            new Rat(GameParent),
+            new Rat(GameParent),
+            new Rat(GameParent),
             new Skeleton(GameParent)
         };
     }
