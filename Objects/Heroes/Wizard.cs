@@ -16,7 +16,7 @@ public class Wizard : Hero
     {
         Random random  = new();
         Gender = random.Next(2) == 1 ? "Male" : "Female";
-        Description = "A wise old wizard.\nWizards will spend 2 mana to cast a fireball.\nFireball does 2/4/6 damage to a random target.\nWill deal half to adjacent targets.";
+        Description = "A wise old wizard.\nWizards will spend 2 mana to cast a fireball if not in melee.\nFireball does 2/4/6 damage to a random target.\nWill deal half to adjacent targets.";
         Class = "Wizard";
         Name = Gender == "Male" ? GameParent.nameGenerator.CreateMaleName() : GameParent.nameGenerator.CreateFemaleName();
         MaxHP = 6;

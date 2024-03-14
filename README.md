@@ -14,12 +14,11 @@ Current features:
 - Feature complete mouseover and descriptions
 
 To Do in Rough Order:
-- Create mana icon and animations
-- Make text align correctly for health and attack
-- Make combat show the last round of combat
 - Add 2 more classes (priest, archer)
 - Add 2 or 3 more enemies (goblin, dark wizard, ogre)
 - Implement gold
+- Mana gaining animation
+- Make combat show the last round of combat
 - Party reordering
 - Selling units
 - Levelling up

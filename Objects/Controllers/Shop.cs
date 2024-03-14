@@ -129,7 +129,23 @@ public class Shop
         for (int i = 0; i < 5; i++)
         {
             // Will contian logic for rolling from valid shop tiers
-            BuyableHeroes.Add(random.Next(2) == 1 ? new Knight(LevelParent.GameParent) : new Wizard(LevelParent.GameParent));
+            int heroClass = random.Next(3);
+            Hero newHero = new();
+            
+            switch (heroClass)
+            {
+                case 0:
+                    newHero = new Knight(LevelParent.GameParent);
+                    break;
+                case 1:
+                    newHero = new Wizard(LevelParent.GameParent);
+                    break;
+                case 2:
+                    newHero = new Ranger(LevelParent.GameParent);
+                    break;
+            }
+
+            BuyableHeroes.Add(newHero);
             BuyableHeroes[i].Position = new Vector2(20 + i * 200, 20);
         }
     }

@@ -14,6 +14,11 @@ public class Hero : Character
     // TODO Armour
     // TODO Trinket
 
+    public Hero()
+    {
+        Active = false;
+    }
+
     public Hero(MainGame inputParent, bool inputActive): base(inputParent)
     {
         // Active should only be false for manual creations
