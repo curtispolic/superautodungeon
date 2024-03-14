@@ -23,6 +23,8 @@ public class Character
 
     public static int DEATH_TIME = 1000;
     public static int DAMAGE_SHOW_TIME = 250;
+    public static Vector2 HP_OFFSET = new(30,130);
+    public static Vector2 ATTACK_OFFSET = new(84,130);
     // TODO Weapon
     // TODO Armour
     // TODO Trinket
@@ -156,33 +158,38 @@ public class Character
     public virtual void Draw(SpriteBatch spriteBatch, GameTime gameTime)
     {
         // Drawing shadow
-        spriteBatch.Draw(this.ShadowTexture, this.Position + new Vector2(16, 96), null, Color.White, 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
+        spriteBatch.Draw(ShadowTexture, Position + new Vector2(16, 96), null, Color.White, 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
 
         // Drawing Self
-        spriteBatch.Draw(this.Texture, this.Position, null, Color.White, 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
+        spriteBatch.Draw(Texture, Position, null, Color.White, 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
 
         // Drawing HP icon
-        spriteBatch.Draw(this.HPTexture, this.Position + new Vector2(24, 128), null, Color.White, 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
+        spriteBatch.Draw(HPTexture, Position + new Vector2(24, 128), null, Color.White, 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
 
         // Drawing attack
-        spriteBatch.Draw(this.AttackTexture, this.Position + new Vector2(72, 128), null, Color.White, 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
+        spriteBatch.Draw(AttackTexture, Position + new Vector2(72, 128), null, Color.White, 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
 
         // Drawing HP text
-        // Draws 4 offset versions for the black outline, then a white version on top
-        spriteBatch.DrawString(this.StatsFont, this.CurrentHP.ToString(), this.Position + new Vector2(31,131), Color.Black);
-        spriteBatch.DrawString(this.StatsFont, this.CurrentHP.ToString(), this.Position + new Vector2(29,129), Color.Black);
-        spriteBatch.DrawString(this.StatsFont, this.CurrentHP.ToString(), this.Position + new Vector2(31,129), Color.Black);
-        spriteBatch.DrawString(this.StatsFont, this.CurrentHP.ToString(), this.Position + new Vector2(29,131), Color.Black);
+        // Offset the text to be central to the icon
+        Vector2 offset = new(10 - StatsFont.MeasureString(CurrentHP.ToString()).X / 2, 10 - StatsFont.MeasureString(CurrentHP.ToString()).Y / 2);
 
-        spriteBatch.DrawString(this.StatsFont, this.CurrentHP.ToString(), this.Position + new Vector2(30,130), Color.White);
+        // Draws 4 offset versions for the black outline, then a white version on top
+        spriteBatch.DrawString(StatsFont, CurrentHP.ToString(), Position + HP_OFFSET + offset + new Vector2(1, 1), Color.Black);
+        spriteBatch.DrawString(StatsFont, CurrentHP.ToString(), Position + HP_OFFSET + offset + new Vector2(1, -1), Color.Black);
+        spriteBatch.DrawString(StatsFont, CurrentHP.ToString(), Position + HP_OFFSET + offset + new Vector2(-1, 1), Color.Black);
+        spriteBatch.DrawString(StatsFont, CurrentHP.ToString(), Position + HP_OFFSET + offset + new Vector2(-1, -1), Color.Black);
+
+        spriteBatch.DrawString(StatsFont, CurrentHP.ToString(), Position + HP_OFFSET + offset, Color.White);
 
         // Attack text
-        spriteBatch.DrawString(this.StatsFont, this.CurrentAttack.ToString(), this.Position + new Vector2(83,129), Color.Black);
-        spriteBatch.DrawString(this.StatsFont, this.CurrentAttack.ToString(), this.Position + new Vector2(85,131), Color.Black);
-        spriteBatch.DrawString(this.StatsFont, this.CurrentAttack.ToString(), this.Position + new Vector2(85,129), Color.Black);
-        spriteBatch.DrawString(this.StatsFont, this.CurrentAttack.ToString(), this.Position + new Vector2(83,131), Color.Black);
+        offset = new(6 - StatsFont.MeasureString(CurrentAttack.ToString()).X / 2, 10 - StatsFont.MeasureString(CurrentAttack.ToString()).Y / 2);
 
-        spriteBatch.DrawString(this.StatsFont, this.CurrentAttack.ToString(), this.Position + new Vector2(84,130), Color.White);
+        spriteBatch.DrawString(StatsFont, CurrentAttack.ToString(), Position + ATTACK_OFFSET + offset + new Vector2(1, 1), Color.Black);
+        spriteBatch.DrawString(StatsFont, CurrentAttack.ToString(), Position + ATTACK_OFFSET + offset + new Vector2(1, -1), Color.Black);
+        spriteBatch.DrawString(StatsFont, CurrentAttack.ToString(), Position + ATTACK_OFFSET + offset + new Vector2(-1, 1), Color.Black);
+        spriteBatch.DrawString(StatsFont, CurrentAttack.ToString(), Position + ATTACK_OFFSET + offset + new Vector2(-1, -1), Color.Black);
+
+        spriteBatch.DrawString(StatsFont, CurrentAttack.ToString(), Position + ATTACK_OFFSET + offset, Color.White);
 
         if (Dead)
         {
@@ -205,23 +212,28 @@ public class Character
             spriteBatch.Draw(AttackTexture, position + new Vector2(72, 128), null, Color.White, 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
 
             // Drawing HP text
-            // Draws 4 offset versions for the black outline, then a white version on top
-            spriteBatch.DrawString(StatsFont, CurrentHP.ToString(), position + new Vector2(31,131), Color.Black);
-            spriteBatch.DrawString(StatsFont, CurrentHP.ToString(), position + new Vector2(29,129), Color.Black);
-            spriteBatch.DrawString(StatsFont, CurrentHP.ToString(), position + new Vector2(31,129), Color.Black);
-            spriteBatch.DrawString(StatsFont, CurrentHP.ToString(), position + new Vector2(29,131), Color.Black);
+            // Offset the text to be central to the icon
+            Vector2 offset = new(10 - StatsFont.MeasureString(CurrentHP.ToString()).X / 2, 10 - StatsFont.MeasureString(CurrentHP.ToString()).Y / 2);
 
-            spriteBatch.DrawString(StatsFont, CurrentHP.ToString(), position + new Vector2(30,130), Color.White);
+            // Draws 4 offset versions for the black outline, then a white version on top
+            spriteBatch.DrawString(StatsFont, CurrentHP.ToString(), position + HP_OFFSET + offset + new Vector2(1, 1), Color.Black);
+            spriteBatch.DrawString(StatsFont, CurrentHP.ToString(), position + HP_OFFSET + offset + new Vector2(1, -1), Color.Black);
+            spriteBatch.DrawString(StatsFont, CurrentHP.ToString(), position + HP_OFFSET + offset + new Vector2(-1, 1), Color.Black);
+            spriteBatch.DrawString(StatsFont, CurrentHP.ToString(), position + HP_OFFSET + offset + new Vector2(-1, -1), Color.Black);
+
+            spriteBatch.DrawString(StatsFont, CurrentHP.ToString(), position + HP_OFFSET + offset, Color.White);
 
             // Attack text
-            spriteBatch.DrawString(StatsFont, CurrentAttack.ToString(), position + new Vector2(83,129), Color.Black);
-            spriteBatch.DrawString(StatsFont, CurrentAttack.ToString(), position + new Vector2(85,131), Color.Black);
-            spriteBatch.DrawString(StatsFont, CurrentAttack.ToString(), position + new Vector2(85,129), Color.Black);
-            spriteBatch.DrawString(StatsFont, CurrentAttack.ToString(), position + new Vector2(83,131), Color.Black);
+            offset = new(6 - StatsFont.MeasureString(CurrentAttack.ToString()).X / 2, 10 - StatsFont.MeasureString(CurrentAttack.ToString()).Y / 2);
 
-            spriteBatch.DrawString(StatsFont, CurrentAttack.ToString(), position + new Vector2(84,130), Color.White);
+            spriteBatch.DrawString(StatsFont, CurrentAttack.ToString(), position + ATTACK_OFFSET + offset + new Vector2(1, 1), Color.Black);
+            spriteBatch.DrawString(StatsFont, CurrentAttack.ToString(), position + ATTACK_OFFSET + offset + new Vector2(1, -1), Color.Black);
+            spriteBatch.DrawString(StatsFont, CurrentAttack.ToString(), position + ATTACK_OFFSET + offset + new Vector2(-1, 1), Color.Black);
+            spriteBatch.DrawString(StatsFont, CurrentAttack.ToString(), position + ATTACK_OFFSET + offset + new Vector2(-1, -1), Color.Black);
+
+            spriteBatch.DrawString(StatsFont, CurrentAttack.ToString(), position + ATTACK_OFFSET + offset, Color.White);
         }
-        // If not doing any on the specially handled character drawing animations, do it here
+        // If not doing any of the specially handled character drawing animations, do it here
         if (!MeleeHitting)
         {
             spriteBatch.Draw(Texture, position, null, Color.White, 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
@@ -244,17 +256,19 @@ public class Character
             if (DamageAnimationTimers[i] <= DAMAGE_SHOW_TIME && DamageAnimationTimers[i] > 0)
             {
                 float slidingUp = (float)DamageAnimationTimers[i] / DAMAGE_SHOW_TIME * -50;
+                string text = "-" + LastDamageAmounts[i].ToString();
+                Vector2 offset = new(10 - StatsFont.MeasureString(text).X / 2, 10 - StatsFont.MeasureString(text).Y / 2);
 
                 // Drawing HP icon
                 spriteBatch.Draw(HPTexture, position + new Vector2(54, slidingUp), null, new Color(255,255,255,128), 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
 
                 // Draw the amount of damage taken
-                spriteBatch.DrawString(StatsFont, "-" + LastDamageAmounts[i].ToString(), position + new Vector2(61,3 + slidingUp), Color.Black);
-                spriteBatch.DrawString(StatsFont, "-" + LastDamageAmounts[i].ToString(), position + new Vector2(59,1 + slidingUp), Color.Black);
-                spriteBatch.DrawString(StatsFont, "-" + LastDamageAmounts[i].ToString(), position + new Vector2(61,1 + slidingUp), Color.Black);
-                spriteBatch.DrawString(StatsFont, "-" + LastDamageAmounts[i].ToString(), position + new Vector2(59,3 + slidingUp), Color.Black);
+                spriteBatch.DrawString(StatsFont, text, position + offset + new Vector2(61,3 + slidingUp), Color.Black);
+                spriteBatch.DrawString(StatsFont, text, position + offset + new Vector2(59,1 + slidingUp), Color.Black);
+                spriteBatch.DrawString(StatsFont, text, position + offset + new Vector2(61,1 + slidingUp), Color.Black);
+                spriteBatch.DrawString(StatsFont, text, position + offset + new Vector2(59,3 + slidingUp), Color.Black);
 
-                spriteBatch.DrawString(StatsFont, "-" + LastDamageAmounts[i].ToString(), position + new Vector2(60,2 + slidingUp), Color.White);
+                spriteBatch.DrawString(StatsFont, text, position + offset + new Vector2(60,2 + slidingUp), Color.White);
             }
 
             DamageAnimationTimers[i] += gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -272,6 +286,17 @@ public class Character
         {
             // Icon
             spriteBatch.Draw(ManaTexture, position + new Vector2(48, 156), null, Color.White, 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
+
+            // Offset the text to be central to the icon
+            Vector2 offset = new(8 - StatsFont.MeasureString(Mana.ToString()).X / 2, 0);
+
+            // Text
+            spriteBatch.DrawString(StatsFont, Mana.ToString(), position + offset + new Vector2(55,159), Color.Black);
+            spriteBatch.DrawString(StatsFont, Mana.ToString(), position + offset + new Vector2(55,157), Color.Black);
+            spriteBatch.DrawString(StatsFont, Mana.ToString(), position + offset + new Vector2(53,159), Color.Black);
+            spriteBatch.DrawString(StatsFont, Mana.ToString(), position + offset + new Vector2(53,157), Color.Black);
+
+            spriteBatch.DrawString(StatsFont, Mana.ToString(), position + offset + new Vector2(54,158), Color.White);
         }
     }
 }
