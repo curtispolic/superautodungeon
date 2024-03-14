@@ -6,10 +6,10 @@ public class Rat : Enemy
 {
     public Rat(MainGame inputParent): base(inputParent)
     {
-        Description = "A little rat scurrying around the dungeon.";
+        Description = "A little rat scurrying around.\nHas no special properties or abilities.";
         Name = "Rat";
-        MaxHP = 3;
-        CurrentHP = 3;
+        MaxHP = 4;
+        CurrentHP = 4;
         BaseAttack = 1;
         CurrentAttack = 1;
         Active = true;

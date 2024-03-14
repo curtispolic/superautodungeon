@@ -7,12 +7,12 @@ public class Skeleton : Enemy
 {
     public Skeleton(MainGame inputParent): base(inputParent)
     {
-        Description = "Quite spooky and/or scary.";
+        Description = "Quite spooky and/or scary.\nHas no special properties or abilities.";
         Name = "Skeleton";
-        MaxHP = 5;
-        CurrentHP = 5;
-        BaseAttack = 1;
-        CurrentAttack = 1;
+        MaxHP = 6;
+        CurrentHP = 6;
+        BaseAttack = 2;
+        CurrentAttack = 2;
         Active = true;
         LoadContent();
     }

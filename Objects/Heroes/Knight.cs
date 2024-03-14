@@ -9,7 +9,7 @@ public class Knight : Hero
     {
         Random random  = new();
         Gender = random.Next(2) == 1 ? "Male" : "Female";
-        Description = "A sturdy, shield bearing Knight. It will be difficult for enemies to get past their plate armour.";
+        Description = "A sturdy, shield bearing Knight.\nKnights will take 1/2/3 less damage from all instances";
         Class = "Knight";
         Name = Gender == "Male" ? GameParent.nameGenerator.CreateMaleName() : GameParent.nameGenerator.CreateFemaleName();
         MaxHP = 12;
@@ -23,5 +23,18 @@ public class Knight : Hero
     {
         Texture = GameParent.Content.Load<Texture2D>("knight");
         base.LoadContent();
+    }
+
+    public override double TakeDamage(int damage, double animationDelay)
+    {
+        damage -= 1;
+        if (damage > 0)
+        {
+            return base.TakeDamage(damage, animationDelay);
+        }
+        else
+        {
+            return base.TakeDamage(0, animationDelay);
+        }
     }
 }

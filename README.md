@@ -7,14 +7,13 @@ Current features:
 - Basic Heroes vs Enemies combat
 - Main Menu with half of the buttons working
 - Base UI for gameplay
-- 2 hero classes with no features
-- Shop (this task was herculean)
+- 2 hero classes
+- Shop
 - Levels, rooms, filled combats
 - Combat steps for backline units
-- Feature complete mouseover
+- Feature complete mouseover and descriptions
 
 To Do in Rough Order:
-- Fully describe each class and enemy properly
 - Create mana icon and animations
 - Add 2 more classes (priest, archer)
 - Add 2 or 3 more enemies (goblin, dark wizard, ogre)
@@ -41,12 +40,10 @@ Going to have the following options as map tiles:
 - Boss (to progress to next floor)
 
 Class ideas with their passive:
-- Knight (takes a reduced amount of damage)
 - Scout (can let you preview a combat)
 - Priest (does good healing)
 - Paladin (heals when he melee attacks)
 - Ranger (attacks from the backline)
-- Mage (magic attacks from afar)
 - Warlock
 - Necromancer (high tier)
 
@@ -60,10 +57,5 @@ Roguelite persistent upgrades between runs.
 
 Equipment will also have levels like heroes will. This will likely require an inventory space built in for the party.
 
-Position is a bad thinking variable for everything, since it is all going to be drawn in multiple places. Refactor to get rid of 
-position as an attribute for objects. 
-EDIT: Okay not everything, buttons rely on it for their handling now but stuff like combats do not need a position. 
-EDIT2: Okay I think heroes will also require a position for drag handling but itll be okay. 
-EDIT3: somewhat through removing position
-
 Use the layer float parameter of draw rather that insisting its all done in order.
+EDIT: Somewhat too far gone to complete this task, but will keep in mind.
