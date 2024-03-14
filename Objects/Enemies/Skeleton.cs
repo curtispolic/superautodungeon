@@ -19,7 +19,7 @@ public class Skeleton : Enemy
 
     public override void LoadContent()
     {
-        Texture = GameParent.Content.Load<Texture2D>("skeleton");
+        Texture = GameParent.Content.Load<Texture2D>("Enemies/skeleton");
         base.LoadContent();
     }
 }

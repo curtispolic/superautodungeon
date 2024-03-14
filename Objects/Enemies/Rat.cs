@@ -18,7 +18,7 @@ public class Rat : Enemy
 
     public override void LoadContent()
     {
-        Texture = GameParent.Content.Load<Texture2D>("rat");
+        Texture = GameParent.Content.Load<Texture2D>("Enemies/rat");
         base.LoadContent();
     }
 }

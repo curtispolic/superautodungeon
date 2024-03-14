@@ -21,7 +21,7 @@ public class Knight : Hero
 
     public override void LoadContent()
     {
-        Texture = GameParent.Content.Load<Texture2D>("knight");
+        Texture = GameParent.Content.Load<Texture2D>("Heroes/knight");
         base.LoadContent();
     }
 

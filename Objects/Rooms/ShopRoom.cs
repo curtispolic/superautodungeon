@@ -25,7 +25,7 @@ public class ShopRoom : Room
 
     public void LoadContent()
     {
-        Texture = LevelParent.GameParent.Content.Load<Texture2D>("shop");
+        Texture = LevelParent.GameParent.Content.Load<Texture2D>("UI/shop");
     }
 
     public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)

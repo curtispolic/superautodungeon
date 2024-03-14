@@ -29,8 +29,8 @@ public class Wizard : Hero
 
     public override void LoadContent()
     {
-        Texture = GameParent.Content.Load<Texture2D>("wizard");
-        FireballTexture = GameParent.Content.Load<Texture2D>("fireball");
+        Texture = GameParent.Content.Load<Texture2D>("Heroes/wizard");
+        FireballTexture = GameParent.Content.Load<Texture2D>("Effects/fireball");
         base.LoadContent();
     }
 
@@ -93,6 +93,8 @@ public class Wizard : Hero
 
             spriteBatch.Draw(FireballTexture, position + fireballOffset, null, Color.White, -0.5f + (float)(FireballTimer / FIREBALL_TIME), new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
         }
+
+        ManaDraw(spriteBatch, gameTime, position);
 
         FireballTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
 

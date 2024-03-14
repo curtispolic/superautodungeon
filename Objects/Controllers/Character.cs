@@ -11,7 +11,7 @@ public class Character
 {
     public MainGame GameParent;
     public Vector2 Position;
-    public Texture2D Texture, HPTexture, AttackTexture, ShadowTexture, DeathTexture;
+    public Texture2D Texture, HPTexture, AttackTexture, ManaTexture, ShadowTexture, DeathTexture;
     public SpriteFont StatsFont;
     public CharacterHoverPanel HoverPanel;
     public bool Dead, Dying, MouseOver, Active, MeleeHitting;
@@ -145,11 +145,12 @@ public class Character
 
     public virtual void LoadContent()
     {
-        HPTexture = GameParent.Content.Load<Texture2D>("heart");
-        AttackTexture = GameParent.Content.Load<Texture2D>("attack");
+        HPTexture = GameParent.Content.Load<Texture2D>("UI/heart");
+        AttackTexture = GameParent.Content.Load<Texture2D>("UI/attack");
         StatsFont = GameParent.Content.Load<SpriteFont>("statsFont");
-        ShadowTexture = GameParent.Content.Load<Texture2D>("shadow50");
-        DeathTexture = GameParent.Content.Load<Texture2D>("death");
+        ShadowTexture = GameParent.Content.Load<Texture2D>("Effects/shadow50");
+        DeathTexture = GameParent.Content.Load<Texture2D>("Effects/death");
+        ManaTexture = GameParent.Content.Load<Texture2D>("UI/mana");
     }
 
     public virtual void Draw(SpriteBatch spriteBatch, GameTime gameTime)
@@ -262,5 +263,15 @@ public class Character
         // Timer handling
         DeathTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
         AnimationTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
+    }
+
+    public virtual void ManaDraw(SpriteBatch spriteBatch, GameTime gameTime, Vector2 position)
+    {
+        // Draw mana icon and text
+        if (!Dead || Dying)
+        {
+            // Icon
+            spriteBatch.Draw(ManaTexture, position + new Vector2(48, 156), null, Color.White, 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
+        }
     }
 }

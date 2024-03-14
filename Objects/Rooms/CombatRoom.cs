@@ -24,7 +24,7 @@ public class CombatRoom : Room
 
     public void LoadContent()
     {
-        Texture = LevelParent.GameParent.Content.Load<Texture2D>("death");
+        Texture = LevelParent.GameParent.Content.Load<Texture2D>("Effects/death");
     }
 
     public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)

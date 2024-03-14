@@ -52,7 +52,7 @@ public class MainMenu
 
     public void LoadContent()
     {
-        TitleTexture = GameParent.Content.Load<Texture2D>("title");
+        TitleTexture = GameParent.Content.Load<Texture2D>("UI/title");
     }
 
     public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
