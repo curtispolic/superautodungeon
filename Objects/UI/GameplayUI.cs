@@ -82,8 +82,6 @@ public class GameplayUI
             // Draw the hero
             if (hero.Active)
             {
-                hero.Draw(spriteBatch, gameTime);
-
                 // Draw the name
                 spriteBatch.DrawString(Font, hero.Name, hero.Position + new Vector2(11, -16), Color.Black);
                 spriteBatch.DrawString(Font, hero.Name, hero.Position + new Vector2(9, -14), Color.Black);
@@ -91,12 +89,42 @@ public class GameplayUI
                 spriteBatch.DrawString(Font, hero.Name, hero.Position + new Vector2(11, -14), Color.Black);
                 spriteBatch.DrawString(Font, hero.Name, hero.Position + new Vector2(10, -15), Color.White);
 
+                hero.Draw(spriteBatch, gameTime);
+
                 if (hero.Dead)
                     spriteBatch.Draw(hero.DeathTexture, hero.Position + new Vector2(32, 32), null, Color.White, 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
             }
             else
             {
                 hero.DrawShadowOnly(spriteBatch, gameTime, hero.Position);
+            }
+        }
+    }
+
+    public void MouseoverDraw(SpriteBatch spriteBatch, GameTime gameTime)
+    {
+        // Handle mouseover here to make sure it's drawn at the front
+        foreach (var hero in PlayerParty.HeroList)
+        {
+            if (hero.MouseOver)
+            {
+                if (GameParent.shop.Active)
+                {
+                    // If a shop is active, only draw mouseover if no picked up hero
+                    if (GameParent.shop.PickedUp == -1)
+                    {
+                        hero.HoverPanel.Draw(spriteBatch, gameTime);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    hero.HoverPanel.Draw(spriteBatch, gameTime);
+                }
+                
             }
         }
     }

@@ -121,6 +121,10 @@ public class MainGame : Game
         if (combat.Active)
             combat.Draw(_spriteBatch, gameTime);
 
+        // Handle mouseovers last so they are on top
+        if (gameplayUI.Active)
+            gameplayUI.MouseoverDraw(_spriteBatch, gameTime);
+
         _spriteBatch.End();
 
         base.Draw(gameTime);

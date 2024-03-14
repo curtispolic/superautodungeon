@@ -61,6 +61,7 @@ public class Shop
             }
         }
 
+        // Set the offset for the pickup so it's smooth
         for (int i = 0; i < BuyableHeroes.Count; i++)
         {
             if (PickedUp == -1)
@@ -173,15 +174,14 @@ public class Shop
         spriteBatch.Draw(_texture2, new Rectangle(25, 25, 1230, 580), Color.White);
 
         // Checking for picked up hero for special drawing order
+        // Also drawing non picked up hereoes
         Hero pickedUpHero = new(LevelParent.GameParent, false);
-        var pickedCheck = false;
         for (int i = 0; i < BuyableHeroes.Count; i++)
         {
             var hero = BuyableHeroes[i];
             if (hero.PickedUp)
             {
                 pickedUpHero = hero;
-                pickedCheck = true;
             }
             else
             {
@@ -193,8 +193,17 @@ public class Shop
         UpgradeShopButton.Draw(spriteBatch, gameTime);
         ExitButton.Draw(spriteBatch, gameTime);
 
+        // Draw the mouseover panel here so it's over all elements
+        foreach (var hero in BuyableHeroes)
+        {
+            if (hero.MouseOver && !pickedUpHero.Active)
+            {
+                hero.HoverPanel.Draw(spriteBatch, gameTime);
+            }
+        }
+
         // Draw picked up hero last to show above all others
-        if (pickedCheck)
+        if (pickedUpHero.Active)
             pickedUpHero.Draw(spriteBatch, gameTime);
     }
 }

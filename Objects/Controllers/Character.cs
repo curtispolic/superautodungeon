@@ -43,10 +43,8 @@ public class Character
         DamageAnimationTimers = new();
         LastDamageAmounts = new();
         MeleeHitting = false;
+        HoverPanel = new();
         LoadContent();
-
-        // Hover panels inherit textures so should be called after loadcontent
-        HoverPanel = new(this);
     }
 
     public virtual double CombatStep(double animationDelay)
@@ -71,7 +69,7 @@ public class Character
                     mouseState.Y > Position.Y && mouseState.Y < Position.Y + Texture.Height)
                     {
                         // Mouseover effect, return asap to not hit the false at the end
-                        HoverPanel.Position = new(mouseState.X, mouseState.Y);
+                        HoverPanel = new(this, graphics, new Vector2(mouseState.X, mouseState.Y));
                         MouseOver = true;
                         return false;
                     }
@@ -159,11 +157,6 @@ public class Character
         {
             spriteBatch.Draw(DeathTexture, Position + new Vector2(32, 32), null, Color.White, 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
         }
-
-        if (MouseOver)
-        {
-            HoverPanel.Draw(spriteBatch, gameTime);
-        }
     }
 
     public virtual void CombatDraw(SpriteBatch spriteBatch, GameTime gameTime, Vector2 position)
@@ -210,12 +203,6 @@ public class Character
             {
                 Dying = false;
             }
-        }
-
-        // Mouseover panels
-        if (MouseOver)
-        {
-            HoverPanel.Draw(spriteBatch, gameTime);
         }
 
         // Drawing damage icons

@@ -2,7 +2,6 @@ namespace superautodungeon.Objects.UI;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using superautodungeon.Objects.Controllers;
 
 public class CharacterHoverPanel
@@ -10,12 +9,33 @@ public class CharacterHoverPanel
     public Character CharacterParent;
     public Texture2D CharacterTexture;
     public SpriteFont Font;
-    public Vector2 Position, Size;
+    public Vector2 Position, Size, TextSize;
+    public string Text;
 
-    public CharacterHoverPanel(Character inputParent)
+    public CharacterHoverPanel()
+    {
+
+    }
+
+    public CharacterHoverPanel(Character inputParent,GraphicsDeviceManager graphics, Vector2 inputPosition)
     {
         CharacterParent = inputParent;
-        Size = new(100, 100);
+        LoadContent();
+
+        // Get details from parent and size for it
+        Text = CharacterParent.Name + "\n" + CharacterParent.Description;
+        TextSize = Font.MeasureString(Text);
+        Size = TextSize + new Vector2(20, 20);
+
+        if (inputPosition.X > graphics.PreferredBackBufferWidth / 2)
+        {
+            Position = inputPosition;
+            Position.X -= Size.X;
+        }
+        else
+        {
+            Position = inputPosition;
+        }
     }
 
      public virtual void LoadContent()
@@ -39,5 +59,9 @@ public class CharacterHoverPanel
         // Drawing outline then the inside
         spriteBatch.Draw(texture, new Rectangle((int)Position.X, (int)Position.Y, (int)Size.X, (int)Size.Y), Color.White);
         spriteBatch.Draw(texture2, new Rectangle((int)Position.X + 5, (int)Position.Y + 5, (int)Size.X - 10, (int)Size.Y - 10), Color.White);
+
+        // Text
+        Vector2 textOffset = (Size - TextSize) / 2;
+        spriteBatch.DrawString(Font, Text, Position + textOffset, Color.Black);
     }
 }

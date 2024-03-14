@@ -11,10 +11,9 @@ Current features:
 - Shop (this task was herculean)
 - Levels, rooms, filled combats
 - Combat steps for backline units
-- Placeholder mouseover information
+- Feature complete mouseover
 
 To Do in Rough Order:
-- Make mouseover feature complete
 - Fully describe each class and enemy properly
 - Create mana icon and animations
 - Add 2 more classes (priest, archer)
