@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
 using superautodungeon.Objects.Enemies;
+using Microsoft.Xna.Framework.Input;
 
 public class Mob
 {
@@ -21,6 +22,21 @@ public class Mob
             new Rat(GameParent),
             new Skeleton(GameParent)
         };
+    }
+
+    public void CombatUpdate(MouseState mouseState, GraphicsDeviceManager graphics, GameTime gameTime)
+    {
+        // Mouseover handling
+        int count = 0;
+        for (int i = 0; i < 4; i++)
+        {
+            var enemy = EnemyList[i];
+            if (enemy.Active && (!enemy.Dead || enemy.Dying))
+            {
+                enemy.CombatUpdate(mouseState, graphics, gameTime, new Vector2(600 + 100 * count, 200));
+                count++;
+            }
+        }
     }
 
     public Enemy FrontEnemy()

@@ -14,7 +14,6 @@ Current features:
 - Feature complete mouseover
 
 To Do in Rough Order:
-- Mouseover works in combat
 - Fully describe each class and enemy properly
 - Create mana icon and animations
 - Add 2 more classes (priest, archer)

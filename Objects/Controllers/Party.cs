@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using superautodungeon.Objects.Heroes;
 using System;
 using System.Collections;
+using Microsoft.Xna.Framework.Input;
 
 public class Party
 {
@@ -21,6 +22,21 @@ public class Party
         {
             HeroList.Add(new(GameParent, false));
             HeroList[i].Position = new(1285, 25 + i * 230);
+        }
+    }
+
+    public void CombatUpdate(MouseState mouseState, GraphicsDeviceManager graphics, GameTime gameTime)
+    {
+        // Mouseover handling
+        int count = 0;
+        for (int i = 0; i < 4; i++)
+        {
+            var hero = HeroList[i];
+            if (hero.Active && (!hero.Dead || hero.Dying))
+            {
+                hero.CombatUpdate(mouseState, graphics, gameTime, new Vector2(400 - 100 * count, 200));
+                count++;
+            }
         }
     }
 

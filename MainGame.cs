@@ -85,7 +85,11 @@ public class MainGame : Game
             if (fightTimer > combat.AnimationTime)
             {
                 fightTimer = 0;
-                combat.AnimationTime = combat.Update(true);
+                combat.AnimationTime = combat.Update();
+            }
+            else
+            {
+                combat.Update(graphics, gameTime);
             }
         }
         else if (shop.Active)
@@ -106,24 +110,25 @@ public class MainGame : Game
         GraphicsDevice.Clear(Color.LightPink);
         _spriteBatch.Begin();
 
+        // Render big components
         if (mainMenu.Active)
             mainMenu.Draw(_spriteBatch, gameTime);
-
         if (gameplayUI.Active)
             gameplayUI.Draw(_spriteBatch, gameTime);
-
         if (shop.Active)
             shop.Draw(_spriteBatch, gameTime);
-
         if (level.Active)
             level.Draw(_spriteBatch, gameTime);
-
         if (combat.Active)
             combat.Draw(_spriteBatch, gameTime);
 
         // Handle mouseovers last so they are on top
         if (gameplayUI.Active)
             gameplayUI.MouseoverDraw(_spriteBatch, gameTime);
+        if (combat.Active)
+            combat.MouseoverDraw(_spriteBatch, gameTime);
+        if (shop.Active)
+            shop.MouseoverDraw(_spriteBatch, gameTime);
 
         _spriteBatch.End();
 

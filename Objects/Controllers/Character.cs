@@ -82,6 +82,36 @@ public class Character
         return false;
     }
 
+    public virtual bool CombatUpdate(MouseState mouseState, GraphicsDeviceManager graphics, GameTime gameTime, Vector2 combatPos)
+    {
+        // This is just for handling mouseover status, say for a mouseover panel to show character information
+        // Specifically in combat
+        // Only handle active characters
+        if (Active)
+        {   
+            // Handle instances where the mouse is inside the game window
+            if (0 <= mouseState.X && mouseState.X <= graphics.PreferredBackBufferWidth && 0 <= mouseState.Y && mouseState.Y <= graphics.PreferredBackBufferHeight)
+            {
+                if (mouseState.LeftButton == ButtonState.Released)
+                {
+                    // Hovering inside self
+                    if (mouseState.X > combatPos.X && mouseState.X < combatPos.X + Texture.Width &&
+                    mouseState.Y > combatPos.Y && mouseState.Y < combatPos.Y + Texture.Height)
+                    {
+                        // Mouseover effect, return asap to not hit the false at the end
+                        HoverPanel = new(this, graphics, new Vector2(mouseState.X, mouseState.Y));
+                        MouseOver = true;
+                        return false;
+                    }
+                }
+            }
+        }
+
+        // Mouseover true is handled, so default to false
+        MouseOver = false;
+        return false;
+    }
+
     public virtual double Die(double animationDelay)
     {
         Dead = true;
@@ -201,6 +231,8 @@ public class Character
             spriteBatch.Draw(DeathTexture, position + new Vector2(32, 32), null, new Color(255,255,255,(int)(DeathTimer/(DEATH_TIME/2)*255)), 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
             if (DeathTimer > DEATH_TIME)
             {
+                // Stops mouseover from hanging when something dies while hovered over
+                MouseOver = false;
                 Dying = false;
             }
         }

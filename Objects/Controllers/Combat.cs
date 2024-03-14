@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using superautodungeon.Objects.Rooms;
+using Microsoft.Xna.Framework.Input;
 
 public class Combat
 {
@@ -53,54 +54,55 @@ public class Combat
     - Characters remain in place until the end of a combat round, then they will be shuffled forward
     */
 
-    public double Update(bool updatingCombat)
+    public double Update()
     {
-        // Only update combat once a round, but always check the buttons
-        if (updatingCombat)
+        // Only update combat once a round, but always check the buttons and characters for mouseover
+        // Will return the number of milliseconds the game should wait before calling again
+        double animationTime = 0;
+        
+        // Combat start animations (characters bobbing onto screen)
+        if (!Begun)
         {
-            // Will return the number of milliseconds the game should wait before calling again
-            double animationTime = 0;
-            
-            // Combat start animations (characters bobbing onto screen)
-            if (!Begun)
-            {
-                animationTime += BeginCombat();
-            }
+            animationTime += BeginCombat();
+        }
 
-            // Melee and associated triggers
-            animationTime += MeleeHit(animationTime);
+        // Melee and associated triggers
+        animationTime += MeleeHit(animationTime);
 
-            // Combat steps for backline units
-            foreach (var hero in PlayerParty.HeroList)
+        // Combat steps for backline units
+        foreach (var hero in PlayerParty.HeroList)
+        {
+            if (hero.Active)
             {
-                if (hero.Active)
+                if (!hero.Dead && hero != PlayerParty.FrontHero())
                 {
-                    if (!hero.Dead && hero != PlayerParty.FrontHero())
-                    {
-                        animationTime += hero.CombatStep(animationTime);
-                    }
+                    animationTime += hero.CombatStep(animationTime);
                 }
             }
+        }
 
-            foreach (var enemy in EnemyMob.EnemyList)
+        foreach (var enemy in EnemyMob.EnemyList)
+        {
+            if (enemy.Active)
             {
-                if (enemy.Active)
+                if (!enemy.Dead && enemy != EnemyMob.EnemyList[0])
                 {
-                    if (!enemy.Dead && enemy != EnemyMob.EnemyList[0])
-                    {
-                        animationTime += enemy.CombatStep(animationTime);
-                    }
+                    animationTime += enemy.CombatStep(animationTime);
                 }
             }
-
-            animationTime += EndRound();
-
-            return animationTime;
         }
-        else 
-        {
-            return 0;
-        }
+
+        animationTime += EndRound();
+
+        return animationTime;
+    }
+
+    public void Update(GraphicsDeviceManager graphics, GameTime gameTime)
+    {
+        // Handle mouseovers for heroes and enemies
+        var mouseState = Mouse.GetState();
+        PlayerParty.CombatUpdate(mouseState, graphics, gameTime);
+        EnemyMob.CombatUpdate(mouseState, graphics, gameTime);
     }
 
     public double BeginCombat()
@@ -183,5 +185,25 @@ public class Combat
         // Draw both parties for the combat
         PlayerParty.Draw(spriteBatch, gameTime);
         EnemyMob.Draw(spriteBatch, gameTime);
+    }
+
+    public void MouseoverDraw(SpriteBatch spriteBatch, GameTime gameTime)
+    {
+        // Handle mouseover here to make sure it's drawn at the front
+        foreach (var hero in PlayerParty.HeroList)
+        {
+            if (hero.MouseOver)
+            {
+                hero.HoverPanel.Draw(spriteBatch, gameTime);              
+            }
+        }
+
+        foreach (var enemy in EnemyMob.EnemyList)
+        {
+            if (enemy.MouseOver)
+            {
+                enemy.HoverPanel.Draw(spriteBatch, gameTime);
+            }
+        }
     }
 }

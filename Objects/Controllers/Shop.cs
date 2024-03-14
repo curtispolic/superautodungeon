@@ -12,6 +12,7 @@ namespace superautodungeon.Objects.Controllers;
 public class Shop
 {
     public List<Hero> BuyableHeroes;
+    public Hero PickedUpHero;
     public Button RerollButton, UpgradeShopButton, ExitButton;
     public Vector2 PickupOffset;
     public Level LevelParent;
@@ -175,13 +176,13 @@ public class Shop
 
         // Checking for picked up hero for special drawing order
         // Also drawing non picked up hereoes
-        Hero pickedUpHero = new(LevelParent.GameParent, false);
+        PickedUpHero = new(LevelParent.GameParent, false);
         for (int i = 0; i < BuyableHeroes.Count; i++)
         {
             var hero = BuyableHeroes[i];
             if (hero.PickedUp)
             {
-                pickedUpHero = hero;
+                PickedUpHero = hero;
             }
             else
             {
@@ -193,17 +194,20 @@ public class Shop
         UpgradeShopButton.Draw(spriteBatch, gameTime);
         ExitButton.Draw(spriteBatch, gameTime);
 
+        // Draw picked up hero last to show above all others
+        if (PickedUpHero.Active)
+            PickedUpHero.Draw(spriteBatch, gameTime);
+    }
+
+    public void MouseoverDraw(SpriteBatch spriteBatch, GameTime gameTime)
+    {
         // Draw the mouseover panel here so it's over all elements
         foreach (var hero in BuyableHeroes)
         {
-            if (hero.MouseOver && !pickedUpHero.Active)
+            if (hero.MouseOver && !PickedUpHero.Active)
             {
                 hero.HoverPanel.Draw(spriteBatch, gameTime);
             }
         }
-
-        // Draw picked up hero last to show above all others
-        if (pickedUpHero.Active)
-            pickedUpHero.Draw(spriteBatch, gameTime);
     }
 }
