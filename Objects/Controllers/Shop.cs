@@ -129,9 +129,9 @@ public class Shop
         for (int i = 0; i < 5; i++)
         {
             // Will contian logic for rolling from valid shop tiers
-            int heroClass = random.Next(3);
+            int heroClass = random.Next(4);
             Hero newHero = new();
-            
+
             switch (heroClass)
             {
                 case 0:
@@ -142,6 +142,9 @@ public class Shop
                     break;
                 case 2:
                     newHero = new Ranger(LevelParent.GameParent);
+                    break;
+                case 3:
+                    newHero = new Priest(LevelParent.GameParent);
                     break;
             }
 

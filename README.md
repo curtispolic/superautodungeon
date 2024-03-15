@@ -14,10 +14,9 @@ Current features:
 - Feature complete mouseover and descriptions
 
 To Do in Rough Order:
-- Add 2 more classes (priest, archer)
+- Mana and priest healing animations
 - Add 2 or 3 more enemies (goblin, dark wizard, ogre)
 - Implement gold
-- Mana gaining animation
 - Make combat show the last round of combat
 - Party reordering
 - Selling units
@@ -42,9 +41,7 @@ Going to have the following options as map tiles:
 
 Class ideas with their passive:
 - Scout (can let you preview a combat)
-- Priest (does good healing)
 - Paladin (heals when he melee attacks)
-- Ranger (attacks from the backline)
 - Warlock
 - Necromancer (high tier)
 

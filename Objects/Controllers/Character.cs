@@ -3,7 +3,6 @@ namespace superautodungeon.Objects.Controllers;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Runtime.ConstrainedExecution;
 using System.Collections.Generic;
 using superautodungeon.Objects.UI;
 
@@ -16,6 +15,7 @@ public class Character
     public CharacterHoverPanel HoverPanel;
     public bool Dead, Dying, MouseOver, Active, MeleeHitting;
     public int MaxHP, CurrentHP, BaseAttack, CurrentAttack, Mana;
+    // Despite the name, damage amounts and timers is also for healing
     public List<int> LastDamageAmounts;
     public double DeathTimer, AnimationTimer;
     public List<double> DamageAnimationTimers;
@@ -126,12 +126,39 @@ public class Character
     {
         double animationTime = 0;
         CurrentHP -= damage;
-        LastDamageAmounts.Add(damage);
+        LastDamageAmounts.Add(0 - damage);
         DamageAnimationTimers.Add(0 - animationDelay);
+
         // Handle damage taking effects here, equipment blah blah
+        
         if (CurrentHP <= 0)
         {
             animationTime += Die(animationTime + animationDelay);
+        }
+
+        return animationTime;
+    }
+
+    public virtual double ReceiveHealing(int healing, double animationDelay)
+    {
+        double animationTime = 0;
+
+        if (CurrentHP < MaxHP)
+        {
+            CurrentHP += healing;
+            if (CurrentHP > MaxHP)
+            {
+                int temp = healing - (CurrentHP - MaxHP);
+                CurrentHP = MaxHP;
+                LastDamageAmounts.Add(temp);
+                DamageAnimationTimers.Add(0 - animationDelay);
+            }
+            else
+            {
+                LastDamageAmounts.Add(healing);
+                DamageAnimationTimers.Add(0 - animationDelay);
+            }
+            // Handle healing recieved effects here
         }
 
         return animationTime;
@@ -250,13 +277,15 @@ public class Character
             }
         }
 
-        // Drawing damage icons
+        // Drawing damage icons (also healing)
         for (int i = 0; i < DamageAnimationTimers.Count; i++)
         {
             if (DamageAnimationTimers[i] <= DAMAGE_SHOW_TIME && DamageAnimationTimers[i] > 0)
             {
                 float slidingUp = (float)DamageAnimationTimers[i] / DAMAGE_SHOW_TIME * -50;
-                string text = "-" + LastDamageAmounts[i].ToString();
+                string text = LastDamageAmounts[i].ToString();
+                if (LastDamageAmounts[i] > 0)
+                    text = "+" + text;
                 Vector2 offset = new(10 - StatsFont.MeasureString(text).X / 2, 10 - StatsFont.MeasureString(text).Y / 2);
 
                 // Drawing HP icon

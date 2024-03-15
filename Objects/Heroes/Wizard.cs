@@ -44,7 +44,6 @@ public class Wizard : Hero
         {
             animationTime += Fireball(animationDelay + animationTime);
             Mana -= 2;
-            // placeholder animation values
             return animationTime;
         }
         else
