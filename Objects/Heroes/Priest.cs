@@ -10,7 +10,7 @@ public class Priest : Hero
     public double HealTimer;
     
     public static int HEAL_TIME = 1000;
-    public static Vector2 HEAL_POSITION = new(400, 0);
+    public static Vector2 HEAL_POSITION = new(400, 70);
 
     public Priest(MainGame inputParent): base(inputParent, true)
     {
