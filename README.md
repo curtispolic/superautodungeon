@@ -14,7 +14,8 @@ Current features:
 - Feature complete mouseover and descriptions
 
 To Do in Rough Order:
-- Mana and priest healing animations
+- Mana animations
+- Make numbers update when the animations happen (will probably be hard)
 - Add 2 or 3 more enemies (goblin, dark wizard, ogre)
 - Implement gold
 - Make combat show the last round of combat
@@ -26,7 +27,8 @@ To Do in Rough Order:
 - Expand To Do list
 
 Known Bugs:
-- None
+- Combat crashes when player party is defeated
+- Combat does not show the last round of combat
 
 Notes:
 

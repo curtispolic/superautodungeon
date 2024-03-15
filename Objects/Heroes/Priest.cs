@@ -10,6 +10,7 @@ public class Priest : Hero
     public double HealTimer;
     
     public static int HEAL_TIME = 1000;
+    public static Vector2 HEAL_POSITION = new(400, 0);
 
     public Priest(MainGame inputParent): base(inputParent, true)
     {
@@ -29,7 +30,7 @@ public class Priest : Hero
     public override void LoadContent()
     {
         Texture = GameParent.Content.Load<Texture2D>("Heroes/priest");
-        //HealTexture = GameParent.Content.Load<Texture2D>("Effects/priest_heal");
+        HealTexture = GameParent.Content.Load<Texture2D>("Effects/priest_heal");
         base.LoadContent();
     }
 
@@ -58,7 +59,8 @@ public class Priest : Hero
         double animationTime = HEAL_TIME;
         var healTarget = GameParent.playerParty.FrontHero();
 
-        animationTime += healTarget.ReceiveHealing(2, animationDelay + animationTime);
+        HealTimer = 0 - animationDelay;
+        animationTime += healTarget.ReceiveHealing(2, animationDelay + animationTime / 2);
 
         return animationTime;
     }
@@ -67,7 +69,7 @@ public class Priest : Hero
     {
         if (HealTimer < HEAL_TIME && HealTimer > 0)
         {
-            //spriteBatch.Draw(HealTexture, HEAL_POSITION, null, Color.White, 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
+            spriteBatch.Draw(HealTexture, HEAL_POSITION, null, Color.White, 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
         }
 
         ManaDraw(spriteBatch, gameTime, position);
