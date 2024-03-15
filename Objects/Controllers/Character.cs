@@ -10,19 +10,20 @@ public class Character
 {
     public MainGame GameParent;
     public Vector2 Position;
-    public Texture2D Texture, HPTexture, AttackTexture, ManaTexture, ShadowTexture, DeathTexture;
+    public Texture2D Texture, HPTexture, AttackTexture, ManaTexture, ShadowTexture, DeathTexture, ManaAnimationSheet;
     public SpriteFont StatsFont;
     public CharacterHoverPanel HoverPanel;
     public bool Dead, Dying, MouseOver, Active, MeleeHitting;
     public int MaxHP, CurrentHP, BaseAttack, CurrentAttack, Mana;
     // Despite the name, damage amounts and timers is also for healing
     public List<int> LastDamageAmounts;
-    public double DeathTimer, AnimationTimer;
+    public double DeathTimer, MeleeTimer, ManaGainTimer;
     public List<double> DamageAnimationTimers;
     public string Name, Description;
 
     public static int DEATH_TIME = 1000;
     public static int DAMAGE_SHOW_TIME = 250;
+    public static int MANA_GAIN_TIME = 250;
     public static Vector2 HP_OFFSET = new(30,130);
     public static Vector2 ATTACK_OFFSET = new(84,130);
     // TODO Weapon
@@ -46,6 +47,7 @@ public class Character
         LastDamageAmounts = new();
         MeleeHitting = false;
         HoverPanel = new();
+        ManaGainTimer = MANA_GAIN_TIME + 1;
         LoadContent();
     }
 
@@ -122,6 +124,15 @@ public class Character
         return 1000;
     }
 
+    public virtual double GainMana(int mana, double animationDelay)
+    {
+        double animationTime = MANA_GAIN_TIME;
+        Mana += mana;
+        ManaGainTimer = 0 - animationDelay;
+
+        return animationTime;
+    }
+
     public virtual double TakeDamage(int damage, double animationDelay)
     {
         double animationTime = 0;
@@ -167,7 +178,7 @@ public class Character
     public virtual double MeleeHit(double animationDelay)
     {
         MeleeHitting = true;
-        AnimationTimer = 0 - animationDelay;
+        MeleeTimer = 0 - animationDelay;
 
         return 500;
     }
@@ -180,6 +191,7 @@ public class Character
         ShadowTexture = GameParent.Content.Load<Texture2D>("Effects/shadow50");
         DeathTexture = GameParent.Content.Load<Texture2D>("Effects/death");
         ManaTexture = GameParent.Content.Load<Texture2D>("UI/mana");
+        ManaAnimationSheet = GameParent.Content.Load<Texture2D>("Effects/mana_gain");
     }
 
     public virtual void Draw(SpriteBatch spriteBatch, GameTime gameTime)
@@ -303,9 +315,31 @@ public class Character
             DamageAnimationTimers[i] += gameTime.ElapsedGameTime.TotalMilliseconds;
         }
 
+        // Animation for gaining mana
+        if (ManaGainTimer > 0 && ManaGainTimer < MANA_GAIN_TIME)
+        {
+            Rectangle animationRectangle;
+
+            if (ManaGainTimer > MANA_GAIN_TIME / 3 * 2)
+            {
+                animationRectangle = new(0, 128, 128, 64);
+            }
+            else if (ManaGainTimer > MANA_GAIN_TIME / 3)
+            {
+                animationRectangle = new(0, 64, 128, 64);
+            }
+            else
+            {
+                animationRectangle = new(0, 0, 128, 64);
+            }
+
+            spriteBatch.Draw(ManaAnimationSheet, position + new Vector2(0, -30), animationRectangle, Color.White, 0f, new Vector2(0, 0), Vector2.One, SpriteEffects.None, 0f);
+        }
+
         // Timer handling
+        ManaGainTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
         DeathTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
-        AnimationTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
+        MeleeTimer += gameTime.ElapsedGameTime.TotalMilliseconds;
     }
 
     public virtual void ManaDraw(SpriteBatch spriteBatch, GameTime gameTime, Vector2 position)

@@ -48,7 +48,7 @@ public class Wizard : Hero
         }
         else
         {
-            Mana++;
+            animationTime += GainMana(1, animationDelay + animationTime);
             return animationTime;
         }
     }

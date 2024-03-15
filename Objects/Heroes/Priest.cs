@@ -49,7 +49,7 @@ public class Priest : Hero
         }
         else
         {
-            Mana++;
+            animationTime += GainMana(1, animationDelay + animationTime);
             return animationTime;
         }
     }
