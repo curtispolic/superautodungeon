@@ -5,17 +5,17 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
 using superautodungeon.Objects.Heroes;
-using System;
-using System.Collections;
 using Microsoft.Xna.Framework.Input;
 
 public class Party
 {
     public List<Hero> HeroList;
     public MainGame GameParent;
+    public int GP;
 
     public Party(MainGame inputParent)
     {
+        // Create the inactive placeholder heroes
         GameParent = inputParent;
         HeroList = new();
         for (int i = 0; i < 4; i++)
@@ -23,6 +23,7 @@ public class Party
             HeroList.Add(new(GameParent, false));
             HeroList[i].Position = new(1285, 25 + i * 230);
         }
+        GP = 250;
     }
 
     public void CombatUpdate(MouseState mouseState, GraphicsDeviceManager graphics, GameTime gameTime)

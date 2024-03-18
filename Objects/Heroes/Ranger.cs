@@ -24,6 +24,7 @@ public class Ranger : Hero
         BaseAttack = 1;
         CurrentAttack = 1;
         ArrowTimer = ARROW_TIME + 1;
+        Cost = 50;
         LoadContent();
     }
 

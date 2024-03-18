@@ -24,6 +24,7 @@ public class Wizard : Hero
         BaseAttack = 1;
         CurrentAttack = 1;
         FireballTimer = FIREBALL_TIME + 1;
+        Cost = 50;
         LoadContent();
     }
 

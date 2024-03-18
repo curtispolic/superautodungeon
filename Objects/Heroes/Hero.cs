@@ -10,6 +10,7 @@ public class Hero : Character
 {
     public string Class,  Gender;
     public bool Buyable, PickedUp;
+    public int Cost;
     // TODO Weapon
     // TODO Armour
     // TODO Trinket

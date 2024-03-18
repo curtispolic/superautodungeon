@@ -22,6 +22,8 @@ public class Button
         TextSize = Font.MeasureString(Text);
         Size = TextSize + new Vector2(20, 20);
         MouseOver = false;
+        // set this to true at first to prevent held down buttoning
+        leftMouseDown = true;
     }
 
     public Button(MainGame inputParent, string inputText, Vector2 inputPosition, Vector2 inputSize)
@@ -34,6 +36,7 @@ public class Button
         LoadContent();
         TextSize = Font.MeasureString(Text);
         MouseOver = false;
+        leftMouseDown = true;
     }
 
     public bool Update(MouseState mouseState, GraphicsDeviceManager graphics, GameTime gameTime)

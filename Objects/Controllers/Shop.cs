@@ -14,6 +14,7 @@ public class Shop
     public List<Hero> BuyableHeroes;
     public Hero PickedUpHero;
     public Button RerollButton, UpgradeShopButton, ExitButton;
+    public SpriteFont Font;
     public Vector2 PickupOffset;
     public Level LevelParent;
     public int ShopTier, RerollCost, UpgradeCost, PickedUp;
@@ -43,14 +44,23 @@ public class Shop
         var mouseState = Mouse.GetState();
 
         if(RerollButton.Update(mouseState, graphics, gameTime))
+        {
             OnClickReRoll();
-        
-        if(UpgradeShopButton.Update(mouseState, graphics, gameTime))
+        }        
+        else if(UpgradeShopButton.Update(mouseState, graphics, gameTime))
+        {
             OnClickUpgradeShopTier();
-
-        if(ExitButton.Update(mouseState, graphics, gameTime))
+        }
+        else if(ExitButton.Update(mouseState, graphics, gameTime))
+        {
             ExitShop();
-        
+        }
+        else if (mouseState.LeftButton == ButtonState.Pressed)
+        {
+            PickedUpHero.PickedUp = false;
+            PickedUpHero = new();
+        }
+
         // PickedUp prevents us from picking up multiple heroes
         PickedUp = -1;
         for (int i = 0; i < BuyableHeroes.Count; i++)
@@ -58,6 +68,7 @@ public class Shop
             if (BuyableHeroes[i].PickedUp)
             {
                 PickedUp = i;
+                PickedUpHero = BuyableHeroes[i];
                 break;
             }
         }
@@ -66,35 +77,43 @@ public class Shop
         for (int i = 0; i < BuyableHeroes.Count; i++)
         {
             if (PickedUp == -1)
+            {
                 if (BuyableHeroes[i].Update(mouseState, graphics, gameTime))
                 {
                     PickedUp = i;
                     PickupOffset = BuyableHeroes[i].Position - mouseState.Position.ToVector2();
                 }
+            }
         }
-
-
     }
 
     public void BuyHero(int boughtHeroIndex, int draggedOntoIndex)
     {
         Hero draggedOnHero = LevelParent.GameParent.playerParty.HeroList[draggedOntoIndex];
         Hero inputHero = BuyableHeroes[boughtHeroIndex];
-        if (inputHero.Class == draggedOnHero.Class)
+        if (LevelParent.GameParent.playerParty.GP >= inputHero.Cost)
         {
-            // Level up hero in the party
-        }
-        else if (!draggedOnHero.Active)
-        {
-            // Buy into that index
-            inputHero.Buyable = false;
-            inputHero.PickedUp = false;
-            LevelParent.GameParent.playerParty.Add(inputHero, draggedOntoIndex);
+            if (inputHero.Class == draggedOnHero.Class)
+            {
+                // Level up hero in the party
+            }
+            else if (!draggedOnHero.Active)
+            {
+                // Buy into that index
+                inputHero.Buyable = false;
+                inputHero.PickedUp = false;
+                LevelParent.GameParent.playerParty.Add(inputHero, draggedOntoIndex);
+                LevelParent.GameParent.playerParty.GP -= inputHero.Cost;
+            }
+            else
+            {
+                // Cancel the buy
+                return;
+            }
         }
         else
         {
-            // Cancel the buy
-            return;
+            // Not enough money handling
         }
 
         // Replace bought hero with inactive
@@ -112,8 +131,15 @@ public class Shop
 
     public void OnClickReRoll()
     {
-        // This should handle the gold checking prior to actually rerolling
-        ReRoll();
+        if (LevelParent.GameParent.playerParty.GP >= RerollCost)
+        {
+            LevelParent.GameParent.playerParty.GP -= RerollCost;
+            ReRoll();
+        }
+        else
+        {
+            // Not enough money handling
+        }
     }
 
     public void RollEquipment()
@@ -162,8 +188,15 @@ public class Shop
 
     public void OnClickUpgradeShopTier()
     {
-        // This will handle the gold checking and tier checking prior to the method call
-        UpgradeShopTier();
+        if (LevelParent.GameParent.playerParty.GP >= UpgradeCost)
+        {
+            LevelParent.GameParent.playerParty.GP -= UpgradeCost;
+            UpgradeShopTier();
+        }
+        else
+        {
+            // Not enough money handling
+        }
     }
 
     public void ExitShop()
@@ -175,6 +208,7 @@ public class Shop
     public void LoadContent()
     {
         // GP Icon to come
+        Font = LevelParent.GameParent.Content.Load<SpriteFont>("statsFont");
     }
 
     public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
@@ -206,12 +240,16 @@ public class Shop
             else
             {
                 hero.Draw(spriteBatch, gameTime);
+                spriteBatch.DrawString(Font, "Cost: " + hero.Cost.ToString() + "GP", hero.Position + new Vector2(20, 170), Color.Black);
             }
         }
 
+        // Button drawing
         RerollButton.Draw(spriteBatch, gameTime);
         UpgradeShopButton.Draw(spriteBatch, gameTime);
         ExitButton.Draw(spriteBatch, gameTime);
+
+        spriteBatch.DrawString(Font, "GP: " + LevelParent.GameParent.playerParty.GP.ToString(), new Vector2(400, 400), Color.Black);
 
         // Draw picked up hero last to show above all others
         if (PickedUpHero.Active)

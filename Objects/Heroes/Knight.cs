@@ -16,6 +16,7 @@ public class Knight : Hero
         CurrentHP = 12;
         BaseAttack = 2;
         CurrentAttack = 2;
+        Cost = 50;
         LoadContent();
     }
 

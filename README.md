@@ -3,7 +3,7 @@ Inspired by Super Auto Pets, I plan to create a dungeon-delving auto battler.
 
 Author: Curtis Polic
 
-Current features:
+## Current features:
 - Basic Heroes vs Enemies combat
 - Main Menu with half of the buttons working
 - Base UI for gameplay
@@ -12,12 +12,11 @@ Current features:
 - Levels, rooms, filled combats
 - Combat steps for backline units
 - Feature complete mouseover and descriptions
+- Animations for various updates
 
-To Do in Rough Order:
-- Mana animations
-- Make numbers update when the animations happen (will probably be hard)
+## To Do in Rough Order:
+- Make numbers update when the animations happen (will probably be hard) (can use lastDamageAmount list to update)
 - Add 2 or 3 more enemies (goblin, dark wizard, ogre)
-- Implement gold
 - Make combat show the last round of combat
 - Party reordering
 - Selling units
@@ -26,11 +25,11 @@ To Do in Rough Order:
 - Fog of war for the level
 - Expand To Do list
 
-Known Bugs:
+## Known Bugs:
 - Combat crashes when player party is defeated
 - Combat does not show the last round of combat
 
-Notes:
+## Notes:
 
 Map is going to be based on a Darkest Dungeon esque traversal of a map, moving through towards a known boss at the end of a floor. 
 Going to have the following options as map tiles:
