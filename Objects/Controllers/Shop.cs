@@ -117,7 +117,7 @@ public class Shop
         }
 
         // Replace bought hero with inactive
-        BuyableHeroes[boughtHeroIndex] = new Hero(LevelParent.GameParent, false)
+        BuyableHeroes[boughtHeroIndex] = new Hero()
         {
             Position = new Vector2(20 + boughtHeroIndex * 200, 20)
         };
@@ -229,7 +229,7 @@ public class Shop
 
         // Checking for picked up hero for special drawing order
         // Also drawing non picked up hereoes
-        PickedUpHero = new(LevelParent.GameParent, false);
+        PickedUpHero = new();
         for (int i = 0; i < BuyableHeroes.Count; i++)
         {
             var hero = BuyableHeroes[i];

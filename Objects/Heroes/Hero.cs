@@ -20,11 +20,10 @@ public class Hero : Character
         Active = false;
     }
 
-    public Hero(MainGame inputParent, bool inputActive): base(inputParent)
+    public Hero(MainGame inputParent): base(inputParent)
     {
-        // Active should only be false for manual creations
-        Active = inputActive;
-        Buyable = Active;
+        Active = true;
+        Buyable = true;
         PickedUp = false;
         MeleeTimer = 0;
         LoadContent();
