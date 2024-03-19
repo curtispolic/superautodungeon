@@ -1,8 +1,10 @@
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 using superautodungeon.Objects.Controllers;
+using superautodungeon.Objects.Heroes;
 
 namespace superautodungeon.Objects.UI;
 
@@ -10,7 +12,10 @@ public class GameplayUI
 {
     public MainGame GameParent;
     public Party PlayerParty;
-    private SpriteFont Font;
+    public SpriteFont Font;
+    public Vector2 PickupOffset;
+    public Hero PickedUpHero;
+    public int PickedUp;
     public bool Active;
 
     public GameplayUI()
@@ -24,6 +29,8 @@ public class GameplayUI
         PlayerParty = inputParty;
         LoadContent();
         Active = true;
+        PickedUp = -1;
+        PickedUpHero = new(GameParent, false);
     }
 
     public void LoadContent()
@@ -35,6 +42,7 @@ public class GameplayUI
     {
         var mouseState = Mouse.GetState();
 
+        bool clickHandled = false;
         for (int i = 0; i < 4; i++)
         {
             if (PlayerParty.HeroList[i].Update(mouseState, graphics, gameTime))
@@ -47,11 +55,60 @@ public class GameplayUI
                     {
                         GameParent.shop.BuyHero(GameParent.shop.PickedUp, i);
                     }
+                    // If nothing picked up in the shop or UI, pickup the hero
+                    else if (PickedUp == -1)
+                    {
+                        PickedUp = i;
+                        PickedUpHero = PlayerParty.HeroList[i];
+                        PickupOffset = PlayerParty.HeroList[i].Position - mouseState.Position.ToVector2();
+                        clickHandled = true;
+                    }
+                    else if (i != PickedUp)
+                    {
+                        PartyReorder(PickedUp, i);
+                        clickHandled = true;
+                        PickedUp = -1;
+                        PickedUpHero = new(GameParent, false);
+                    }
+                }
+                // Don't allow clicking during combat
+                else if (!GameParent.combat.Active)
+                {
+                    // no hero picked up
+                    if (PickedUp == -1)
+                    {
+                        PickedUp = i;
+                        PickedUpHero = PlayerParty.HeroList[i];
+                        PickupOffset = PlayerParty.HeroList[i].Position - mouseState.Position.ToVector2();
+                        clickHandled = true;
+                    }
+                    // swapping heroes
+                    else if (i != PickedUp)
+                    {
+                        PartyReorder(PickedUp, i);
+                        clickHandled = true;
+                        PickedUp = -1;
+                        PickedUpHero = new(GameParent, false);
+                    }
                 }
             }
         }
 
+        // Drop the hero if it's an unhandled click
+        if (PickedUp != -1 && mouseState.LeftButton == ButtonState.Pressed && !clickHandled)
+        {
+            PickedUp = -1;
+            PickedUpHero = new(GameParent, false);
+        }
+
         return -1;
+    }
+
+    public void PartyReorder(int index1, int index2)
+    {
+        Hero temp = PlayerParty.HeroList[index1];
+        PlayerParty.HeroList[index1] = PlayerParty.HeroList[index2];
+        PlayerParty.HeroList[index2] = temp;
     }
 
     public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
@@ -106,7 +163,7 @@ public class GameplayUI
         // Handle mouseover here to make sure it's drawn at the front
         foreach (var hero in PlayerParty.HeroList)
         {
-            if (hero.MouseOver)
+            if (hero.MouseOver && PickedUp == -1)
             {
                 if (GameParent.shop.Active)
                 {
@@ -127,5 +184,20 @@ public class GameplayUI
                 
             }
         }
+
+        // Checking for picked up hero for special drawing order
+        PickedUpHero = new(GameParent, false);
+        foreach (var hero in PlayerParty.HeroList)
+        {
+            if (hero.PickedUp)
+            {
+                PickedUpHero = hero;
+                break;
+            }
+        }
+
+        // Draw picked up hero last to show above all others
+        if (PickedUpHero.Active)
+            PickedUpHero.Draw(spriteBatch, gameTime);
     }
 }

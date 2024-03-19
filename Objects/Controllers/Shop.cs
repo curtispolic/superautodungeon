@@ -18,7 +18,7 @@ public class Shop
     public Vector2 PickupOffset;
     public Level LevelParent;
     public int ShopTier, RerollCost, UpgradeCost, PickedUp;
-    public bool Active;
+    public bool Active, leftMouseDown;
 
     public Shop()
     {
@@ -37,6 +37,7 @@ public class Shop
         LoadContent();
         ReRoll();
         Active = true;
+        leftMouseDown = false;
     }
 
     public void Update(GraphicsDeviceManager graphics, GameTime gameTime)
@@ -55,36 +56,48 @@ public class Shop
         {
             ExitShop();
         }
-        else if (mouseState.LeftButton == ButtonState.Pressed)
+        else if (mouseState.LeftButton == ButtonState.Pressed && !leftMouseDown)
         {
-            PickedUpHero.PickedUp = false;
-            PickedUpHero = new();
-        }
-
-        // PickedUp prevents us from picking up multiple heroes
-        PickedUp = -1;
-        for (int i = 0; i < BuyableHeroes.Count; i++)
-        {
-            if (BuyableHeroes[i].PickedUp)
+            // PickedUp prevents us from picking up multiple heroes
+            PickedUp = -1;
+            for (int i = 0; i < BuyableHeroes.Count; i++)
             {
-                PickedUp = i;
-                PickedUpHero = BuyableHeroes[i];
-                break;
-            }
-        }
-
-        // Set the offset for the pickup so it's smooth
-        for (int i = 0; i < BuyableHeroes.Count; i++)
-        {
-            if (PickedUp == -1)
-            {
-                if (BuyableHeroes[i].Update(mouseState, graphics, gameTime))
+                if (BuyableHeroes[i].PickedUp)
                 {
                     PickedUp = i;
-                    PickupOffset = BuyableHeroes[i].Position - mouseState.Position.ToVector2();
+                    PickedUpHero = BuyableHeroes[i];
+                    break;
                 }
             }
+
+            if (PickedUp == -1)
+            {
+                // Check for hero clicking
+                for (int i = 0; i < BuyableHeroes.Count; i++)
+                {
+                    if (BuyableHeroes[i].Update(mouseState, graphics, gameTime) && !leftMouseDown)
+                    {
+                        leftMouseDown = true;
+                        PickedUp = i;
+                        PickupOffset = BuyableHeroes[i].Position - mouseState.Position.ToVector2();
+                        BuyableHeroes[i].PickedUp = true;
+                    }
+                }
+            }
+            else
+            {
+                PickedUpHero.PickedUp = false;
+                PickedUpHero = new(LevelParent.GameParent, false);
+            }
+
+            leftMouseDown = true;
         }
+
+        if (leftMouseDown && mouseState.LeftButton == ButtonState.Released)
+        {
+            leftMouseDown = false;
+        }
+
     }
 
     public void BuyHero(int boughtHeroIndex, int draggedOntoIndex)
@@ -117,7 +130,7 @@ public class Shop
         }
 
         // Replace bought hero with inactive
-        BuyableHeroes[boughtHeroIndex] = new Hero()
+        BuyableHeroes[boughtHeroIndex] = new Hero(LevelParent.GameParent, false)
         {
             Position = new Vector2(20 + boughtHeroIndex * 200, 20)
         };
@@ -156,7 +169,7 @@ public class Shop
         {
             // Will contian logic for rolling from valid shop tiers
             int heroClass = random.Next(4);
-            Hero newHero = new();
+            Hero newHero = new(LevelParent.GameParent, false);
 
             switch (heroClass)
             {
@@ -227,23 +240,6 @@ public class Shop
 
         spriteBatch.Draw(_texture2, new Rectangle(25, 25, 1230, 580), Color.White);
 
-        // Checking for picked up hero for special drawing order
-        // Also drawing non picked up hereoes
-        PickedUpHero = new();
-        for (int i = 0; i < BuyableHeroes.Count; i++)
-        {
-            var hero = BuyableHeroes[i];
-            if (hero.PickedUp)
-            {
-                PickedUpHero = hero;
-            }
-            else
-            {
-                hero.Draw(spriteBatch, gameTime);
-                spriteBatch.DrawString(Font, "Cost: " + hero.Cost.ToString() + "GP", hero.Position + new Vector2(20, 170), Color.Black);
-            }
-        }
-
         // Button drawing
         RerollButton.Draw(spriteBatch, gameTime);
         UpgradeShopButton.Draw(spriteBatch, gameTime);
@@ -251,9 +247,14 @@ public class Shop
 
         spriteBatch.DrawString(Font, "GP: " + LevelParent.GameParent.playerParty.GP.ToString(), new Vector2(400, 400), Color.Black);
 
-        // Draw picked up hero last to show above all others
-        if (PickedUpHero.Active)
-            PickedUpHero.Draw(spriteBatch, gameTime);
+        foreach (var hero in BuyableHeroes)
+        {
+            if (!hero.PickedUp)
+            {
+                hero.Draw(spriteBatch, gameTime);
+                spriteBatch.DrawString(Font, "Cost: " + hero.Cost.ToString() + "GP", hero.Position + new Vector2(20, 170), Color.Black);
+            }
+        }
     }
 
     public void MouseoverDraw(SpriteBatch spriteBatch, GameTime gameTime)
@@ -266,5 +267,20 @@ public class Shop
                 hero.HoverPanel.Draw(spriteBatch, gameTime);
             }
         }
+
+        // Checking for picked up hero for special drawing order
+        PickedUpHero = new(LevelParent.GameParent, false);
+        for (int i = 0; i < BuyableHeroes.Count; i++)
+        {
+            var hero = BuyableHeroes[i];
+            if (hero.PickedUp)
+            {
+                PickedUpHero = hero;
+            }
+        }
+
+        // Draw picked up hero last to show above all others
+        if (PickedUpHero.Active)
+            PickedUpHero.Draw(spriteBatch, gameTime);
     }
 }

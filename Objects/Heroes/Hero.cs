@@ -17,13 +17,13 @@ public class Hero : Character
 
     public Hero()
     {
-        Active = false;
+
     }
 
-    public Hero(MainGame inputParent): base(inputParent)
+    public Hero(MainGame inputParent, bool active): base(inputParent)
     {
-        Active = true;
-        Buyable = true;
+        Active = active;
+        Buyable = Active;
         PickedUp = false;
         MeleeTimer = 0;
         LoadContent();
@@ -43,15 +43,7 @@ public class Hero : Character
             if (0 <= mouseState.X && mouseState.X <= graphics.PreferredBackBufferWidth && 0 <= mouseState.Y && mouseState.Y <= graphics.PreferredBackBufferHeight)
             {
                 // Left mouse down handling, if clicked while buyable and not picked up
-                if (mouseState.LeftButton == ButtonState.Pressed && !PickedUp && Buyable &&
-                mouseState.X > Position.X && mouseState.X < Position.X + Texture.Width &&
-                mouseState.Y > Position.Y && mouseState.Y < Position.Y + Texture.Height)
-                {
-                    PickedUp = true;
-                    return PickedUp;
-                }
-                // NOT ACTIVE
-                else if (mouseState.LeftButton == ButtonState.Pressed && !PickedUp && Buyable && !Active &&
+                if (mouseState.LeftButton == ButtonState.Pressed && !PickedUp &&
                 mouseState.X > Position.X && mouseState.X < Position.X + Texture.Width &&
                 mouseState.Y > Position.Y && mouseState.Y < Position.Y + Texture.Height)
                 {

@@ -20,7 +20,7 @@ public class Party
         HeroList = new();
         for (int i = 0; i < 4; i++)
         {
-            HeroList.Add(new());
+            HeroList.Add(new(GameParent, false));
             HeroList[i].Position = new(1285, 25 + i * 230);
         }
         GP = 250;
