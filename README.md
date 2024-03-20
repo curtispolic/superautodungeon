@@ -17,7 +17,6 @@ Author: Curtis Polic
 
 ## To Do in Rough Order:
 - Add 2 or 3 more enemies (goblin, dark wizard, ogre)
-- Make combat show the last round of combat
 - Selling units
 - Levelling up
 - Add a boss to the level
@@ -27,7 +26,6 @@ Author: Curtis Polic
 
 ## Known Bugs:
 - Combat crashes when player party is defeated
-- Combat does not show the last round of combat
 
 ## Notes:
 

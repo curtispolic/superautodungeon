@@ -70,7 +70,7 @@ public class Shop
                     // Check for hero clicking
                     for (int i = 0; i < BuyableHeroes.Count; i++)
                     {
-                        if (BuyableHeroes[i].Update(mouseState, graphics, gameTime))
+                        if (BuyableHeroes[i].Update(mouseState, graphics, gameTime) && BuyableHeroes[i].Active)
                         {
                             PickedUp = i;
                             PickupOffset = BuyableHeroes[i].Position - mouseState.Position.ToVector2();
@@ -246,7 +246,7 @@ public class Shop
 
         foreach (var hero in BuyableHeroes)
         {
-            if (!hero.PickedUp)
+            if (!hero.PickedUp  && hero.Active)
             {
                 hero.Draw(spriteBatch, gameTime);
                 spriteBatch.DrawString(Font, "Cost: " + hero.Cost.ToString() + "GP", hero.Position + new Vector2(20, 170), Color.Black);

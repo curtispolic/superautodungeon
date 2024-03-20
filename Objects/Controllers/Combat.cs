@@ -59,6 +59,14 @@ public class Combat
         // Only update combat once a round, but always check the buttons and characters for mouseover
         // Will return the number of milliseconds the game should wait before calling again
         double animationTime = 0;
+
+        // This just lets the animations finish but will catch a completed combat and clean it up
+        if (Finished)
+        {
+            Active = false;
+            RoomParent.Completed = true;
+            return 0;
+        }
         
         // Combat start animations (characters bobbing onto screen)
         if (!Begun)
@@ -158,12 +166,17 @@ public class Combat
         }
         if (enemyCheck == EnemyMob.EnemyList.Count || heroCheck == PlayerParty.HeroList.Count)
         {
-            Active = false;
-            RoomParent.Completed = true;
+            // Use this so combat ends at the "start" of the next round to allow animations to finish
+            Finished = true;
         }
 
         // Placeholder 500 to delay end round a touch
         return 500;
+    }
+
+    public void AllowAnimationFinish()
+    {
+
     }
 
     public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
