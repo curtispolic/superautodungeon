@@ -13,7 +13,8 @@ public class Knight : Hero
         Class = "Knight";
         Name = Gender == "Male" ? GameParent.nameGenerator.CreateMaleName() : GameParent.nameGenerator.CreateFemaleName();
         MaxHP = 12;
-        CurrentHP = 12;
+        VisibleHP = MaxHP;
+        CurrentHP = MaxHP;
         BaseAttack = 2;
         CurrentAttack = 2;
         Cost = 50;

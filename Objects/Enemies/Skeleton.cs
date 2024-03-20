@@ -10,7 +10,8 @@ public class Skeleton : Enemy
         Description = "Quite spooky and/or scary.\nHas no special properties or abilities.";
         Name = "Skeleton";
         MaxHP = 6;
-        CurrentHP = 6;
+        VisibleHP = MaxHP;
+        CurrentHP = MaxHP;
         BaseAttack = 2;
         CurrentAttack = 2;
         Active = true;

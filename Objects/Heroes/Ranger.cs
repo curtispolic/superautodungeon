@@ -20,7 +20,8 @@ public class Ranger : Hero
         Class = "Ranger";
         Name = Gender == "Male" ? GameParent.nameGenerator.CreateMaleName() : GameParent.nameGenerator.CreateFemaleName();
         MaxHP = 8;
-        CurrentHP = 8;
+        VisibleHP = MaxHP;
+        CurrentHP = MaxHP;
         BaseAttack = 1;
         CurrentAttack = 1;
         ArrowTimer = ARROW_TIME + 1;

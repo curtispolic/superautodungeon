@@ -20,7 +20,8 @@ public class Wizard : Hero
         Class = "Wizard";
         Name = Gender == "Male" ? GameParent.nameGenerator.CreateMaleName() : GameParent.nameGenerator.CreateFemaleName();
         MaxHP = 6;
-        CurrentHP = 6;
+        VisibleHP = MaxHP;
+        CurrentHP = MaxHP;
         BaseAttack = 1;
         CurrentAttack = 1;
         FireballTimer = FIREBALL_TIME + 1;
