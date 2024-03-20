@@ -31,6 +31,7 @@ public class Shop
         ShopTier = inputTier;
         RerollCost = 50;
         UpgradeCost = 300;
+        PickedUp = -1;
         RerollButton = new Button(LevelParent.GameParent, $"Reroll: {RerollCost}GP", new Vector2(50, 250));
         UpgradeShopButton = new Button(LevelParent.GameParent, $"Upgrade Shop Tier: {UpgradeCost}GP", new Vector2(50, 300));
         ExitButton = new Button(LevelParent.GameParent, "Exit Shop", new Vector2(50, 350));
@@ -44,60 +45,55 @@ public class Shop
     {
         var mouseState = Mouse.GetState();
 
-        if(RerollButton.Update(mouseState, graphics, gameTime))
+        // Only handle clicks inside the game window
+        if (0 <= mouseState.X && mouseState.X <= graphics.PreferredBackBufferWidth && 0 <= mouseState.Y && mouseState.Y <= graphics.PreferredBackBufferHeight)
         {
-            OnClickReRoll();
-        }        
-        else if(UpgradeShopButton.Update(mouseState, graphics, gameTime))
-        {
-            OnClickUpgradeShopTier();
-        }
-        else if(ExitButton.Update(mouseState, graphics, gameTime))
-        {
-            ExitShop();
-        }
-        else if (mouseState.LeftButton == ButtonState.Pressed && !leftMouseDown)
-        {
-            // PickedUp prevents us from picking up multiple heroes
-            PickedUp = -1;
-            for (int i = 0; i < BuyableHeroes.Count; i++)
+            // Check for button presses first
+            if(RerollButton.Update(mouseState, graphics, gameTime))
             {
-                if (BuyableHeroes[i].PickedUp)
-                {
-                    PickedUp = i;
-                    PickedUpHero = BuyableHeroes[i];
-                    break;
-                }
+                OnClickReRoll();
+            }        
+            else if(UpgradeShopButton.Update(mouseState, graphics, gameTime))
+            {
+                OnClickUpgradeShopTier();
             }
-
-            if (PickedUp == -1)
+            else if(ExitButton.Update(mouseState, graphics, gameTime))
             {
-                // Check for hero clicking
-                for (int i = 0; i < BuyableHeroes.Count; i++)
+                ExitShop();
+            }
+            // Otherwise handle a single click and flag to not repeat
+            else if (mouseState.LeftButton == ButtonState.Pressed && !leftMouseDown)
+            {
+                // PickedUp prevents us from picking up multiple heroes
+                if (PickedUp == -1)
                 {
-                    if (BuyableHeroes[i].Update(mouseState, graphics, gameTime) && !leftMouseDown)
+                    // Check for hero clicking
+                    for (int i = 0; i < BuyableHeroes.Count; i++)
                     {
-                        leftMouseDown = true;
-                        PickedUp = i;
-                        PickupOffset = BuyableHeroes[i].Position - mouseState.Position.ToVector2();
-                        BuyableHeroes[i].PickedUp = true;
+                        if (BuyableHeroes[i].Update(mouseState, graphics, gameTime))
+                        {
+                            PickedUp = i;
+                            PickupOffset = BuyableHeroes[i].Position - mouseState.Position.ToVector2();
+                            BuyableHeroes[i].PickedUp = true;
+                        }
                     }
                 }
+                else
+                {
+                    PickedUp = -1;
+                    PickedUpHero.PickedUp = false;
+                    PickedUpHero = new(LevelParent.GameParent, false);
+                }
+
+                leftMouseDown = true;
             }
-            else
+
+            // Unflag when the click has been released
+            if (mouseState.LeftButton == ButtonState.Released && leftMouseDown)
             {
-                PickedUpHero.PickedUp = false;
-                PickedUpHero = new(LevelParent.GameParent, false);
+                leftMouseDown = false;
             }
-
-            leftMouseDown = true;
         }
-
-        if (leftMouseDown && mouseState.LeftButton == ButtonState.Released)
-        {
-            leftMouseDown = false;
-        }
-
     }
 
     public void BuyHero(int boughtHeroIndex, int draggedOntoIndex)
@@ -109,6 +105,7 @@ public class Shop
             if (inputHero.Class == draggedOnHero.Class)
             {
                 // Level up hero in the party
+                return;
             }
             else if (!draggedOnHero.Active)
             {
@@ -254,6 +251,10 @@ public class Shop
                 hero.Draw(spriteBatch, gameTime);
                 spriteBatch.DrawString(Font, "Cost: " + hero.Cost.ToString() + "GP", hero.Position + new Vector2(20, 170), Color.Black);
             }
+            else
+            {
+                hero.DrawShadowOnly(spriteBatch, gameTime, hero.Position);
+            }
         }
     }
 
@@ -281,6 +282,9 @@ public class Shop
 
         // Draw picked up hero last to show above all others
         if (PickedUpHero.Active)
-            PickedUpHero.Draw(spriteBatch, gameTime);
+        {
+            var mouseState = Mouse.GetState();
+            PickedUpHero.MouseDraw(spriteBatch, gameTime, mouseState.Position.ToVector2() + PickupOffset);
+        }
     }
 }

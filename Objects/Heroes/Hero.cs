@@ -84,14 +84,6 @@ public class Hero : Character
             // Inactive heroes are just for placeholder shadows
             DrawShadowOnly(spriteBatch, gameTime, Position);
         }
-        else if (PickedUp)
-        {        
-            // If picked up we want to draw on the mouse and shadow in position
-            var mouseState = Mouse.GetState();
-            Vector2 mousePos = mouseState.Position.ToVector2();
-            DrawShadowOnly(spriteBatch, gameTime, Position);
-            MouseDraw(spriteBatch, gameTime, mousePos + GameParent.shop.PickupOffset);
-        }
         else
         {
             // Default case can just use the base character draw method

@@ -13,16 +13,16 @@ Author: Curtis Polic
 - Combat steps for backline units
 - Feature complete mouseover and descriptions
 - Animations for various updates
+- Party reordering
 
 ## To Do in Rough Order:
-- Make numbers update when the animations happen (will probably be hard) (can use lastDamageAmount list to update)
 - Add 2 or 3 more enemies (goblin, dark wizard, ogre)
 - Make combat show the last round of combat
-- Party reordering
 - Selling units
 - Levelling up
 - Add a boss to the level
 - Fog of war for the level
+- Make numbers update when the animations happen (will probably be hard) (can use lastDamageAmount list to update)
 - Expand To Do list
 
 ## Known Bugs:

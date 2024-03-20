@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks.Dataflow;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -16,7 +17,7 @@ public class GameplayUI
     public Vector2 PickupOffset;
     public Hero PickedUpHero;
     public int PickedUp;
-    public bool Active;
+    public bool Active, leftMouseDown;
 
     public GameplayUI()
     {
@@ -31,6 +32,7 @@ public class GameplayUI
         Active = true;
         PickedUp = -1;
         PickedUpHero = new(GameParent, false);
+        leftMouseDown = false;
     }
 
     public void LoadContent()
@@ -38,75 +40,157 @@ public class GameplayUI
         Font = GameParent.Content.Load<SpriteFont>("statsFont");
     }
 
-    public int Update(GraphicsDeviceManager graphics, GameTime gameTime)
+    public void Update(GraphicsDeviceManager graphics, GameTime gameTime)
     {
         var mouseState = Mouse.GetState();
 
-        bool clickHandled = false;
-        for (int i = 0; i < 4; i++)
+        // Only handle clicks inside the game window
+        if (0 <= mouseState.X && mouseState.X <= graphics.PreferredBackBufferWidth && 0 <= mouseState.Y && mouseState.Y <= graphics.PreferredBackBufferHeight)
         {
-            if (PlayerParty.HeroList[i].Update(mouseState, graphics, gameTime))
+            // Handle a single click and flag to not repeat
+            if (mouseState.LeftButton == ButtonState.Pressed && !leftMouseDown)
             {
-                // Handle clicks on the party
-                // This is specifically for shop buying
+                bool handledClick = false;
+                // If the shop is active and has a picked up hero, handle buying
                 if (GameParent.shop.Active)
                 {
                     if (GameParent.shop.PickedUp > -1)
                     {
-                        GameParent.shop.BuyHero(GameParent.shop.PickedUp, i);
-                    }
-                    // If nothing picked up in the shop or UI, pickup the hero
-                    else if (PickedUp == -1)
-                    {
-                        PickedUp = i;
-                        PickedUpHero = PlayerParty.HeroList[i];
-                        PickupOffset = PlayerParty.HeroList[i].Position - mouseState.Position.ToVector2();
-                        clickHandled = true;
-                    }
-                    else if (i != PickedUp)
-                    {
-                        PartyReorder(PickedUp, i);
-                        clickHandled = true;
-                        PickedUp = -1;
-                        PickedUpHero = new(GameParent, false);
+                        for (int i = 0; i < PlayerParty.HeroList.Count; i++)
+                        {
+                            if (PlayerParty.HeroList[i].Update(mouseState, graphics, gameTime))
+                            {
+                                GameParent.shop.BuyHero(GameParent.shop.PickedUp, i);
+                                handledClick = true;
+                            }
+                        }
                     }
                 }
-                // Don't allow clicking during combat
-                else if (!GameParent.combat.Active)
+
+                // Don't allow changes during combat
+                if (!GameParent.combat.Active && !handledClick)
                 {
-                    // no hero picked up
-                    if (PickedUp == -1)
+                    // Check for hero clicking
+                    for (int i = 0; i < PlayerParty.HeroList.Count; i++)
                     {
-                        PickedUp = i;
-                        PickedUpHero = PlayerParty.HeroList[i];
-                        PickupOffset = PlayerParty.HeroList[i].Position - mouseState.Position.ToVector2();
-                        clickHandled = true;
-                    }
-                    // swapping heroes
-                    else if (i != PickedUp)
-                    {
-                        PartyReorder(PickedUp, i);
-                        clickHandled = true;
-                        PickedUp = -1;
-                        PickedUpHero = new(GameParent, false);
+                        if (PlayerParty.HeroList[i].Update(mouseState, graphics, gameTime))
+                        {
+                            if (PickedUp == -1)
+                            {
+                                PickedUp = i;
+                                PickupOffset = PlayerParty.HeroList[i].Position - mouseState.Position.ToVector2();
+                                PlayerParty.HeroList[i].PickedUp = true;
+                                handledClick = true;
+                            }
+                            else if (PickedUp != i)
+                            {
+                                PartyReorder(PickedUp, i);
+                                handledClick = true;
+                                PickedUp = -1;
+                                PickedUpHero.PickedUp = false;
+                                PickedUpHero = new(GameParent, false);
+                            }
+                        }
                     }
                 }
+
+                // If nothing else matched, just drop the picked up if needed
+                if (!handledClick)
+                {
+                    PickedUp = -1;
+                    PickedUpHero.PickedUp = false;
+                    PickedUpHero = new(GameParent, false);
+                }
+
+                leftMouseDown = true;
+            }
+
+            // Unflag when the click has been released
+            if (mouseState.LeftButton == ButtonState.Released && leftMouseDown)
+            {
+                leftMouseDown = false;
             }
         }
 
-        // Drop the hero if it's an unhandled click
-        if (PickedUp != -1 && mouseState.LeftButton == ButtonState.Pressed && !clickHandled)
+/*
+        bool clickHandled = false;
+        // Only handle clicks inside the game window
+        if (0 <= mouseState.X && mouseState.X <= graphics.PreferredBackBufferWidth && 0 <= mouseState.Y && mouseState.Y <= graphics.PreferredBackBufferHeight)
         {
-            PickedUp = -1;
-            PickedUpHero = new(GameParent, false);
-        }
+            for (int i = 0; i < 4; i++)
+            {
+                if (PlayerParty.HeroList[i].Update(mouseState, graphics, gameTime))
+                {
+                    // Handle clicks on the party
+                    // This is specifically for shop buying
+                    if (GameParent.shop.Active)
+                    {
+                        if (GameParent.shop.PickedUp > -1)
+                        {
+                            GameParent.shop.BuyHero(GameParent.shop.PickedUp, i);
+                        }
+                        // If nothing picked up in the shop or UI, pickup the hero
+                        else if (PickedUp == -1)
+                        {
+                            PickedUp = i;
+                            PickedUpHero = PlayerParty.HeroList[i];
+                            PickupOffset = PlayerParty.HeroList[i].Position - mouseState.Position.ToVector2();
+                            PickedUpHero.PickedUp = true;
+                            clickHandled = true;
+                        }
+                        else if (i != PickedUp)
+                        {
+                            PartyReorder(PickedUp, i);
+                            clickHandled = true;
+                            PickedUp = -1;
+                            PickedUpHero.PickedUp = false;
+                            PickedUpHero = new(GameParent, false);
+                        }
+                    }
+                    // Don't allow clicking during combat
+                    else if (!GameParent.combat.Active)
+                    {
+                        // no hero picked up
+                        if (PickedUp == -1)
+                        {
+                            PickedUp = i;
+                            PickedUpHero = PlayerParty.HeroList[i];
+                            PickedUpHero.PickedUp = true;
+                            PickupOffset = PlayerParty.HeroList[i].Position - mouseState.Position.ToVector2();
+                            clickHandled = true;
+                        }
+                        // swapping heroes
+                        else if (i != PickedUp)
+                        {
+                            PartyReorder(PickedUp, i);
+                            clickHandled = true;
+                            PickedUp = -1;
+                            PickedUpHero.PickedUp = false;
+                            PickedUpHero = new(GameParent, false);
+                        }
+                    }
+                }
+            }
 
-        return -1;
+            // Drop the hero if it's an unhandled click
+            if (PickedUp != -1 && mouseState.LeftButton == ButtonState.Pressed && !clickHandled)
+            {
+                PickedUp = -1;
+                PickedUpHero.PickedUp = false;
+                PickedUpHero = new(GameParent, false);
+            }
+        }
+*/
     }
 
     public void PartyReorder(int index1, int index2)
     {
         Hero temp = PlayerParty.HeroList[index1];
+        Vector2 tempPos = temp.Position;
+
+        temp.Position = PlayerParty.HeroList[index2].Position;
+        PlayerParty.HeroList[index2].Position = tempPos;
+
         PlayerParty.HeroList[index1] = PlayerParty.HeroList[index2];
         PlayerParty.HeroList[index2] = temp;
     }
@@ -137,7 +221,7 @@ public class GameplayUI
         foreach (var hero in PlayerParty.HeroList)
         {
             // Draw the hero
-            if (hero.Active)
+            if (hero.Active && !hero.PickedUp)
             {
                 // Draw the name
                 spriteBatch.DrawString(Font, hero.Name, hero.Position + new Vector2(11, -16), Color.Black);
@@ -187,17 +271,20 @@ public class GameplayUI
 
         // Checking for picked up hero for special drawing order
         PickedUpHero = new(GameParent, false);
-        foreach (var hero in PlayerParty.HeroList)
+        for (int i = 0; i < PlayerParty.HeroList.Count; i++)
         {
+            var hero = PlayerParty.HeroList[i];
             if (hero.PickedUp)
             {
                 PickedUpHero = hero;
-                break;
             }
         }
 
         // Draw picked up hero last to show above all others
         if (PickedUpHero.Active)
-            PickedUpHero.Draw(spriteBatch, gameTime);
+        {
+            var mouseState = Mouse.GetState();
+            PickedUpHero.MouseDraw(spriteBatch, gameTime, mouseState.Position.ToVector2() + PickupOffset);
+        }
     }
 }
