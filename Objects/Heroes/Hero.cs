@@ -77,6 +77,23 @@ public class Hero : Character
         return false;
     }
 
+    public virtual void GainXP(int xp)
+    {
+        XP += xp;
+        if (XP < 2)
+        {
+            Level = 1;
+        }
+        else if (XP < 6)
+        {
+            Level = 2;
+        }
+        else
+        {
+            Level = 3;
+        }
+    }
+
     public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
     {
         if (!Active)

@@ -112,7 +112,8 @@ public class Shop
             if (inputHero.Class == draggedOnHero.Class)
             {
                 // Level up hero in the party
-                return;
+                LevelParent.GameParent.playerParty.HeroList[draggedOntoIndex].GainXP(1);
+                LevelParent.GameParent.playerParty.GP -= inputHero.Cost;
             }
             else if (!draggedOnHero.Active)
             {
@@ -131,6 +132,7 @@ public class Shop
         else
         {
             // Not enough money handling
+            return;
         }
 
         // Replace bought hero with inactive

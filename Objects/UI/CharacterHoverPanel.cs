@@ -3,6 +3,7 @@ namespace superautodungeon.Objects.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using superautodungeon.Objects.Controllers;
+using superautodungeon.Objects.Heroes;
 
 public class CharacterHoverPanel
 {
@@ -23,9 +24,10 @@ public class CharacterHoverPanel
         LoadContent();
 
         // Get details from parent and size for it
-        Text = CharacterParent.Name + "\n"
-            + "Level " + CharacterParent.Level.ToString() + " " + CharacterParent.Class + "\n"
-            + CharacterParent.Description;
+        Text = CharacterParent.Name + "\n" + "Level " + CharacterParent.Level.ToString() + " " + CharacterParent.Class + "\n";
+        if (CharacterParent is Hero)
+        Text += "XP: " + CharacterParent.XP + "\n";
+        Text += CharacterParent.Description;
         TextSize = Font.MeasureString(Text);
         Size = TextSize + new Vector2(20, 20);
 
