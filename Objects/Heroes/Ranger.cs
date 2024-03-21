@@ -16,7 +16,7 @@ public class Ranger : Hero
     {
         Random random  = new();
         Gender = random.Next(2) == 1 ? "Male" : "Female";
-        Description = "A ranger of the wilds.\nIf not in melee, will shoot a random enemy target each turn.\nArrows deal 1/2/3 damage.";
+        Description = "A ranger of the wilds.\nIf not in melee, will shoot a random enemy target each turn.\nArrows deal 1 damage per level.";
         Class = "Ranger";
         Name = Gender == "Male" ? GameParent.nameGenerator.CreateMaleName() : GameParent.nameGenerator.CreateFemaleName();
         MaxHP = 8;
@@ -49,7 +49,8 @@ public class Ranger : Hero
             ArrowTargetIndex = random.Next(enemies.Count);
             ArrowTimer = 0 - animationDelay;
             animationTime = ARROW_TIME;
-            animationTime += enemies[ArrowTargetIndex].TakeDamage(1, animationDelay + animationTime);
+
+            animationTime += enemies[ArrowTargetIndex].TakeDamage(Level, animationDelay + animationTime);
         }
 
         return animationTime;

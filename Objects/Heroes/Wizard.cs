@@ -16,7 +16,7 @@ public class Wizard : Hero
     {
         Random random  = new();
         Gender = random.Next(2) == 1 ? "Male" : "Female";
-        Description = "A wise old wizard.\nWizards will spend 2 mana to cast a fireball if not in melee.\nFireball does 2/4/6 damage to a random target.\nWill deal half to adjacent targets.";
+        Description = "A wise old wizard.\nWizards will spend 2 mana to cast a fireball if not in melee.\nFireball does 2 damage per level to a random target.\nWill deal half to adjacent targets.";
         Class = "Wizard";
         Name = Gender == "Male" ? GameParent.nameGenerator.CreateMaleName() : GameParent.nameGenerator.CreateFemaleName();
         MaxHP = 6;
@@ -64,17 +64,16 @@ public class Wizard : Hero
         FireballTargetIndex = random.Next(enemies.Count);
         FireballTimer = 0 - animationDelay;
 
-        // Just two for now until levelling is implemeneted
-        animationTime += enemies[FireballTargetIndex].TakeDamage(2, animationDelay + animationTime);
+        animationTime += enemies[FireballTargetIndex].TakeDamage(Level * 2, animationDelay + animationTime);
 
         // Make sure we don't go out of range
         if (FireballTargetIndex > 0)
         {
-            animationTime += enemies[FireballTargetIndex-1].TakeDamage(1, animationDelay + animationTime);
+            animationTime += enemies[FireballTargetIndex-1].TakeDamage(Level, animationDelay + animationTime);
         }
         if (FireballTargetIndex < enemies.Count - 1)
         {
-            animationTime += enemies[FireballTargetIndex+1].TakeDamage(1, animationDelay + animationTime);
+            animationTime += enemies[FireballTargetIndex+1].TakeDamage(Level, animationDelay + animationTime);
         }
 
         return animationTime;

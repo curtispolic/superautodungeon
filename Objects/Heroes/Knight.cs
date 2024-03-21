@@ -9,7 +9,7 @@ public class Knight : Hero
     {
         Random random  = new();
         Gender = random.Next(2) == 1 ? "Male" : "Female";
-        Description = "A sturdy, shield bearing Knight.\nKnights will take 1/2/3 less damage from all instances";
+        Description = "A sturdy, shield bearing Knight.\nKnights will take 1 less damage per level from all instances";
         Class = "Knight";
         Name = Gender == "Male" ? GameParent.nameGenerator.CreateMaleName() : GameParent.nameGenerator.CreateFemaleName();
         MaxHP = 12;
@@ -29,7 +29,7 @@ public class Knight : Hero
 
     public override double TakeDamage(int damage, double animationDelay)
     {
-        damage -= 1;
+        damage -= Level;
         if (damage > 0)
         {
             return base.TakeDamage(damage, animationDelay);

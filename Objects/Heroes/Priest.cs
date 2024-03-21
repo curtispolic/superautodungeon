@@ -16,7 +16,7 @@ public class Priest : Hero
     {
         Random random  = new();
         Gender = random.Next(2) == 1 ? "Male" : "Female";
-        Description = "A devout priest of a non-specific monotheistic religion.\nPriests will spend 3 mana to heal if not in melee.\nWill heal for 2/4/6 health.\nWill only heal the front unit and only if damaged.";
+        Description = "A devout priest of a non-specific monotheistic religion.\nPriests will spend 3 mana to heal if not in melee.\nWill heal for 2 health per level.\nWill only heal the front unit and only if damaged.";
         Class = "Priest";
         Name = Gender == "Male" ? GameParent.nameGenerator.CreateMaleName() : GameParent.nameGenerator.CreateFemaleName();
         MaxHP = 6;
@@ -62,7 +62,7 @@ public class Priest : Hero
         var healTarget = GameParent.playerParty.FrontHero();
 
         HealTimer = 0 - animationDelay;
-        animationTime += healTarget.ReceiveHealing(2, animationDelay + animationTime / 2);
+        animationTime += healTarget.ReceiveHealing(Level*2, animationDelay + animationTime / 2);
 
         return animationTime;
     }
