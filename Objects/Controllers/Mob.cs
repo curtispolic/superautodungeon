@@ -19,7 +19,7 @@ public class Mob
         {
             new Rat(GameParent),
             new Rat(GameParent),
-            new Rat(GameParent),
+            new Goblin(GameParent),
             new Skeleton(GameParent)
         };
     }

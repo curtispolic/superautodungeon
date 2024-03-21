@@ -93,7 +93,7 @@ public class Combat
         {
             if (enemy.Active)
             {
-                if (!enemy.Dead && enemy != EnemyMob.EnemyList[0])
+                if (!enemy.Dead && enemy != EnemyMob.FrontEnemy())
                 {
                     animationTime += enemy.CombatStep(animationTime);
                 }
@@ -172,11 +172,6 @@ public class Combat
 
         // Placeholder 500 to delay end round a touch
         return 500;
-    }
-
-    public void AllowAnimationFinish()
-    {
-
     }
 
     public void Draw(SpriteBatch spriteBatch, GameTime gameTime)

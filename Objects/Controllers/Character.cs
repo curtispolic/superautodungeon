@@ -166,11 +166,13 @@ public class Character
                 CurrentHP = MaxHP;
                 LastDamageAmounts.Add(temp);
                 DamageAnimationTimers.Add(0 - animationDelay);
+                DamageApplied.Add(false);
             }
             else
             {
                 LastDamageAmounts.Add(healing);
                 DamageAnimationTimers.Add(0 - animationDelay);
+                DamageApplied.Add(false);
             }
             // Handle healing recieved effects here
         }

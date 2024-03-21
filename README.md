@@ -21,11 +21,11 @@ Author: Curtis Polic
 - Levelling up
 - Add a boss to the level
 - Fog of war for the level
-- Make numbers update when the animations happen (will probably be hard) (can use lastDamageAmount list to update)
 - Expand To Do list
 
 ## Known Bugs:
 - Combat crashes when player party is defeated
+- Mouseover panels can get stuck on the screen during a transistion
 
 ## Notes:
 

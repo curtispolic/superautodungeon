@@ -9,7 +9,7 @@ public class Skeleton : Enemy
     {
         Description = "Quite spooky and/or scary.\nHas no special properties or abilities.";
         Name = "Skeleton";
-        MaxHP = 6;
+        MaxHP = 8;
         VisibleHP = MaxHP;
         CurrentHP = MaxHP;
         BaseAttack = 2;
