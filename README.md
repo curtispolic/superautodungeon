@@ -16,7 +16,8 @@ Author: Curtis Polic
 - Party reordering
 
 ## To Do in Rough Order:
-- Add 2 or 3 more enemies (goblin, dark wizard, ogre)
+- Add 2 or 3 more enemies (dark wizard, ogre)
+- Minor rework of mouseover handling will likely be required
 - Selling units
 - Levelling up
 - Add a boss to the level
@@ -26,7 +27,6 @@ Author: Curtis Polic
 ## Known Bugs:
 - Combat crashes when player party is defeated
 - Mouseover panels can get stuck on the screen during a transistion
-- Mouseovers broken in shop and UI
 
 ## Notes:
 
