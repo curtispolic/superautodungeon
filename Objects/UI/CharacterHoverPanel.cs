@@ -23,7 +23,9 @@ public class CharacterHoverPanel
         LoadContent();
 
         // Get details from parent and size for it
-        Text = CharacterParent.Name + "\n" + CharacterParent.Description;
+        Text = CharacterParent.Name + "\n"
+            + "Level " + CharacterParent.Level.ToString() + " " + CharacterParent.Class + "\n"
+            + CharacterParent.Description;
         TextSize = Font.MeasureString(Text);
         Size = TextSize + new Vector2(20, 20);
 

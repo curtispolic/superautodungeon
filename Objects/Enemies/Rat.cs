@@ -8,6 +8,7 @@ public class Rat : Enemy
     {
         Description = "A little rat scurrying around.\nHas no special properties or abilities.";
         Name = "Rat";
+        Class = "Rat";
         MaxHP = 4;
         VisibleHP = MaxHP;
         CurrentHP = MaxHP;

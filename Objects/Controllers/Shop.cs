@@ -39,6 +39,7 @@ public class Shop
         ReRoll();
         Active = true;
         leftMouseDown = false;
+        PickedUpHero = new(LevelParent.GameParent, false);
     }
 
     public void Update(GraphicsDeviceManager graphics, GameTime gameTime)
@@ -86,6 +87,12 @@ public class Shop
                 }
 
                 leftMouseDown = true;
+            }
+
+            // Run updates on buyable heroes even without mouse click to handle mouseover status
+            foreach (var hero in BuyableHeroes)
+            {
+                hero.Update(mouseState, graphics, gameTime);
             }
 
             // Unflag when the click has been released
@@ -263,7 +270,7 @@ public class Shop
         // Draw the mouseover panel here so it's over all elements
         foreach (var hero in BuyableHeroes)
         {
-            if (hero.MouseOver && !PickedUpHero.Active)
+            if (hero.MouseOver && PickedUp == -1)
             {
                 hero.HoverPanel.Draw(spriteBatch, gameTime);
             }

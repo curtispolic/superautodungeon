@@ -26,6 +26,7 @@ Author: Curtis Polic
 ## Known Bugs:
 - Combat crashes when player party is defeated
 - Mouseover panels can get stuck on the screen during a transistion
+- Mouseovers broken in shop and UI
 
 ## Notes:
 

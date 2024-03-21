@@ -8,7 +8,7 @@ using superautodungeon.Objects.Controllers;
 
 public class Hero : Character
 {
-    public string Class,  Gender;
+    public string Gender;
     public bool Buyable, PickedUp;
     public int Cost;
     // TODO Weapon

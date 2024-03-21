@@ -105,82 +105,18 @@ public class GameplayUI
                 leftMouseDown = true;
             }
 
+            // Run updates on buyable heroes even without mouse click to handle mouseover status
+            foreach (var hero in PlayerParty.HeroList)
+            {
+                hero.Update(mouseState, graphics, gameTime);
+            }
+
             // Unflag when the click has been released
             if (mouseState.LeftButton == ButtonState.Released && leftMouseDown)
             {
                 leftMouseDown = false;
             }
         }
-
-/*
-        bool clickHandled = false;
-        // Only handle clicks inside the game window
-        if (0 <= mouseState.X && mouseState.X <= graphics.PreferredBackBufferWidth && 0 <= mouseState.Y && mouseState.Y <= graphics.PreferredBackBufferHeight)
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                if (PlayerParty.HeroList[i].Update(mouseState, graphics, gameTime))
-                {
-                    // Handle clicks on the party
-                    // This is specifically for shop buying
-                    if (GameParent.shop.Active)
-                    {
-                        if (GameParent.shop.PickedUp > -1)
-                        {
-                            GameParent.shop.BuyHero(GameParent.shop.PickedUp, i);
-                        }
-                        // If nothing picked up in the shop or UI, pickup the hero
-                        else if (PickedUp == -1)
-                        {
-                            PickedUp = i;
-                            PickedUpHero = PlayerParty.HeroList[i];
-                            PickupOffset = PlayerParty.HeroList[i].Position - mouseState.Position.ToVector2();
-                            PickedUpHero.PickedUp = true;
-                            clickHandled = true;
-                        }
-                        else if (i != PickedUp)
-                        {
-                            PartyReorder(PickedUp, i);
-                            clickHandled = true;
-                            PickedUp = -1;
-                            PickedUpHero.PickedUp = false;
-                            PickedUpHero = new(GameParent, false);
-                        }
-                    }
-                    // Don't allow clicking during combat
-                    else if (!GameParent.combat.Active)
-                    {
-                        // no hero picked up
-                        if (PickedUp == -1)
-                        {
-                            PickedUp = i;
-                            PickedUpHero = PlayerParty.HeroList[i];
-                            PickedUpHero.PickedUp = true;
-                            PickupOffset = PlayerParty.HeroList[i].Position - mouseState.Position.ToVector2();
-                            clickHandled = true;
-                        }
-                        // swapping heroes
-                        else if (i != PickedUp)
-                        {
-                            PartyReorder(PickedUp, i);
-                            clickHandled = true;
-                            PickedUp = -1;
-                            PickedUpHero.PickedUp = false;
-                            PickedUpHero = new(GameParent, false);
-                        }
-                    }
-                }
-            }
-
-            // Drop the hero if it's an unhandled click
-            if (PickedUp != -1 && mouseState.LeftButton == ButtonState.Pressed && !clickHandled)
-            {
-                PickedUp = -1;
-                PickedUpHero.PickedUp = false;
-                PickedUpHero = new(GameParent, false);
-            }
-        }
-*/
     }
 
     public void PartyReorder(int index1, int index2)

@@ -16,6 +16,7 @@ public class Goblin : Enemy
     {
         Description = "A small green menace.\nThrows a spear for 1 damage at a random target if not in melee.";
         Name = "Goblin";
+        Class = "Goblin";
         MaxHP = 6;
         VisibleHP = MaxHP;
         CurrentHP = MaxHP;

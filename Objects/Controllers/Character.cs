@@ -14,13 +14,13 @@ public class Character
     public SpriteFont StatsFont;
     public CharacterHoverPanel HoverPanel;
     public bool Dead, Dying, MouseOver, Active, MeleeHitting;
-    public int MaxHP, CurrentHP, BaseAttack, CurrentAttack, Mana, VisibleHP;
+    public int MaxHP, CurrentHP, BaseAttack, CurrentAttack, Mana, VisibleHP, XP, Level;
     // Despite the name, damage amounts and timers is also for healing
     public List<int> LastDamageAmounts;
     public double DeathTimer, MeleeTimer, ManaGainTimer;
     public List<double> DamageAnimationTimers;
     public List<bool> DamageApplied;
-    public string Name, Description;
+    public string Name, Description, Class;
 
     public static int DEATH_TIME = 1000;
     public static int DAMAGE_SHOW_TIME = 250;
@@ -41,6 +41,8 @@ public class Character
         // This constructor should only run for active characters
         GameParent = inputParent;
         Mana = 0;
+        XP = 0;
+        Level = 1;
         Dead = false;
         Dying = false;
         DeathTimer = 0;
