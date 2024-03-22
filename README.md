@@ -18,12 +18,12 @@ Author: Curtis Polic
 ## To Do in Rough Order:
 - Add 2 or 3 more enemies (dark wizard, ogre)
 - Selling units
-- Combining heroes in the UI
 - Add a boss to the level
 - Expand To Do list
 
 ## Known Bugs:
 - Combat crashes when player party is defeated
+- No way to switch 2 heroes of the same class
 - Mouseover panels can get stuck on the screen during a transistion
 
 ## Notes:

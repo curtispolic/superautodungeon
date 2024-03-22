@@ -84,11 +84,27 @@ public class GameplayUI
                             }
                             else if (PickedUp != i)
                             {
-                                PartyReorder(PickedUp, i);
-                                handledClick = true;
-                                PickedUp = -1;
-                                PickedUpHero.PickedUp = false;
-                                PickedUpHero = new(GameParent, false);
+                                if (PlayerParty.HeroList[i].Class == PlayerParty.HeroList[PickedUp].Class)
+                                {
+                                    // Handle combining heroes
+                                    Vector2 temp = PlayerParty.HeroList[PickedUp].Position;
+                                    PlayerParty.HeroList[i].GainXP(PlayerParty.HeroList[PickedUp].XP + 1);
+                                    PlayerParty.HeroList[PickedUp] = new(GameParent, false)
+                                    {
+                                        Position = temp
+                                    };
+                                    PickedUp = -1;
+                                    PickedUpHero = new(GameParent, false);
+                                }
+                                else
+                                {
+                                    // Handle reordering heroes
+                                    PartyReorder(PickedUp, i);
+                                    handledClick = true;
+                                    PickedUp = -1;
+                                    PickedUpHero.PickedUp = false;
+                                    PickedUpHero = new(GameParent, false);
+                                }
                             }
                         }
                     }
