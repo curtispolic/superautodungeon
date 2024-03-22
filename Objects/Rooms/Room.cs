@@ -11,7 +11,7 @@ public class Room
     public Level LevelParent;
     public Vector2 Position;
     public int X, Y;
-    public bool MouseOver, Active, leftMouseDown, ContainsPlayer, Completed;
+    public bool MouseOver, Active, leftMouseDown, ContainsPlayer, Completed, Visible;
 
     public Room()
     {
@@ -21,6 +21,7 @@ public class Room
     public Room(Level inputParent, int inputX, int inputY)
     {
         ContainsPlayer = false;
+        Visible = false;
         MouseOver = false;
         Active = true;
         leftMouseDown = false;

@@ -17,11 +17,9 @@ Author: Curtis Polic
 
 ## To Do in Rough Order:
 - Add 2 or 3 more enemies (dark wizard, ogre)
-- Minor rework of mouseover handling will likely be required
 - Selling units
-- Levelling up
+- Combining heroes in the UI
 - Add a boss to the level
-- Fog of war for the level
 - Expand To Do list
 
 ## Known Bugs:

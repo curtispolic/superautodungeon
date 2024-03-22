@@ -21,7 +21,7 @@ public class Level
     {
         GameParent = inputParent;
 
-        // Create 5x5 room
+        // Create 5x5 level
         RoomGrid = new Room [5,5];
         for (int i = 0; i < 5; i++)
         {
@@ -57,6 +57,8 @@ public class Level
             {
                 RoomGrid[x,y] = new ShopRoom(this, x, y);
                 shopRoom = RoomGrid[x,y];
+                shopRoom.Visible = true;
+                RevealAroundRoom(x,y);
                 shop = true;
             }
         }
@@ -84,8 +86,29 @@ public class Level
         {
             for (int j = 0; j < 5; j++)
             {
-                RoomGrid[i,j].Draw(spriteBatch, gameTime);
+                if (RoomGrid[i,j].Visible)
+                    RoomGrid[i,j].Draw(spriteBatch, gameTime);
             }
+        }
+    }
+
+    public void RevealAroundRoom(int x, int y)
+    {
+        if (x > 0)
+        {
+            RoomGrid[x-1,y].Visible = true;
+        }
+        if (x < 4)
+        {
+            RoomGrid[x+1,y].Visible = true;
+        }
+        if (y > 0)
+        {
+            RoomGrid[x,y-1].Visible = true;
+        }
+        if (y < 4)
+        {
+            RoomGrid[x,y+1].Visible = true;
         }
     }
 
@@ -96,6 +119,7 @@ public class Level
             if (RoomGrid[x-1,y].ContainsPlayer)
             {
                 RoomGrid[x-1,y].ContainsPlayer = false;
+                RevealAroundRoom(x,y);
                 RoomGrid[x,y].Enter();
             }
         }
@@ -104,6 +128,7 @@ public class Level
             if (RoomGrid[x+1,y].ContainsPlayer)
             {
                 RoomGrid[x+1,y].ContainsPlayer = false;
+                RevealAroundRoom(x,y);
                 RoomGrid[x,y].Enter();
             }
         }
@@ -112,6 +137,7 @@ public class Level
             if (RoomGrid[x,y-1].ContainsPlayer)
             {
                 RoomGrid[x,y-1].ContainsPlayer = false;
+                RevealAroundRoom(x,y);
                 RoomGrid[x,y].Enter();
             }
         }
@@ -120,6 +146,7 @@ public class Level
             if (RoomGrid[x,y+1].ContainsPlayer)
             {
                 RoomGrid[x,y+1].ContainsPlayer = false;
+                RevealAroundRoom(x,y);
                 RoomGrid[x,y].Enter();
             }
         }
