@@ -188,6 +188,18 @@
 /processorParam:TextureFormat=Color
 /build:UI/attack.png
 
+#begin UI/event.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:UI/event.png
+
 #begin UI/heart.png
 /importer:TextureImporter
 /processor:TextureProcessor
