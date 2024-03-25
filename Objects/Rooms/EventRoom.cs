@@ -12,14 +12,18 @@ public class EventRoom : Room
 
     public EventRoom(Level inputParent, int inputX, int inputY) : base(inputParent, inputX, inputY)
     {
-        RoomEvent = new(LevelParent.GameParent);
+        RoomEvent = new MinorTreasureEvent(this);
         LoadContent();
     }
 
     public override void Enter()
     {
         base.Enter();
-        // Handle event active here
+        if (!Completed)
+        {
+            RoomEvent.Active = true;
+            LevelParent.GameParent.gameEvent = RoomEvent;
+        }
     }
 
     public void LoadContent()

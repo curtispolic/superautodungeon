@@ -63,6 +63,18 @@ public class Level
             }
         }
 
+        int events = 0;
+        while (events < 3)
+        {
+            int x = random.Next(5);
+            int y = random.Next(5);
+            if (RoomGrid[x,y] is not CombatRoom && RoomGrid[x,y] is not ShopRoom)
+            {
+                RoomGrid[x,y] = new EventRoom(this, x, y);
+                events++;
+            }
+        }
+
         // Start the player in the shop
         Active = true;
         shopRoom.Enter();

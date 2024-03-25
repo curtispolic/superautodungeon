@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 using superautodungeon.Objects;
 using superautodungeon.Objects.Controllers;
+using superautodungeon.Objects.Events;
 using superautodungeon.Objects.UI;
 
 namespace superautodungeon;
@@ -13,6 +14,7 @@ public class MainGame : Game
     public MainMenu mainMenu;
     public Combat combat;
     public Shop shop;
+    public Event gameEvent;
     public Level level;
     public GameplayUI gameplayUI;
     public Party playerParty;
@@ -48,6 +50,7 @@ public class MainGame : Game
         gameplayUI = new();
         combat = new();
         level = new();
+        gameEvent = new();
 
         playerParty = new(this);
 
@@ -96,6 +99,10 @@ public class MainGame : Game
         {
             shop.Update(graphics, gameTime);
         }
+        else if (gameEvent.Active)
+        {
+            gameEvent.Update(graphics, gameTime);
+        }
         else if (level.Active)
         {
             level.Update(graphics, gameTime);
@@ -121,6 +128,8 @@ public class MainGame : Game
             level.Draw(_spriteBatch, gameTime);
         if (combat.Active)
             combat.Draw(_spriteBatch, gameTime);
+        if (gameEvent.Active)
+            gameEvent.Draw(_spriteBatch, gameTime);
 
         // Handle mouseovers last so they are on top
         if (gameplayUI.Active)
