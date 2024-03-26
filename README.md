@@ -4,21 +4,21 @@ Inspired by Super Auto Pets, I plan to create a dungeon-delving auto battler.
 Author: Curtis Polic
 
 ## Current features:
-- Basic Heroes vs Enemies combat
-- Main Menu with half of the buttons working
-- Base UI for gameplay
-- 2 hero classes
-- Shop
-- Levels, rooms, filled combats
-- Combat steps for backline units
-- Feature complete mouseover and descriptions
-- Animations for various updates
-- Party reordering
+- Feature complete combat (qol addition of pausing)
+- Feature incomplete main menu (needs loading and settings)
+- Feature incomplete shop (needs selling, equipment, tiers)
+- Feature incomplete main UI (needs inventory, gold)
+- Feature incomplete levels (needs treasure, bosses)
 
 ## To Do in Rough Order:
+- Add rough equipment
+- Add inventory
+- Add gold to UI
+- Implement saving and loading
+- Implement settings
 - Add 2 or 3 more enemies (dark wizard, ogre)
-- Selling units
 - Add a boss to the level
+- Randomly generate room combats, events, bosses and levels
 - Expand To Do list
 
 ## Known Bugs:
