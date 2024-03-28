@@ -6,10 +6,12 @@ using System.Collections.Generic;
 
 using superautodungeon.Objects.Heroes;
 using Microsoft.Xna.Framework.Input;
+using superautodungeon.Objects.Items;
 
 public class Party
 {
     public List<Hero> HeroList;
+    public Item[] Inventory;
     public MainGame GameParent;
     public int GP;
 
@@ -18,6 +20,7 @@ public class Party
         // Create the inactive placeholder heroes
         GameParent = inputParent;
         HeroList = new();
+        Inventory = new Item[12];
         for (int i = 0; i < 4; i++)
         {
             HeroList.Add(new(GameParent, false));
@@ -49,6 +52,20 @@ public class Party
             HeroList[inputIndex].Position =  new Vector2(1285, 25 + inputIndex * 230);
             return true;
         }
+        return false;
+    }
+
+    public bool Add(Item inputItem)
+    {
+        for (int i = 0; i < 12; i++)
+        {
+            if (Inventory[i].Active == false)
+            {
+                Inventory[i] = inputItem;
+                return true;
+            }
+        }
+
         return false;
     }
 

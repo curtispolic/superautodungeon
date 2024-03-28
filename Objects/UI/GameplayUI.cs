@@ -15,7 +15,7 @@ public class GameplayUI
     public Party PlayerParty;
     public SpriteFont Font;
     public Vector2 PickupOffset;
-    public Hero PickedUpHero;
+    public Hero PickedUpHero; 
     public int PickedUp;
     public bool Active, leftMouseDown;
 
@@ -190,6 +190,26 @@ public class GameplayUI
             else
             {
                 hero.DrawShadowOnly(spriteBatch, gameTime, hero.Position);
+            }
+        }
+
+        // Draw inventory
+        for (int i = 0; i < 4; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                spriteBatch.Draw(_texture, new Rectangle(800 + i*85, 640 + j*85, 80, 80), Color.White);
+                spriteBatch.Draw(_texture2, new Rectangle(805 + i*85, 645 + j*85, 70, 70), Color.White);
+                
+                // Drawing the items
+                if (PlayerParty.Inventory[j*3 + i].Active)
+                {
+                    PlayerParty.Inventory[j*3 + i].Draw(spriteBatch, gameTime);
+                }
+                else
+                {
+
+                }
             }
         }
     }
