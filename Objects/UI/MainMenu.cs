@@ -5,9 +5,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-using superautodungeon.Objects.Heroes;
-using superautodungeon.Objects.Enemies;
-
 public class MainMenu
 {
     public Button NewGameButton, LoadGameButton, SettingsButton, ExitButton;
@@ -79,7 +76,7 @@ public class MainMenu
 
     public void OnClickLoadGame()
     {
-        Console.WriteLine("Load Game button clicked - TODO: Add functionality");
+        GameParent.saveHandler.LoadGame();
     }
 
     public void OnClickNewGame()

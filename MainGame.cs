@@ -19,6 +19,7 @@ public class MainGame : Game
     public GameplayUI gameplayUI;
     public Party playerParty;
     public NameGenerator nameGenerator;
+    public SaveHandler saveHandler;
     public GraphicsDeviceManager graphics;
     private SpriteBatch _spriteBatch;
     private double fightTimer;
@@ -40,6 +41,9 @@ public class MainGame : Game
 
         // Set the main menu
         mainMenu = new(this);
+
+        // Prepare the save handler
+        saveHandler = new(this);
 
         /*
         Create default shells of each other game element
